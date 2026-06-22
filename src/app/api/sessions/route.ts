@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getContent } from "@/lib/content";
 import { generateCode } from "@/lib/code";
 import { isAdminAuthorized } from "@/lib/admin";
+import { REGIONS } from "@/lib/germany";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,13 @@ export async function POST(req: Request) {
       ? (body.involvedRoles as string[]).filter((id) => content.roles.some((r) => r.id === id))
       : content.roles.map((r) => r.id);
 
+  // Optional location for the readiness map. Only stored if a region is given;
+  // we trust the curated city/coords the admin form selects.
+  const regionCode = REGIONS.some((r) => r.code === body.regionCode) ? (body.regionCode as string) : null;
+  const city = regionCode && typeof body.city === "string" ? body.city : null;
+  const lat = regionCode && typeof body.lat === "number" ? body.lat : null;
+  const lng = regionCode && typeof body.lng === "number" ? body.lng : null;
+
   // Generate a unique join code (retry a few times on the rare collision).
   let code = generateCode();
   for (let i = 0; i < 5; i++) {
@@ -60,6 +68,10 @@ export async function POST(req: Request) {
       startedAt: new Date(),
       strictGate: Boolean(body.strictGate),
       leaderboardPublic: body.leaderboardPublic === undefined ? true : Boolean(body.leaderboardPublic),
+      regionCode,
+      city,
+      lat,
+      lng,
     },
   });
 

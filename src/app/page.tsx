@@ -36,9 +36,14 @@ export default function HomePage() {
         }}
       />
 
-      <a href="/leaderboard" className="block text-center text-sm font-semibold text-brand underline">
-        🏆 Browse the company leaderboard
-      </a>
+      <div className="flex flex-col items-center gap-1.5 text-sm font-semibold text-brand">
+        <a href="/map" className="underline">
+          🗺️ Explore the readiness map
+        </a>
+        <a href="/leaderboard" className="underline">
+          🏆 Browse the company leaderboard
+        </a>
+      </div>
     </Screen>
   );
 }
