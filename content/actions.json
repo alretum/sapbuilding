@@ -3,352 +3,471 @@
     "id": "captain-vision",
     "roleId": "captain",
     "type": "swipe",
-    "title": "Set the vision",
-    "subtitle": "Where should the company be in 2027? Swipe the statements that fit.",
-    "points": 100,
+    "title": "Vision Swipe",
+    "subtitle": "Where should we be in 2027?",
+    "points": 40,
     "payload": {
-      "prompt": "That's us in 2027 — or not?",
-      "leftLabel": "Not us",
-      "rightLabel": "That's us",
+      "prompt": "Strategic Cloud Driver or Weak Driver?",
+      "leftLabel": "Weak Driver",
+      "rightLabel": "Strategic Cloud Driver",
       "cards": [
-        { "id": "v1", "label": "Closing the books in real time, not real weeks." },
-        { "id": "v2", "label": "Fewer late nights, more time for the actual business." },
-        { "id": "v3", "label": "Updates arrive automatically — no more big-bang upgrades." },
-        { "id": "v4", "label": "Decisions based on live data, not last month's export." },
-        { "id": "v5", "label": "A clean core: standard where possible, custom where it counts." }
+        { "id": "c1", "label": "Faster business decisions through real-time data", "correctSide": "right" },
+        { "id": "c2", "label": "Moving only because SAP says so", "correctSide": "left" },
+        { "id": "c3", "label": "More scalable IT for future growth", "correctSide": "right" },
+        { "id": "c4", "label": "Avoiding every process change", "correctSide": "left" },
+        { "id": "c5", "label": "Reducing long-term system limitations", "correctSide": "right" }
       ]
     }
   },
   {
-    "id": "captain-commit",
+    "id": "captain-decision",
     "roleId": "captain",
-    "type": "chatbot",
-    "title": "Make your commitment",
-    "subtitle": "Unlock a commitment statement everyone can see.",
-    "points": 150,
+    "type": "multiselect",
+    "title": "Decision Gate Builder",
+    "subtitle": "Choose the 4 elements a CEO should require before approving the next migration step.",
+    "points": 40,
     "payload": {
-      "start": "intro",
-      "nodes": {
-        "intro": {
-          "bot": "As Captain, your visible commitment sets the tone. Ready to lock one in?",
-          "options": [
-            { "label": "Let's do it", "next": "ambition" },
-            { "label": "What's at stake?", "next": "why" }
-          ]
-        },
-        "why": {
-          "bot": "When the CEO commits out loud, departments stop waiting and start moving. That's the whole game. Shall we?",
-          "options": [{ "label": "Okay, I'm in", "next": "ambition" }]
-        },
-        "ambition": {
-          "bot": "Pick the tone of your commitment:",
-          "options": [
-            { "label": "\"We move together, no one left behind.\"", "next": "done" },
-            { "label": "\"Curiosity first — we explore, then decide.\"", "next": "done" },
-            { "label": "\"Future-proof by 2027.\"", "next": "done" }
-          ]
-        },
-        "done": {
-          "bot": "Locked in and shared with the crew. The whole company can see the Captain is on board. 🚀",
-          "end": true
-        }
+      "prompt": "Select the required elements:",
+      "maxSelect": 4,
+      "options": [
+        { "id": "o1", "label": "Clear business case", "correct": true },
+        { "id": "o2", "label": "Department risk overview", "correct": true },
+        { "id": "o3", "label": "Downtime tolerance", "correct": true },
+        { "id": "o4", "label": "Migration path options", "correct": true },
+        { "id": "o5", "label": "New logo for the project", "correct": false },
+        { "id": "o6", "label": "Only IT recommendation", "correct": false },
+        { "id": "o7", "label": "Final decision without department input", "correct": false },
+        { "id": "o8", "label": "Wait until deadline pressure", "correct": false }
+      ]
+    }
+  },
+  {
+    "id": "captain-risk",
+    "roleId": "captain",
+    "type": "sort",
+    "title": "Risk Ranking",
+    "subtitle": "What hurts the business most?",
+    "points": 40,
+    "payload": {
+      "prompt": "Rank from most critical (Top) to least critical (Bottom)",
+      "items": [
+        { "id": "r1", "label": "Business-critical downtime" },
+        { "id": "r2", "label": "Data loss / inconsistent data" },
+        { "id": "r3", "label": "Unclear total cost" },
+        { "id": "r4", "label": "Different user interface color" }
+      ],
+      "correctOrder": ["r1", "r2", "r3", "r4"]
+    }
+  },
+  {
+    "id": "captain-benefit",
+    "roleId": "captain",
+    "type": "match",
+    "title": "Benefit Match",
+    "subtitle": "Match business benefit to CEO concern.",
+    "points": 40,
+    "payload": {
+      "prompt": "Match Concern to Cloud Benefit",
+      "items": [
+        { "id": "p1", "label": "Slow decisions" },
+        { "id": "p2", "label": "Growing business complexity" },
+        { "id": "p3", "label": "Old system limitations" },
+        { "id": "p4", "label": "High maintenance effort" }
+      ],
+      "targets": [
+        { "id": "b1", "label": "Real-time insights" },
+        { "id": "b2", "label": "Scalability" },
+        { "id": "b3", "label": "Future-proof IT" },
+        { "id": "b4", "label": "Lower internal maintenance burden" }
+      ],
+      "correctMatches": {
+        "p1": "b1",
+        "p2": "b2",
+        "p3": "b3",
+        "p4": "b4"
       }
     }
   },
   {
-    "id": "captain-benefits",
+    "id": "captain-booster",
     "roleId": "captain",
     "type": "quiz",
-    "title": "The business case in 90 seconds",
-    "subtitle": "Three quick ones on what the cloud actually buys you.",
-    "points": 120,
+    "title": "Booster Task",
+    "subtitle": "Pick the best motivational nudge to send to a lagging department.",
+    "points": 40,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "What's the biggest reporting shift with S/4HANA Cloud?",
+          "prompt": "Which message would you send?",
           "options": [
-            { "id": "a", "label": "Reports run overnight in batches", "correct": false },
-            { "id": "b", "label": "Real-time insight on live data", "correct": true },
-            { "id": "c", "label": "Reports move to paper", "correct": false }
+            { "id": "a", "label": "\"Why are you so slow?\"", "correct": false },
+            { "id": "b", "label": "\"Your input is important because your processes are business-critical.\"", "correct": true },
+            { "id": "c", "label": "\"IT will handle everything.\"", "correct": false },
+            { "id": "d", "label": "\"Just finish the quiz.\"", "correct": false }
           ],
-          "explanation": "In-memory processing means you analyse live operational data — no waiting for the nightly batch."
-        },
-        {
-          "id": "q2",
-          "prompt": "How do upgrades work in the cloud model?",
-          "options": [
-            { "id": "a", "label": "Continuous, automatic updates", "correct": true },
-            { "id": "b", "label": "One painful upgrade every 5–7 years", "correct": false }
-          ],
-          "explanation": "Regular automatic updates replace the big, risky upgrade projects."
-        },
-        {
-          "id": "q3",
-          "prompt": "What does 'clean core' protect you from?",
-          "options": [
-            { "id": "a", "label": "Custom code that blocks future updates", "correct": true },
-            { "id": "b", "label": "Having any custom code at all", "correct": false }
-          ],
-          "explanation": "Keeping the core clean (extensions, not modifications) is what keeps automatic updates frictionless."
+          "explanation": "A CEO needs to emphasize the business-criticality of the department's input."
         }
       ]
     }
   },
+
   {
-    "id": "captain-dashboard",
-    "roleId": "captain",
-    "type": "dashboard-booster",
-    "title": "Dashboard Check",
-    "subtitle": "Review all department statuses once + send a 'booster' to a lagging department.",
-    "points": 200,
+    "id": "finance-report-rescue",
+    "roleId": "finance",
+    "type": "match",
+    "title": "Report Rescue",
+    "subtitle": "Month-end closing! Protect reporting by dragging each report to the right category.",
+    "points": 40,
     "payload": {
-      "prompt": "Click below to review statuses and boost a department."
+      "prompt": "Drag each report into the right category",
+      "items": [
+        { "id": "i1", "label": "Balance Sheet" },
+        { "id": "i2", "label": "Profit & Loss Statement" },
+        { "id": "i3", "label": "Cost Center Report" },
+        { "id": "i4", "label": "Cash Flow Forecast" },
+        { "id": "i5", "label": "Tax Report" },
+        { "id": "i6", "label": "Sales Dashboard" }
+      ],
+      "targets": [
+        { "id": "t1", "label": "Financial Statement" },
+        { "id": "t2", "label": "Controlling Report" },
+        { "id": "t3", "label": "Liquidity Report" },
+        { "id": "t4", "label": "Compliance Report" },
+        { "id": "t5", "label": "Management Insight" }
+      ],
+      "correctMatches": {
+        "i1": "t1",
+        "i2": "t1",
+        "i3": "t2",
+        "i4": "t3",
+        "i5": "t4",
+        "i6": "t5"
+      }
+    }
+  },
+  {
+    "id": "finance-myth-fact",
+    "roleId": "finance",
+    "type": "swipe",
+    "title": "Cloud Myth or Finance Fact?",
+    "subtitle": "Swipe each statement to Myth or Fact.",
+    "points": 40,
+    "payload": {
+      "prompt": "Myth or Fact?",
+      "leftLabel": "Myth",
+      "rightLabel": "Fact",
+      "cards": [
+        { "id": "c1", "label": "Real-time reporting can reduce waiting time for financial insights.", "correctSide": "right" },
+        { "id": "c2", "label": "SAP Cloud automatically solves all finance problems without process changes.", "correctSide": "left" },
+        { "id": "c3", "label": "Manual Excel workarounds can make migration and reporting more complex.", "correctSide": "right" },
+        { "id": "c4", "label": "Compliance and audit trails are only relevant after go-live.", "correctSide": "left" },
+        { "id": "c5", "label": "Finance should be involved early, not only shortly before go-live.", "correctSide": "right" }
+      ]
+    }
+  },
+  {
+    "id": "finance-first-closing",
+    "roleId": "finance",
+    "type": "sort",
+    "title": "First Closing After Go-Live",
+    "subtitle": "Rank the risks from most critical to least critical for the first month-end closing.",
+    "points": 40,
+    "payload": {
+      "prompt": "Sort from most critical (Top) to least critical (Bottom)",
+      "items": [
+        { "id": "r1", "label": "Incomplete financial postings" },
+        { "id": "r2", "label": "Missing audit trail" },
+        { "id": "r3", "label": "Users unsure about new closing steps" },
+        { "id": "r4", "label": "Dashboard layout looks different" }
+      ],
+      "correctOrder": ["r1", "r2", "r3", "r4"]
+    }
+  },
+  {
+    "id": "finance-pain-benefit",
+    "roleId": "finance",
+    "type": "match",
+    "title": "Pain Point → Cloud Benefit",
+    "subtitle": "Match today's Finance pain point with the most relevant SAP Cloud/S/4HANA benefit.",
+    "points": 40,
+    "payload": {
+      "prompt": "Match Pain Point to Benefit",
+      "items": [
+        { "id": "p1", "label": "Manual Excel consolidation" },
+        { "id": "p2", "label": "Slow management reports" },
+        { "id": "p3", "label": "Difficult reconciliation between FI and CO" },
+        { "id": "p4", "label": "Unclear cost transparency" },
+        { "id": "p5", "label": "High effort for system maintenance" }
+      ],
+      "targets": [
+        { "id": "b1", "label": "More real-time insights" },
+        { "id": "b2", "label": "Reduced manual reporting effort" },
+        { "id": "b3", "label": "Universal Journal / integrated data model" },
+        { "id": "b4", "label": "Better cost visibility" },
+        { "id": "b5", "label": "Lower internal maintenance burden" }
+      ],
+      "correctMatches": {
+        "p1": "b2",
+        "p2": "b1",
+        "p3": "b3",
+        "p4": "b4",
+        "p5": "b5"
+      }
+    }
+  },
+  {
+    "id": "finance-shield",
+    "roleId": "finance",
+    "type": "multiselect",
+    "title": "Create the Finance Migration Shield",
+    "subtitle": "Choose 4 out of 8 shield parts that best protect Finance during migration.",
+    "points": 40,
+    "payload": {
+      "prompt": "Select the correct actions to build your shield:",
+      "maxSelect": 4,
+      "options": [
+        { "id": "s1", "label": "Validate critical reports before go-live", "correct": true },
+        { "id": "s2", "label": "Define report owners", "correct": true },
+        { "id": "s3", "label": "Test first month-end closing in a dry run", "correct": true },
+        { "id": "s4", "label": "Document compliance requirements", "correct": true },
+        { "id": "s5", "label": "Wait until after go-live to check reports", "correct": false },
+        { "id": "s6", "label": "Let only IT validate finance data", "correct": false },
+        { "id": "s7", "label": "Keep all Excel workarounds hidden", "correct": false },
+        { "id": "s8", "label": "Skip audit trail testing", "correct": false }
+      ]
+    }
+  },
+  {
+    "id": "finance-roi-builder",
+    "roleId": "finance",
+    "type": "calculator",
+    "title": "ROI Quick Builder",
+    "subtitle": "Enter rough values to estimate your cloud potential.",
+    "points": 50,
+    "payload": {
+      "fields": [
+        { "id": "users", "label": "Number of SAP users", "min": 1 },
+        { "id": "maint", "label": "Estimated annual ECC maintenance cost", "min": 0 },
+        { "id": "days", "label": "Current days for monthly close", "min": 1 },
+        { "id": "excel", "label": "Number of manual Excel reports", "optional": true, "min": 0 }
+      ]
     }
   },
 
   {
-    "id": "finance-roi",
-    "roleId": "finance",
-    "type": "calculator",
-    "title": "ROI Calculator",
-    "subtitle": "Rough inputs → savings potential.",
-    "points": 200,
-    "payload": {
-      "fields": [
-        { "id": "users", "label": "Number of SAP users", "min": 1 },
-        { "id": "maint", "label": "Estimated annual ECC IT maintenance cost", "min": 0 },
-        { "id": "days", "label": "Days per monthly close", "min": 1 },
-        { "id": "custom", "label": "Number of custom developments", "optional": true, "min": 0 }
-      ]
-    }
-  },
-  {
-    "id": "finance-slow-reports",
-    "roleId": "finance",
-    "type": "swipe",
-    "title": "Tag the slow reports",
-    "subtitle": "Swipe the reports that take too long today.",
-    "points": 100,
-    "payload": {
-      "prompt": "How does this one feel today?",
-      "leftLabel": "Fine",
-      "rightLabel": "Too slow",
-      "cards": [
-        { "id": "r1", "label": "Month-end close" },
-        { "id": "r2", "label": "Cash-flow forecast" },
-        { "id": "r3", "label": "Profitability by product" },
-        { "id": "r4", "label": "Intercompany reconciliation" },
-        { "id": "r5", "label": "Ad-hoc 'can you pull this?' requests" }
-      ]
-    }
-  },
-  {
-    "id": "finance-close-check",
-    "roleId": "finance",
-    "type": "input",
-    "title": "Close check",
-    "subtitle": "How many days does your monthly close take?",
-    "points": 100,
-    "payload": {
-      "prompt": "Enter days for your monthly close:",
-      "inputType": "number",
-      "min": 1,
-      "max": 30,
-      "unit": "days"
-    }
-  },
-  {
-    "id": "finance-realtime",
-    "roleId": "finance",
+    "id": "it-reality-check",
+    "roleId": "it",
     "type": "quiz",
-    "title": "What changes with real-time reporting?",
-    "subtitle": "What does real-time reporting mean — and what's in it for me?",
-    "points": 120,
+    "title": "Custom Code Reality Check",
+    "subtitle": "Find out whether custom developments are known, actively used, and cloud-relevant.",
+    "points": 40,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "Today, how fresh is the data in most of your management reports?",
+          "prompt": "Approximately how many custom Z/Y objects exist in your ECC system?",
           "options": [
-            { "id": "a", "label": "Live, to the minute" },
-            { "id": "b", "label": "Yesterday's batch" },
-            { "id": "c", "label": "Last week / last close" }
+            { "id": "a", "label": "< 100", "points": 10 },
+            { "id": "b", "label": "100–500", "points": 8 },
+            { "id": "c", "label": "500–2,000", "points": 5 },
+            { "id": "d", "label": "> 2,000", "points": 2 },
+            { "id": "e", "label": "Unknown", "points": 0 }
           ]
         },
         {
           "id": "q2",
-          "prompt": "Which reconciliation step disappears when finance & controlling share one source of truth?",
+          "prompt": "Do you know which custom objects are actively used?",
           "options": [
-            { "id": "a", "label": "Matching FI and CO totals by hand", "correct": true },
-            { "id": "b", "label": "Printing the balance sheet", "correct": false }
-          ],
-          "explanation": "The universal journal means FI and CO read the same line items — no more reconciliation between them."
-        }
-      ]
-    }
-  },
-  {
-    "id": "finance-guess",
-    "roleId": "finance",
-    "type": "quiz",
-    "title": "Guessing game",
-    "subtitle": "How many days does a real-time close save on average?",
-    "points": 80,
-    "payload": {
-      "questions": [
+            { "id": "a", "label": "Yes, based on usage statistics / monitoring", "points": 10 },
+            { "id": "b", "label": "Partly, based on expert knowledge", "points": 7 },
+            { "id": "c", "label": "Only for business-critical objects", "points": 5 },
+            { "id": "d", "label": "No clear overview", "points": 0 }
+          ]
+        },
         {
-          "id": "q1",
-          "prompt": "How many days does a real-time close save on average?",
+          "id": "q3",
+          "prompt": "How much of your custom code modifies or enhances SAP standard processes?",
           "options": [
-            { "id": "a", "label": "1-2 days", "correct": true },
-            { "id": "b", "label": "0 days", "correct": false },
-            { "id": "c", "label": "5 days", "correct": false }
-          ],
-          "explanation": "Most companies save 1-2 days per month, which adds up to roughly a month saved per year!"
+            { "id": "a", "label": "Very little, mostly reports or external add-ons", "points": 10 },
+            { "id": "b", "label": "Some enhancements exist", "points": 7 },
+            { "id": "c", "label": "Many core process modifications/enhancements", "points": 2 },
+            { "id": "d", "label": "Unknown", "points": 0 }
+          ]
+        },
+        {
+          "id": "q4",
+          "prompt": "How often is unused custom code cleaned up?",
+          "options": [
+            { "id": "a", "label": "Regularly", "points": 10 },
+            { "id": "b", "label": "Before major releases only", "points": 7 },
+            { "id": "c", "label": "Rarely", "points": 3 },
+            { "id": "d", "label": "Never / unknown", "points": 0 }
+          ]
         }
       ]
     }
   },
   {
-    "id": "finance-myth",
-    "roleId": "finance",
-    "type": "swipe",
-    "title": "Myth or true?",
-    "subtitle": "Swipe cards on finance cloud topics.",
-    "points": 100,
-    "payload": {
-      "prompt": "Myth or true?",
-      "leftLabel": "Myth",
-      "rightLabel": "True",
-      "cards": [
-        { "id": "m1", "label": "Cloud ERP is less secure than on-premise." },
-        { "id": "m2", "label": "You can still run custom reports." },
-        { "id": "m3", "label": "Upgrades happen without downtime." }
-      ]
-    }
-  },
-
-  {
-    "id": "it-custom-code",
+    "id": "it-cloud-fit",
     "roleId": "it",
-    "type": "input",
-    "title": "Custom code estimate",
-    "subtitle": "How many custom developments do you have — and how many do you actually use?",
-    "points": 150,
+    "type": "match",
+    "title": "Cloud Fit Sorting",
+    "subtitle": "Sort current technical objects into the right cloud strategy.",
+    "points": 40,
     "payload": {
-      "prompt": "Percentage of custom developments actually used:",
-      "inputType": "slider",
-      "min": 0,
-      "max": 100,
-      "unit": "%"
-    }
-  },
-  {
-    "id": "it-cleanup",
-    "roleId": "it",
-    "type": "swipe",
-    "title": "Clean core clean-up game",
-    "subtitle": "Sort Z-code examples.",
-    "points": 150,
-    "payload": {
-      "prompt": "Keep or Retire?",
-      "leftLabel": "Retire",
-      "rightLabel": "Keep",
-      "cards": [
-        { "id": "c1", "label": "Z_REPORT_2009_FINAL_v3" },
-        { "id": "c2", "label": "Custom invoice PDF layout" },
-        { "id": "c3", "label": "That user-exit nobody documented" },
-        { "id": "c4", "label": "Pricing routine for a discontinued product" },
-        { "id": "c5", "label": "Integration to the warehouse scanners" }
-      ]
-    }
-  },
-  {
-    "id": "it-data",
-    "roleId": "it",
-    "type": "sort",
-    "title": "Data sorting: Hot, warm, cold?",
-    "subtitle": "Sort data ranges from Hottest (Top) to Coldest (Bottom).",
-    "points": 150,
-    "payload": {
-      "prompt": "Sort from Hottest (Top) to Coldest (Bottom)",
+      "prompt": "Match Object to Category",
       "items": [
-        { "id": "d1", "label": "Current stock levels" },
-        { "id": "d2", "label": "Open customer orders" },
-        { "id": "d3", "label": "Active supplier contracts" },
-        { "id": "d4", "label": "Invoices from 2011" },
-        { "id": "d5", "label": "Employees who left a decade ago" }
-      ]
+        { "id": "o1", "label": "Z-report used daily for legal reporting with no standard alternative" },
+        { "id": "o2", "label": "Custom approval workflow similar to standard SAP flexible workflow" },
+        { "id": "o3", "label": "Old Z-transaction not used in the last 24 months" },
+        { "id": "o4", "label": "Direct database update in custom program" },
+        { "id": "o5", "label": "Interface using outdated file transfer without owner" },
+        { "id": "o6", "label": "Duplicate custom report with same logic as standard analytics" },
+        { "id": "o7", "label": "Critical warehouse interface with clear owner and documentation" },
+        { "id": "o8", "label": "Modification in SAP standard object" }
+      ],
+      "targets": [
+        { "id": "t1", "label": "Keep as Extension" },
+        { "id": "t2", "label": "Replace with Standard" },
+        { "id": "t3", "label": "Retire" },
+        { "id": "t4", "label": "Needs Deep Analysis" }
+      ],
+      "correctMatches": {
+        "o1": "t1",
+        "o2": "t2",
+        "o3": "t3",
+        "o4": "t4",
+        "o5": "t4",
+        "o6": "t2",
+        "o7": "t1",
+        "o8": "t4"
+      }
     }
   },
   {
-    "id": "it-profile",
+    "id": "it-risk-radar",
     "roleId": "it",
-    "type": "calculator",
-    "title": "System profile",
-    "subtitle": "Enter a few key figures to set up your character.",
-    "points": 150,
+    "type": "match",
+    "title": "Interface Risk Radar",
+    "subtitle": "Identify whether interfaces are cloud-ready or risky.",
+    "points": 40,
     "payload": {
-      "fields": [
-        { "id": "version", "label": "Current ERP Version (e.g. 6.0)", "optional": true },
-        { "id": "volume", "label": "Approximate data volume (GB)", "min": 0 }
-      ]
+      "prompt": "Classify interface scenario risk:",
+      "items": [
+        { "id": "s1", "label": "API-based interface, documented owner, monitored errors" },
+        { "id": "s2", "label": "IDoc interface used daily, owner known, documentation partly outdated" },
+        { "id": "s3", "label": "File-based interface via local server path, no owner, business-critical" },
+        { "id": "s4", "label": "Direct database access from external system to ECC tables" },
+        { "id": "s5", "label": "Middleware-managed interface with logging and retry mechanism" },
+        { "id": "s6", "label": "Manual Excel upload used for monthly postings" },
+        { "id": "s7", "label": "Interface to MES with no clear fallback process" },
+        { "id": "s8", "label": "Standard BAPI-based integration with monitoring" }
+      ],
+      "targets": [
+        { "id": "r1", "label": "Low Risk" },
+        { "id": "r2", "label": "Medium Risk" },
+        { "id": "r3", "label": "High Risk" }
+      ],
+      "correctMatches": {
+        "s1": "r1",
+        "s2": "r2",
+        "s3": "r3",
+        "s4": "r3",
+        "s5": "r1",
+        "s6": "r2",
+        "s7": "r3",
+        "s8": "r1"
+      }
     }
   },
   {
-    "id": "it-quiz",
+    "id": "it-decision-gate",
     "roleId": "it",
     "type": "quiz",
-    "title": "What is clean core?",
-    "subtitle": "And why does it save money later?",
-    "points": 100,
+    "title": "Clean Core Decision Gate",
+    "subtitle": "Decide the best cloud-readiness action in realistic IT situations.",
+    "points": 40,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "What does 'clean core' protect you from?",
+          "prompt": "A custom approval workflow exists, but S/4HANA Cloud offers a standard flexible workflow. What should you do first?",
           "options": [
-            { "id": "a", "label": "Custom code that blocks future updates", "correct": true },
-            { "id": "b", "label": "Having any custom code at all", "correct": false }
-          ],
-          "explanation": "Keeping the core clean (extensions, not modifications) is what keeps automatic updates frictionless."
+            { "id": "a", "label": "Move the custom workflow unchanged", "correct": false },
+            { "id": "b", "label": "Compare business requirements with standard workflow and standardize where possible", "correct": true },
+            { "id": "c", "label": "Delete the workflow immediately", "correct": false },
+            { "id": "d", "label": "Ignore it until after go-live", "correct": false }
+          ]
+        },
+        {
+          "id": "q2",
+          "prompt": "A business-critical Z-report is used daily, but no owner is defined. What is the best next step?",
+          "options": [
+            { "id": "a", "label": "Keep it without documentation", "correct": false },
+            { "id": "b", "label": "Retire it", "correct": false },
+            { "id": "c", "label": "Assign owner, check usage, and evaluate standard/cloud alternative", "correct": true },
+            { "id": "d", "label": "Rebuild it immediately without analysis", "correct": false }
+          ]
+        },
+        {
+          "id": "q3",
+          "prompt": "An external system reads directly from ECC database tables. What is the main issue for a cloud move?",
+          "options": [
+            { "id": "a", "label": "It is always faster", "correct": false },
+            { "id": "b", "label": "Direct database access may not fit a cloud architecture and creates dependency risk", "correct": true },
+            { "id": "c", "label": "It improves clean core", "correct": false },
+            { "id": "d", "label": "It has no relevance", "correct": false }
+          ]
+        },
+        {
+          "id": "q4",
+          "prompt": "Which extension approach is most aligned with a clean-core strategy?",
+          "options": [
+            { "id": "a", "label": "Modify SAP standard directly", "correct": false },
+            { "id": "b", "label": "Use side-by-side extensions / released APIs where possible", "correct": true },
+            { "id": "c", "label": "Copy old ECC code unchanged", "correct": false },
+            { "id": "d", "label": "Avoid documentation", "correct": false }
+          ]
+        },
+        {
+          "id": "q5",
+          "prompt": "Which action improves readiness before moving from on-premise to cloud?",
+          "options": [
+            { "id": "a", "label": "Identify custom code usage, interface ownership, data volume, and critical dependencies", "correct": true },
+            { "id": "b", "label": "Start only with UI training", "correct": false },
+            { "id": "c", "label": "Freeze all business processes without analysis", "correct": false },
+            { "id": "d", "label": "Wait until go-live weekend", "correct": false }
+          ]
         }
       ]
     }
   },
   {
-    "id": "it-myth",
+    "id": "it-ops-check",
     "roleId": "it",
-    "type": "swipe",
-    "title": "Myth-busting",
-    "subtitle": "Custom code = update nightmare?",
-    "points": 100,
+    "type": "multiselect",
+    "title": "Cloud Operations Readiness Check",
+    "subtitle": "Select all items that are essential before moving from an on-premise ECC landscape toward S/4HANA Cloud.",
+    "points": 40,
     "payload": {
-      "prompt": "True or False?",
-      "leftLabel": "False",
-      "rightLabel": "True",
-      "cards": [
-        { "id": "m1", "label": "You have to recreate all custom code from scratch." },
-        { "id": "m2", "label": "Clean core means absolutely zero customizations." }
-      ]
-    }
-  },
-  {
-    "id": "it-safer",
-    "roleId": "it",
-    "type": "swipe",
-    "title": "Cloud safety",
-    "subtitle": "What makes the cloud safer / lower-maintenance?",
-    "points": 100,
-    "payload": {
-      "prompt": "Does this make it safer?",
-      "leftLabel": "No",
-      "rightLabel": "Yes",
-      "cards": [
-        { "id": "s1", "label": "Automated regular patching." },
-        { "id": "s2", "label": "Managed disaster recovery." },
-        { "id": "s3", "label": "Using old customized code." }
+      "prompt": "Select the essential operational readiness items:",
+      "options": [
+        { "id": "o1", "label": "Defined interface monitoring and error handling", "correct": true },
+        { "id": "o2", "label": "Role and authorization review", "correct": true },
+        { "id": "o3", "label": "Test migration / sandbox validation", "correct": true },
+        { "id": "o4", "label": "Cutover and rollback concept", "correct": true },
+        { "id": "o5", "label": "Data volume and archiving assessment", "correct": true },
+        { "id": "o6", "label": "Security and access concept", "correct": true },
+        { "id": "o7", "label": "Business process testing with key users", "correct": true },
+        { "id": "o8", "label": "Integration fallback plan", "correct": true },
+        { "id": "w1", "label": "Keep all roles unchanged without review", "correct": false },
+        { "id": "w2", "label": "Only test technical login", "correct": false },
+        { "id": "w3", "label": "Ignore archived data volume", "correct": false },
+        { "id": "w4", "label": "Document interfaces after go-live", "correct": false },
+        { "id": "w5", "label": "Move all custom developments without usage check", "correct": false },
+        { "id": "w6", "label": "Let IT test alone without business users", "correct": false },
+        { "id": "w7", "label": "Skip rollback planning", "correct": false }
       ]
     }
   },
@@ -462,6 +581,120 @@
         { "id": "i1", "label": "Better communication between shifts." },
         { "id": "i2", "label": "Less manual paperwork." },
         { "id": "i3", "label": "Faster maintenance response." }
+      ]
+    }
+  },
+  {
+    "id": "hr-change-booster",
+    "roleId": "hr",
+    "type": "swipe",
+    "title": "Change Booster or Blocker?",
+    "subtitle": "Are these actions helping or hurting the cloud transition?",
+    "points": 40,
+    "payload": {
+      "prompt": "Booster or Blocker?",
+      "leftLabel": "Blocker",
+      "rightLabel": "Booster",
+      "cards": [
+        { "id": "c1", "label": "Key users are involved early.", "correctSide": "right" },
+        { "id": "c2", "label": "Employees hear about migration shortly before go-live.", "correctSide": "left" },
+        { "id": "c3", "label": "Training is role-specific and practical.", "correctSide": "right" },
+        { "id": "c4", "label": "Communication only uses technical SAP language.", "correctSide": "left" },
+        { "id": "c5", "label": "Teams can share concerns anonymously.", "correctSide": "right" }
+      ]
+    }
+  },
+  {
+    "id": "hr-training-match",
+    "roleId": "hr",
+    "type": "match",
+    "title": "Training Match",
+    "subtitle": "Match employee group to best training format.",
+    "points": 40,
+    "payload": {
+      "prompt": "Match Group to Training Format",
+      "items": [
+        { "id": "g1", "label": "Shopfloor workers" },
+        { "id": "g2", "label": "Key users" },
+        { "id": "g3", "label": "Managers" },
+        { "id": "g4", "label": "Finance users" },
+        { "id": "g5", "label": "IT users" }
+      ],
+      "targets": [
+        { "id": "t1", "label": "Short mobile learning nuggets" },
+        { "id": "t2", "label": "Hands-on process testing" },
+        { "id": "t3", "label": "Decision and change briefing" },
+        { "id": "t4", "label": "Reporting and closing scenario training" },
+        { "id": "t5", "label": "Technical migration and support training" }
+      ],
+      "correctMatches": {
+        "g1": "t1",
+        "g2": "t2",
+        "g3": "t3",
+        "g4": "t4",
+        "g5": "t5"
+      }
+    }
+  },
+  {
+    "id": "hr-resistance-ranking",
+    "roleId": "hr",
+    "type": "sort",
+    "title": "Resistance Ranking",
+    "subtitle": "Rank the causes of resistance from most serious to least serious.",
+    "points": 40,
+    "payload": {
+      "prompt": "Rank from most serious (Top) to least serious (Bottom)",
+      "items": [
+        { "id": "r1", "label": "Employees do not understand why the change is happening" },
+        { "id": "r2", "label": "Key users are involved too late" },
+        { "id": "r3", "label": "Training is too generic" },
+        { "id": "r4", "label": "The project has a new name" }
+      ],
+      "correctOrder": ["r1", "r2", "r3", "r4"]
+    }
+  },
+  {
+    "id": "hr-starter-pack",
+    "roleId": "hr",
+    "type": "multiselect",
+    "title": "Build the Change Starter Pack",
+    "subtitle": "Choose the 4 best change management actions.",
+    "points": 40,
+    "payload": {
+      "prompt": "Select the correct actions:",
+      "maxSelect": 4,
+      "options": [
+        { "id": "o1", "label": "Early key-user involvement", "correct": true },
+        { "id": "o2", "label": "Role-specific training", "correct": true },
+        { "id": "o3", "label": "Clear communication of business reason", "correct": true },
+        { "id": "o4", "label": "Feedback channel for concerns", "correct": true },
+        { "id": "o5", "label": "Communicate only after go-live", "correct": false },
+        { "id": "o6", "label": "One long PDF for everyone", "correct": false },
+        { "id": "o7", "label": "Let IT handle all communication", "correct": false },
+        { "id": "o8", "label": "Ignore resistance", "correct": false }
+      ]
+    }
+  },
+  {
+    "id": "hr-communication-check",
+    "roleId": "hr",
+    "type": "quiz",
+    "title": "Communication Check",
+    "subtitle": "Pick the best message to employees.",
+    "points": 40,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "Which message is best?",
+          "options": [
+            { "id": "a", "label": "\"SAP Cloud is coming. Please adapt.\"", "correct": false },
+            { "id": "b", "label": "\"The system will change, but we will show what it means for your daily work and involve key users early.\"", "correct": true },
+            { "id": "c", "label": "\"IT will explain everything later.\"", "correct": false },
+            { "id": "d", "label": "\"Nothing will change for anyone.\"", "correct": false }
+          ]
+        }
       ]
     }
   }

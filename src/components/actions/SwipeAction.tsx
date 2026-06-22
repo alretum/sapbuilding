@@ -28,6 +28,21 @@ export function SwipeAction({ action, onComplete }: ActionProps) {
     else if (info.offset.x < -80) decide("left");
   }
 
+  function finish() {
+    let score = action.points;
+    const hasCorrectSides = payload.cards.some(c => c.correctSide);
+    if (hasCorrectSides) {
+      const correctPointsPerCard = Math.floor(action.points / payload.cards.length);
+      score = 0;
+      payload.cards.forEach(c => {
+        if (c.correctSide && choices[c.id] === c.correctSide) {
+          score += correctPointsPerCard;
+        }
+      });
+    }
+    onComplete({ actionId: action.id, score, payload: { choices } });
+  }
+
   if (done) {
     return (
       <div className="space-y-4 text-center">
@@ -35,7 +50,7 @@ export function SwipeAction({ action, onComplete }: ActionProps) {
         <p className="font-semibold">All sorted!</p>
         <Button
           className="w-full"
-          onClick={() => onComplete({ actionId: action.id, score: action.points, payload: { choices } })}
+          onClick={finish}
         >
           Collect {action.points} points →
         </Button>
