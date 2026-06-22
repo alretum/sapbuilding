@@ -11,7 +11,8 @@ export async function DELETE(req: Request, { params }: { params: { code: string 
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const session = await prisma.session.findUnique({ where: { code: params.code.toUpperCase() } });
+  const { code } = await params; // Promise on Next 15, plain object on Next 14
+  const session = await prisma.session.findUnique({ where: { code: code.toUpperCase() } });
   if (!session) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   const body = (await req.json().catch(() => ({}))) as { confirm?: string };
