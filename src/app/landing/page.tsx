@@ -233,7 +233,7 @@ export default function DecisionMakerPage() {
                     <span className="font-display text-3xl font-bold text-brand">66%</span>
                   </div>
                 </div>
-                <p className="text-xs text-ink/45">Company readiness (illustrative)</p>
+                <p className="text-xs text-ink/45">Company preparation (illustrative)</p>
               </div>
               <div className="space-y-2">
                 {SAMPLE_DEPTS.map((d) => (
@@ -251,6 +251,20 @@ export default function DecisionMakerPage() {
             </div>
           </Reveal>
         </div>
+      </Section>
+
+      {/* Honesty posture */}
+      <Section className="bg-white/40">
+        <Reveal className="mx-auto max-w-3xl space-y-3 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand">Our promise</p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">We won&apos;t pretend the move is trivial.</h2>
+          <p className="text-ink/65">
+            Migration is real work, and the cloud genuinely limits some customization — we&apos;ll tell you that
+            honestly. This isn&apos;t a sales funnel dressed as a game: no fabricated ROI numbers, no &ldquo;you&apos;re
+            100% ready&rdquo; theatre. If now isn&apos;t your moment, we&apos;ll say so. An honest read is the whole
+            point.
+          </p>
+        </Reveal>
       </Section>
 
       {/* CTA */}

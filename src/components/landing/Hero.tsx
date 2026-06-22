@@ -29,7 +29,7 @@ export function Hero() {
           </h1>
           <p className="mx-auto max-w-md text-lg text-ink/65 md:mx-0">
             A playful, all-departments challenge that turns the move to SAP S/4HANA Cloud from scary to fun. Quizzes,
-            swipes, confetti — and one readiness score your whole company builds together.
+            swipes, confetti — and one preparation score your whole company builds together.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row md:justify-start">
             <Button onClick={() => scrollTo("try")}>Try it — no login ↓</Button>
@@ -48,7 +48,7 @@ export function Hero() {
             className="card grid h-40 w-40 place-items-center rounded-full p-4 text-center"
           >
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-ink/45">Readiness</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink/45">Preparation</p>
               <AnimatedNumber value={87} suffix="%" duration={1400} className="font-display text-4xl font-bold text-brand" />
             </div>
           </motion.div>

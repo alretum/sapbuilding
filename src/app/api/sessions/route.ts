@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       status: "active",
       startedAt: new Date(),
       strictGate: Boolean(body.strictGate),
-      leaderboardPublic: body.leaderboardPublic === undefined ? true : Boolean(body.leaderboardPublic),
+      leaderboardPublic: Boolean(body.leaderboardPublic), // opt-in (default false)
       regionCode,
       city,
       lat,

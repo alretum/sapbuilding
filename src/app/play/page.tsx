@@ -256,7 +256,7 @@ export default function PlayPage() {
               <p className="mt-1 font-display text-3xl font-extrabold text-brand">
                 +<AnimatedNumber value={reward} duration={900} />
               </p>
-              <p className="text-xs font-semibold text-ink/50">readiness points</p>
+              <p className="text-xs font-semibold text-ink/50">preparation points</p>
             </motion.div>
           </motion.div>
         )}

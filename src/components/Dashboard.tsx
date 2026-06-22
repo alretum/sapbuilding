@@ -73,11 +73,6 @@ export function Dashboard({
               {!d.participated && (
                 <p className="mt-2 text-xs font-semibold text-sun">Not started yet — pulling the score down 👀</p>
               )}
-              {d.roleId === "finance" && snapshot.financeROI !== null && (
-                <div className="mt-3 rounded-lg bg-green-50/50 p-2 text-xs font-medium text-green-800 ring-1 ring-inset ring-green-200">
-                  <span className="font-bold">Calculated Savings Potential:</span> ~€{snapshot.financeROI.toLocaleString()} / year
-                </div>
-              )}
             </motion.div>
           );
         })}
@@ -125,7 +120,7 @@ export function Dashboard({
 function ReadinessGauge({ value }: { value: number }) {
   return (
     <div className="card flex flex-col items-center gap-2 p-6 text-center">
-      <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Company Readiness</p>
+      <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Company Preparation</p>
       <div
         className="grid h-44 w-44 place-items-center rounded-full"
         style={{
@@ -136,7 +131,7 @@ function ReadinessGauge({ value }: { value: number }) {
           <AnimatedNumber value={value} suffix="%" className="font-display text-5xl font-bold text-brand" />
         </div>
       </div>
-      <p className="text-xs text-ink/45">Arithmetic mean of every department&apos;s readiness</p>
+      <p className="text-xs text-ink/45">How engaged and aligned your organization is</p>
     </div>
   );
 }

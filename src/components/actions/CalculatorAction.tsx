@@ -6,6 +6,9 @@ import type { ActionProps } from "./types";
 import { Button } from "../ui";
 import { motion } from "framer-motion";
 
+// SAP's official value/ROI guidance. TODO: swap for the exact SAP value-calculator URL.
+const SAP_VALUE_URL = "https://www.sap.com/products/erp/rise.html";
+
 export function CalculatorAction({ action, onComplete }: ActionProps) {
   const payload = action.payload as CalculatorPayload;
   const [values, setValues] = useState<Record<string, number>>({});
@@ -15,14 +18,11 @@ export function CalculatorAction({ action, onComplete }: ActionProps) {
     .filter((f) => !f.optional)
     .every((f) => values[f.id] !== undefined && !isNaN(values[f.id]));
 
+  // We deliberately do NOT compute a fabricated savings figure — the inputs are
+  // captured for the company's brief, and the real number comes from SAP's tool.
   function finish() {
     onComplete({ actionId: action.id, score: action.points, payload: { values } });
   }
-
-  // Dummy logic for ROI as requested by spec
-  const savings = ((values["users"] || 100) * 500) + ((values["maint"] || 10000) * 0.2);
-  const timeSaved = Math.max(1, Math.round((values["days"] || 5) * 0.3));
-  const maturity = (values["custom"] || 0) > 100 ? "High technical debt, ripe for clean core." : "Solid baseline.";
 
   return (
     <div className="space-y-5">
@@ -44,24 +44,26 @@ export function CalculatorAction({ action, onComplete }: ActionProps) {
             </div>
           ))}
           <Button onClick={() => setSubmitted(true)} disabled={!allRequiredAnswered} className="w-full">
-            Calculate
+            Continue
           </Button>
         </>
       ) : (
-        <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
-          <div className="rounded-2xl border border-brand/20 bg-brand/5 p-5 space-y-3">
-            <h3 className="font-bold text-brand">Estimated Potential</h3>
-            <p className="text-sm">
-              <span className="font-semibold text-ink">Annual Savings:</span> ~€{savings.toLocaleString()}
+        <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+          <div className="space-y-2 rounded-2xl border border-brand/20 bg-brand/5 p-5 text-sm">
+            <h3 className="font-bold text-brand">Noted — this goes into your brief</h3>
+            <p className="text-ink/70">
+              We won&apos;t invent a savings number. Companies your size typically cut their monthly close by several
+              days and lower IT maintenance after moving — but your real figure deserves SAP&apos;s actual modelling, not
+              a guess from us.
             </p>
-            <p className="text-sm">
-              <span className="font-semibold text-ink">Time Saved Per Close:</span> ~{timeSaved} days
-            </p>
-            {values["custom"] !== undefined && (
-              <p className="text-sm">
-                <span className="font-semibold text-ink">Maturity Hint:</span> {maturity}
-              </p>
-            )}
+            <a
+              href={SAP_VALUE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-semibold text-brand underline"
+            >
+              Get your real ROI from SAP&apos;s value tooling →
+            </a>
           </div>
           <Button onClick={finish} className="w-full">
             Collect {action.points} points →

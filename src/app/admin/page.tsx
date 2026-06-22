@@ -104,6 +104,7 @@ function CreateForm({
   const [name, setName] = useState("");
   const [roleIds, setRoleIds] = useState<string[] | null>(null); // null = all
   const [strictGate, setStrictGate] = useState(false);
+  const [leaderboardPublic, setLeaderboardPublic] = useState(false);
   const [regionCode, setRegionCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [busy, setBusy] = useState(false);
@@ -132,6 +133,7 @@ function CreateForm({
           name: name.trim(),
           involvedRoles: selected,
           strictGate,
+          leaderboardPublic,
           regionCode: regionCode || undefined,
           city: selectedCity?.name,
           lat: selectedCity?.lat,
@@ -143,6 +145,7 @@ function CreateForm({
       setCreated(data);
       setName("");
       setRoleIds(null);
+      setLeaderboardPublic(false);
       setRegionCode("");
       setCityName("");
       onCreated();
@@ -213,7 +216,7 @@ function CreateForm({
           </select>
         </label>
       </div>
-      <p className="-mt-2 text-xs text-ink/45">Location places this company on the national readiness map.</p>
+      <p className="-mt-2 text-xs text-ink/45">Location places this company on the national preparation map (if you opt in below).</p>
 
       <div className="space-y-1">
         <span className="text-sm font-medium">Participating departments</span>
@@ -238,7 +241,20 @@ function CreateForm({
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={strictGate} onChange={(e) => setStrictGate(e.target.checked)} />
-        Strict gate (readiness capped until every department has started)
+        Strict gate (preparation capped until every department has started)
+      </label>
+
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={leaderboardPublic}
+          onChange={(e) => setLeaderboardPublic(e.target.checked)}
+          className="mt-0.5"
+        />
+        <span>
+          List this company on the <b>public</b> national leaderboard &amp; map (optional). Off by default — internal
+          dashboards always work either way.
+        </span>
       </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

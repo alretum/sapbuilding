@@ -35,6 +35,7 @@ async function main() {
           status: "active",
           startedAt: new Date(),
           isDemo: true,
+          leaderboardPublic: true, // demo companies are public so the map/leaderboard stay populated
           regionCode: city.regionCode,
           city: city.name,
           lat: city.lat,

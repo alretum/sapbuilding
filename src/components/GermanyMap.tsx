@@ -66,7 +66,7 @@ export default function GermanyMap() {
     <div className="relative overflow-hidden rounded-xl2 border border-white/60 bg-gradient-to-b from-[#eef0fb] to-[#e7fbf4] shadow-card">
       {/* Legend */}
       <div className="absolute left-3 top-3 z-10 rounded-2xl bg-white/85 px-3 py-2 text-[11px] shadow-card backdrop-blur">
-        <p className="mb-1 font-bold text-ink/60">Readiness</p>
+        <p className="mb-1 font-bold text-ink/60">Preparation</p>
         <div
           className="h-2 w-32 rounded-full"
           style={{ background: "linear-gradient(90deg,#f4a7a7,#ffce6b,#5fe0c0,#6d5df6)" }}
@@ -181,7 +181,7 @@ export default function GermanyMap() {
 
       {!showCities && (
         <p className="absolute inset-x-0 bottom-2 z-0 text-center text-[11px] font-semibold text-ink/40">
-          Tap a region to zoom in and reveal city readiness
+          Tap a region to zoom in and reveal city preparation
         </p>
       )}
     </div>
@@ -198,7 +198,7 @@ function RegionCard({ data }: { data: RegionData }) {
         <>
           <div className="my-1 flex items-end gap-2">
             <AnimatedNumber value={data.avgReadiness} suffix="%" className="font-display text-3xl font-bold text-brand" />
-            <span className="pb-1 text-xs text-ink/50">avg readiness</span>
+            <span className="pb-1 text-xs text-ink/50">avg preparation</span>
           </div>
           <p className="text-xs text-ink/50">
             {data.companies} compan{data.companies === 1 ? "y" : "ies"} · {data.participants} participants
@@ -216,7 +216,7 @@ function CityCard({ data }: { data: CityData }) {
       <p className="text-xs text-ink/50">{regionName(data.regionCode)}</p>
       <div className="my-1 flex items-end gap-2">
         <AnimatedNumber value={data.avgReadiness} suffix="%" className="font-display text-3xl font-bold text-brand" />
-        <span className="pb-1 text-xs text-ink/50">avg readiness</span>
+        <span className="pb-1 text-xs text-ink/50">avg preparation</span>
       </div>
       <p className="text-xs text-ink/50">
         {data.companies} compan{data.companies === 1 ? "y" : "ies"} here
