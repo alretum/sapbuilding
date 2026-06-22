@@ -1,0 +1,41 @@
+# VPS deployment compose.
+# This host is shared with other apps and a system nginx owns :80/:443, so:
+#   - no Caddy here (avoid the 80/443 contention),
+#   - Postgres is NOT published to the host (web reaches it over the compose net),
+#   - web is published on a dedicated port (default 8090),
+#   - the project is namespaced via `name:` so it never collides with other stacks.
+# Put a domain in front later by adding an nginx vhost -> 127.0.0.1:${WEB_PORT}.
+name: sapbuilding
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-crc}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-crc}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crc} -d ${POSTGRES_DB:-crc}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crc}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-crc}
+      NODE_ENV: production
+      PORT: 3000
+      ADMIN_KEY: ${ADMIN_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8090}:3000"
+
+volumes:
+  db_data:
