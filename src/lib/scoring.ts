@@ -1,6 +1,10 @@
+import type { ActionCompletion, Player, Session } from "@prisma/client";
 import { prisma } from "./prisma";
 import { getContent, maxPointsForRole } from "./content";
+import type { Content } from "./content-schema";
 import { MAX_LEVEL, type DepartmentSnapshot, type PlayerScore, type SessionSnapshot } from "./snapshot-types";
+
+export type LoadedSession = Session & { players: Player[]; completions: ActionCompletion[] };
 
 // ---------------------------------------------------------------------------
 // Scoring — the coverage model.
@@ -17,14 +21,17 @@ import { MAX_LEVEL, type DepartmentSnapshot, type PlayerScore, type SessionSnaps
 // ---------------------------------------------------------------------------
 
 export async function computeSessionSnapshot(sessionId: string): Promise<SessionSnapshot | null> {
-  const content = getContent();
-
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
     include: { players: true, completions: true },
   });
   if (!session) return null;
+  return buildSnapshot(session, getContent());
+}
 
+// Pure snapshot builder from an already-loaded session — so callers that fetch
+// many sessions at once (e.g. the company leaderboard) avoid N round-trips.
+export function buildSnapshot(session: LoadedSession, content: Content): SessionSnapshot {
   const involved = session.involvedRoles.length ? session.involvedRoles : content.roles.map((r) => r.id);
 
   const departments: DepartmentSnapshot[] = involved.map((roleId) => {

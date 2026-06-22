@@ -8,6 +8,7 @@ import { getContent } from "../lib/content";
 //   - clients submit completed actions; we persist + rebroadcast the new score
 
 const room = (sessionId: string) => `session:${sessionId}`;
+const COMPANIES_ROOM = "companies"; // cross-company leaderboard subscribers
 
 function clampScore(max: number, score?: number): number {
   if (typeof score !== "number" || Number.isNaN(score)) return max; // default: full points
@@ -21,6 +22,12 @@ export function registerSocketHandlers(io: Server): void {
       socket.join(room(sessionId));
       const snapshot = await computeSessionSnapshot(sessionId);
       if (snapshot) socket.emit("score:update", snapshot);
+    });
+
+    // The national/company leaderboard subscribes here; it refetches whenever any
+    // company's score changes (signalled by "companies:dirty").
+    socket.on("companies:subscribe", () => {
+      socket.join(COMPANIES_ROOM);
     });
 
     socket.on(
@@ -56,6 +63,7 @@ export function registerSocketHandlers(io: Server): void {
 
           const snapshot = await computeSessionSnapshot(sessionId);
           io.to(room(sessionId)).emit("score:update", snapshot);
+          io.to(COMPANIES_ROOM).emit("companies:dirty"); // a company's score moved
           ack?.({ ok: true, awarded, snapshot });
         } catch (err) {
           ack?.({ ok: false, error: (err as Error).message });
