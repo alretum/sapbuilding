@@ -9,8 +9,6 @@ import { CalculatorAction } from "./CalculatorAction";
 import { SortAction } from "./SortAction";
 import { InputAction } from "./InputAction";
 import { DashboardBoosterAction } from "./DashboardBoosterAction";
-import { MatchAction } from "./MatchAction";
-import { MultiselectAction } from "./MultiselectAction";
 
 // The registry: action type -> component. This is the extension point.
 // New type? Add a component above and one line here.
@@ -22,8 +20,6 @@ const REGISTRY: Record<ActionType, React.ComponentType<ActionProps>> = {
   sort: SortAction,
   input: InputAction,
   "dashboard-booster": DashboardBoosterAction,
-  match: MatchAction,
-  multiselect: MultiselectAction,
 };
 
 export function ActionRenderer({ action, onComplete }: ActionProps) {

@@ -96,9 +96,9 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     companyReadiness = meanReadiness * participatedShare;
   }
 
-  const boosterSent = session.completions.some(c => c.actionId === "captain-booster");
+  const boosterSent = session.completions.some(c => c.actionId === "captain-dashboard");
 
-  const roiComps = session.completions.filter(c => c.actionId === "finance-roi-builder" && c.payload);
+  const roiComps = session.completions.filter(c => c.actionId === "finance-roi" && c.payload);
   let financeROI: number | null = null;
   if (roiComps.length > 0) {
     let totalSavings = 0;
@@ -109,92 +109,6 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
        totalSavings += (users * 500) + (maint * 0.2);
     }
     financeROI = Math.round(totalSavings / roiComps.length);
-  }
-
-  const financeBadges: string[] = [];
-  const financeMissingBadges: string[] = [];
-
-  const checkBadge = (actionId: string, badgeName: string, requiresPerfect = true) => {
-    const comp = session.completions.find(c => c.actionId === actionId);
-    if (!comp) return; 
-    
-    const actionDef = content.actions.find(a => a.id === actionId);
-    if (actionDef) {
-       const isPerfect = comp.score >= actionDef.points; 
-       if (requiresPerfect) {
-         if (isPerfect) financeBadges.push(badgeName);
-         else financeMissingBadges.push(badgeName);
-       } else {
-         financeBadges.push(badgeName);
-       }
-    }
-  };
-
-  checkBadge("finance-report-rescue", "Report Rescuer");
-  checkBadge("finance-myth-fact", "Myth Breaker");
-  checkBadge("finance-first-closing", "Close Controller");
-  checkBadge("finance-pain-benefit", "Value Matcher");
-  checkBadge("finance-shield", "Compliance Guardian");
-
-  const roiComp = session.completions.find(c => c.actionId === "finance-roi-builder");
-  if (roiComp) financeBadges.push("Business Case Builder");
-
-  const captainBadges: string[] = [];
-  const checkCaptainBadge = (actionId: string, badgeName: string) => {
-    const comp = session.completions.find(c => c.actionId === actionId);
-    if (!comp) return; 
-    const actionDef = content.actions.find(a => a.id === actionId);
-    if (actionDef && comp.score >= actionDef.points) {
-       captainBadges.push(badgeName);
-    }
-  };
-
-  checkCaptainBadge("captain-vision", "Vision Setter");
-  checkCaptainBadge("captain-decision", "Decision Captain");
-  checkCaptainBadge("captain-risk", "Risk Prioritizer");
-  checkCaptainBadge("captain-benefit", "Benefit Builder");
-  checkCaptainBadge("captain-booster", "Team Booster");
-
-  const itBadges: string[] = [];
-  const checkItBadge = (actionId: string, badgeName: string) => {
-    const comp = session.completions.find(c => c.actionId === actionId);
-    if (!comp) return; 
-    const actionDef = content.actions.find(a => a.id === actionId);
-    if (actionDef && comp.score >= actionDef.points) {
-       itBadges.push(badgeName);
-    }
-  };
-
-  checkItBadge("it-reality-check", "Custom Code Scanner");
-  checkItBadge("it-cloud-fit", "Cloud Fit Architect");
-  checkItBadge("it-risk-radar", "Interface Radar Expert");
-  checkItBadge("it-decision-gate", "Clean-Core Decision Maker");
-  checkItBadge("it-ops-check", "Cloud Ops Guardian");
-
-  const hrBadges: string[] = [];
-  const checkHrBadge = (actionId: string, badgeName: string) => {
-    const comp = session.completions.find(c => c.actionId === actionId);
-    if (!comp) return; 
-    const actionDef = content.actions.find(a => a.id === actionId);
-    if (actionDef && comp.score >= actionDef.points) {
-       hrBadges.push(badgeName);
-    }
-  };
-
-  checkHrBadge("hr-change-booster", "Change Spotter");
-  checkHrBadge("hr-training-match", "Training Designer");
-  checkHrBadge("hr-resistance-ranking", "Resistance Reader");
-  checkHrBadge("hr-starter-pack", "Change Champion");
-  checkHrBadge("hr-communication-check", "Trust Builder");
-
-  let financeFeedback: string | null = null;
-  const financeRole = departments.find(d => d.roleId === "finance");
-  if (financeRole && financeRole.participated) {
-    if (financeBadges.includes("Compliance Guardian")) {
-      financeFeedback = "Finance understands the main cloud benefits and recognizes the most critical closing and compliance risks. Well done!";
-    } else if (financeMissingBadges.includes("Compliance Guardian")) {
-      financeFeedback = "Finance understands the main cloud benefits and recognizes the most critical closing and compliance risks. The biggest next step is to validate critical reports and test the first month-end closing before go-live.";
-    }
   }
 
   return {
@@ -210,11 +124,5 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     updatedAt: new Date().toISOString(),
     financeROI,
     boosterSent,
-    financeBadges,
-    financeMissingBadges,
-    financeFeedback,
-    captainBadges,
-    itBadges,
-    hrBadges,
   };
 }

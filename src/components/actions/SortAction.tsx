@@ -11,24 +11,7 @@ export function SortAction({ action, onComplete }: ActionProps) {
   const [items, setItems] = useState(payload.items);
 
   function finish() {
-    let score = action.points;
-    if (payload.correctOrder) {
-      let correctPositions = 0;
-      items.forEach((item, index) => {
-        if (payload.correctOrder![index] === item.id) {
-          correctPositions++;
-        }
-      });
-      const total = payload.items.length;
-      if (correctPositions === total) {
-        score = action.points; // exact, e.g. 40
-      } else if (correctPositions >= total - 2 && total > 2) {
-        score = Math.floor(action.points * 0.625); // mostly correct, e.g. 25
-      } else {
-        score = Math.floor(action.points * 0.25); // partly correct, e.g. 10
-      }
-    }
-    onComplete({ actionId: action.id, score, payload: { items } });
+    onComplete({ actionId: action.id, score: action.points, payload: { items } });
   }
 
   function moveUp(index: number) {

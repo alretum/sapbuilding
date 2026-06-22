@@ -38,12 +38,6 @@ export interface SessionSnapshot {
   updatedAt: string;
   financeROI: number | null;
   boosterSent: boolean;
-  financeBadges: string[];
-  financeMissingBadges: string[];
-  financeFeedback: string | null;
-  captainBadges: string[];
-  itBadges: string[];
-  hrBadges: string[];
 }
 
 export const MAX_LEVEL = 5;

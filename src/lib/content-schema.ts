@@ -36,7 +36,6 @@ export const quizPayloadSchema = z.object({
               // `correct` optional: knowledge questions mark right answers,
               // opinion/poll questions simply omit it.
               correct: z.boolean().optional(),
-              points: z.number().optional(),
             }),
           )
           .min(2),
@@ -50,7 +49,7 @@ export const swipePayloadSchema = z.object({
   prompt: z.string(),
   leftLabel: z.string(),
   rightLabel: z.string(),
-  cards: z.array(z.object({ id: z.string(), label: z.string(), hint: z.string().optional(), correctSide: z.enum(["left", "right"]).optional() })).min(1),
+  cards: z.array(z.object({ id: z.string(), label: z.string(), hint: z.string().optional() })).min(1),
 });
 
 export const chatbotPayloadSchema = z.object({
@@ -68,20 +67,8 @@ export const chatbotPayloadSchema = z.object({
 
 // ---- Action + Content ------------------------------------------------------
 
-export const matchPayloadSchema = z.object({
-  prompt: z.string(),
-  items: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
-  targets: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
-  correctMatches: z.record(z.string(), z.string()).optional(),
-});
+export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster"]);
 
-export const multiselectPayloadSchema = z.object({
-  prompt: z.string(),
-  options: z.array(z.object({ id: z.string(), label: z.string(), correct: z.boolean().optional() })).min(1),
-  maxSelect: z.number().optional(),
-});
-
-export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster", "match", "multiselect"]);
 export const calculatorPayloadSchema = z.object({
   fields: z.array(
     z.object({
@@ -97,7 +84,6 @@ export const calculatorPayloadSchema = z.object({
 export const sortPayloadSchema = z.object({
   prompt: z.string(),
   items: z.array(z.object({ id: z.string(), label: z.string() })).min(2),
-  correctOrder: z.array(z.string()).optional(),
 });
 
 export const inputPayloadSchema = z.object({
@@ -140,8 +126,6 @@ export type CalculatorPayload = z.infer<typeof calculatorPayloadSchema>;
 export type SortPayload = z.infer<typeof sortPayloadSchema>;
 export type InputPayload = z.infer<typeof inputPayloadSchema>;
 export type DashboardBoosterPayload = z.infer<typeof dashboardBoosterPayloadSchema>;
-export type MatchPayload = z.infer<typeof matchPayloadSchema>;
-export type MultiselectPayload = z.infer<typeof multiselectPayloadSchema>;
 export type Content = z.infer<typeof contentSchema>;
 
 // Map of action type -> its payload schema, used to validate payloads on load.
@@ -153,6 +137,4 @@ export const payloadSchemas = {
   sort: sortPayloadSchema,
   input: inputPayloadSchema,
   "dashboard-booster": dashboardBoosterPayloadSchema,
-  match: matchPayloadSchema,
-  multiselect: multiselectPayloadSchema,
 } as const;
