@@ -26,8 +26,8 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/sapbuilding
-            git fetch --all --prune
-            git reset --hard origin/main
+            git fetch origin main --prune
+            git checkout -B main origin/main
             docker compose -f docker-compose.deploy.yml up -d --build
             docker image prune -f
             echo "Deployed $(git rev-parse --short HEAD)"
