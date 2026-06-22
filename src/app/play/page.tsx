@@ -15,6 +15,7 @@ import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { LevelBadge } from "@/components/LevelBadge";
 import { DeptAvatar, UserAvatar } from "@/components/Avatar";
 import { AvatarEditor } from "@/components/AvatarEditor";
+import { BookEvoKitCTA } from "@/components/BookEvoKitCTA";
 import { ActionRenderer } from "@/components/actions/ActionRenderer";
 import type { ActionResult } from "@/components/actions/types";
 
@@ -198,6 +199,8 @@ export default function PlayPage() {
           );
         })}
       </div>
+
+      {doneCount === actions.length && actions.length > 0 && <BookEvoKitCTA code={player.code} />}
 
       <a href="/dashboard" className="btn-ghost w-full">
         🏆 Leaderboard & dashboard →

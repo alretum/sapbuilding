@@ -5,6 +5,7 @@ import { type SessionSnapshot } from "@/lib/snapshot-types";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { LevelBadge } from "./LevelBadge";
 import { DeptAvatar, UserAvatar } from "./Avatar";
+import { BookEvoKitCTA } from "./BookEvoKitCTA";
 import { ProgressBar } from "./ui";
 
 // The shared dashboard: company Readiness Score, every department side by side,
@@ -113,6 +114,8 @@ export function Dashboard({
           </div>
         )}
       </section>
+
+      <BookEvoKitCTA code={snapshot.code} />
     </div>
   );
 }

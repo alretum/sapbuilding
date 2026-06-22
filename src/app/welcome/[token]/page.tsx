@@ -12,6 +12,7 @@ import {
 } from "@/lib/profile";
 import { Button, Card, Screen } from "@/components/ui";
 import { PersonalizedRead } from "@/components/PersonalizedRead";
+import { BookEvoKitCTA } from "@/components/BookEvoKitCTA";
 
 type View = "loading" | "confirm" | "read" | "notfound";
 
@@ -19,6 +20,7 @@ export default function WelcomePage() {
   const token = String(useParams().token ?? "");
   const [view, setView] = useState<View>("loading");
   const [name, setName] = useState("your company");
+  const [code, setCode] = useState("");
   const [profile, setProfile] = useState<CompanyProfile>({});
   const [busy, setBusy] = useState(false);
 
@@ -28,6 +30,7 @@ export default function WelcomePage() {
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => {
         setName(d.name);
+        setCode(d.code);
         setProfile(d.profile ?? {});
         setView(d.confirmed ? "read" : "confirm");
       })
@@ -98,6 +101,7 @@ export default function WelcomePage() {
       {view === "read" && (
         <>
           <PersonalizedRead companyName={name} profile={profile} />
+          {code && <BookEvoKitCTA code={code} />}
           <button onClick={() => setView("confirm")} className="block w-full text-center text-sm text-brand underline">
             Adjust my details
           </button>
