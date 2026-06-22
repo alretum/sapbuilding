@@ -11,18 +11,20 @@ import { Card, Screen } from "@/components/ui";
 export default function DashboardPage() {
   const [sessionId, setSessionId] = useState<string | undefined>();
   const [myRole, setMyRole] = useState<string | undefined>();
+  const [myPlayerId, setMyPlayerId] = useState<string | undefined>();
 
   useEffect(() => {
+    const player = loadPlayer();
+    if (player) {
+      setMyRole(player.roleId);
+      setMyPlayerId(player.playerId);
+    }
     const fromQuery = new URLSearchParams(window.location.search).get("session");
     if (fromQuery) {
       setSessionId(fromQuery);
       return;
     }
-    const player = loadPlayer();
-    if (player) {
-      setSessionId(player.sessionId);
-      setMyRole(player.roleId);
-    }
+    if (player) setSessionId(player.sessionId);
   }, []);
 
   const snapshot = useSessionSnapshot(sessionId);
@@ -46,7 +48,7 @@ export default function DashboardPage() {
       ) : !snapshot ? (
         <Card className="text-center text-sm text-ink/50">Connecting to the live scores…</Card>
       ) : (
-        <Dashboard snapshot={snapshot} highlightRole={myRole} />
+        <Dashboard snapshot={snapshot} highlightRole={myRole} highlightPlayerId={myPlayerId} />
       )}
     </Screen>
   );

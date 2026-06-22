@@ -26,7 +26,9 @@ players' phones ── Socket.IO ──► server.ts ──► Postgres (session
 CEO dashboard  ─────────────────┘   live "score:update" broadcasts
 ```
 
-- **Scoring** (`src/lib/scoring.ts`): `companyReadiness = mean(departmentReadiness)`, where `departmentReadiness = earned / max`. Scores are always derived from `action_completions`, never stored counters.
+- **Scoring** (`src/lib/scoring.ts`): `companyReadiness = mean(departmentReadiness)`, where `departmentReadiness = average of each member's readiness` (a member's readiness = their points ÷ the department's max). So full readiness needs every member to finish everything. Scores are always derived from `action_completions`, never stored counters.
+- **Avatars**: every player gets a random DiceBear avatar on join (no onboarding step); tap your avatar to edit it. Stored as JSON on the player, rendered offline in 3D "clay" medallions.
+- **Leaderboard**: the live snapshot includes every employee ranked by points company-wide (shown on the dashboard).
 - **Action engine** (`src/components/actions/`): a registry maps `type → component`. Add content = edit JSON; add a new *kind* of action = one component + one registry line.
 - **Roles**: SAP sets up a challenge per company at **`/admin`** (gated by `ADMIN_KEY`) and hands out the join code. Employees only ever use the join flow.
 - **Login**: no credentials. Enter a session code → pick a department → pick your name (or add a new one).

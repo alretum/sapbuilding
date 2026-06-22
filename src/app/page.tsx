@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Content, Role } from "@/lib/content-schema";
 import { savePlayer, type StoredPlayer } from "@/lib/player";
 import { Button, Card, Screen } from "@/components/ui";
+import { DeptAvatar } from "@/components/Avatar";
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,8 +21,8 @@ export default function HomePage() {
   return (
     <Screen className="space-y-6">
       <header className="space-y-1 pt-4 text-center">
-        <p className="text-4xl">🚀</p>
-        <h1 className="text-2xl font-extrabold">Cloud Readiness Challenge</h1>
+        <p className="text-5xl">🚀</p>
+        <h1 className="font-display text-2xl font-bold">Cloud Readiness Challenge</h1>
         <p className="text-sm text-ink/60">
           Got a join code? Enter it to join your company&apos;s challenge.
         </p>
@@ -117,6 +118,7 @@ function JoinFlow({
         playerId: data.playerId,
         roleId: data.roleId,
         name: newName.trim(),
+        avatar: data.avatar,
       });
     } catch (e) {
       setError(friendlyError(e, "Could not join"));
@@ -160,10 +162,10 @@ function JoinFlow({
             <button
               key={r.id}
               onClick={() => pickRole(r)}
-              className="flex flex-col items-start gap-1 rounded-2xl border border-black/10 p-3 text-left hover:border-brand"
+              className="flex flex-col items-start gap-2 rounded-2xl border border-black/10 p-3 text-left transition hover:-translate-y-0.5 hover:border-brand hover:shadow-pop"
             >
-              <span className="text-2xl">{r.avatar}</span>
-              <span className="text-sm font-semibold leading-tight">{r.name}</span>
+              <DeptAvatar emoji={r.avatar} color={r.color} size={40} />
+              <span className="font-display text-sm font-semibold leading-tight">{r.name}</span>
               <span className="text-[11px] text-ink/50">{r.department}</span>
             </button>
           ))}
@@ -225,7 +227,7 @@ function StepHeader({ title, onBack }: { title: React.ReactNode; onBack: () => v
       <button onClick={onBack} className="text-ink/40 hover:text-ink" aria-label="Back">
         ←
       </button>
-      <h2 className="font-bold">{title}</h2>
+      <h2 className="font-display font-bold">{title}</h2>
     </div>
   );
 }
