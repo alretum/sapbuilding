@@ -67,7 +67,36 @@ export const chatbotPayloadSchema = z.object({
 
 // ---- Action + Content ------------------------------------------------------
 
-export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot"]);
+export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster"]);
+
+export const calculatorPayloadSchema = z.object({
+  fields: z.array(
+    z.object({
+      id: z.string(),
+      label: z.string(),
+      optional: z.boolean().optional(),
+      min: z.number().optional(),
+      max: z.number().optional(),
+    })
+  )
+});
+
+export const sortPayloadSchema = z.object({
+  prompt: z.string(),
+  items: z.array(z.object({ id: z.string(), label: z.string() })).min(2),
+});
+
+export const inputPayloadSchema = z.object({
+  prompt: z.string(),
+  inputType: z.enum(["number", "slider"]),
+  min: z.number().optional(),
+  max: z.number().optional(),
+  unit: z.string().optional(),
+});
+
+export const dashboardBoosterPayloadSchema = z.object({
+  prompt: z.string(),
+});
 
 export const actionSchema = z.object({
   id: z.string(),
@@ -93,6 +122,10 @@ export type ActionConfig = z.infer<typeof actionSchema>;
 export type QuizPayload = z.infer<typeof quizPayloadSchema>;
 export type SwipePayload = z.infer<typeof swipePayloadSchema>;
 export type ChatbotPayload = z.infer<typeof chatbotPayloadSchema>;
+export type CalculatorPayload = z.infer<typeof calculatorPayloadSchema>;
+export type SortPayload = z.infer<typeof sortPayloadSchema>;
+export type InputPayload = z.infer<typeof inputPayloadSchema>;
+export type DashboardBoosterPayload = z.infer<typeof dashboardBoosterPayloadSchema>;
 export type Content = z.infer<typeof contentSchema>;
 
 // Map of action type -> its payload schema, used to validate payloads on load.
@@ -100,4 +133,8 @@ export const payloadSchemas = {
   quiz: quizPayloadSchema,
   swipe: swipePayloadSchema,
   chatbot: chatbotPayloadSchema,
+  calculator: calculatorPayloadSchema,
+  sort: sortPayloadSchema,
+  input: inputPayloadSchema,
+  "dashboard-booster": dashboardBoosterPayloadSchema,
 } as const;

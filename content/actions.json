@@ -20,6 +20,42 @@
     }
   },
   {
+    "id": "captain-commit",
+    "roleId": "captain",
+    "type": "chatbot",
+    "title": "Make your commitment",
+    "subtitle": "Unlock a commitment statement everyone can see.",
+    "points": 150,
+    "payload": {
+      "start": "intro",
+      "nodes": {
+        "intro": {
+          "bot": "As Captain, your visible commitment sets the tone. Ready to lock one in?",
+          "options": [
+            { "label": "Let's do it", "next": "ambition" },
+            { "label": "What's at stake?", "next": "why" }
+          ]
+        },
+        "why": {
+          "bot": "When the CEO commits out loud, departments stop waiting and start moving. That's the whole game. Shall we?",
+          "options": [{ "label": "Okay, I'm in", "next": "ambition" }]
+        },
+        "ambition": {
+          "bot": "Pick the tone of your commitment:",
+          "options": [
+            { "label": "\"We move together, no one left behind.\"", "next": "done" },
+            { "label": "\"Curiosity first — we explore, then decide.\"", "next": "done" },
+            { "label": "\"Future-proof by 2027.\"", "next": "done" }
+          ]
+        },
+        "done": {
+          "bot": "Locked in and shared with the crew. The whole company can see the Captain is on board. 🚀",
+          "end": true
+        }
+      }
+    }
+  },
+  {
     "id": "captain-benefits",
     "roleId": "captain",
     "type": "quiz",
@@ -60,48 +96,74 @@
     }
   },
   {
-    "id": "captain-commit",
+    "id": "captain-dashboard",
     "roleId": "captain",
-    "type": "chatbot",
-    "title": "Make your commitment",
-    "subtitle": "Unlock a commitment statement everyone can see.",
-    "points": 80,
+    "type": "dashboard-booster",
+    "title": "Dashboard Check",
+    "subtitle": "Review all department statuses once + send a 'booster' to a lagging department.",
+    "points": 200,
     "payload": {
-      "start": "intro",
-      "nodes": {
-        "intro": {
-          "bot": "As Captain, your visible commitment sets the tone. Ready to lock one in?",
-          "options": [
-            { "label": "Let's do it", "next": "ambition" },
-            { "label": "What's at stake?", "next": "why" }
-          ]
-        },
-        "why": {
-          "bot": "When the CEO commits out loud, departments stop waiting and start moving. That's the whole game. Shall we?",
-          "options": [{ "label": "Okay, I'm in", "next": "ambition" }]
-        },
-        "ambition": {
-          "bot": "Pick the tone of your commitment:",
-          "options": [
-            { "label": "\"We move together, no one left behind.\"", "next": "done" },
-            { "label": "\"Curiosity first — we explore, then decide.\"", "next": "done" },
-            { "label": "\"Future-proof by 2027.\"", "next": "done" }
-          ]
-        },
-        "done": {
-          "bot": "Locked in and shared with the crew. The whole company can see the Captain is on board. 🚀",
-          "end": true
-        }
-      }
+      "prompt": "Click below to review statuses and boost a department."
     }
   },
 
+  {
+    "id": "finance-roi",
+    "roleId": "finance",
+    "type": "calculator",
+    "title": "ROI Calculator",
+    "subtitle": "Rough inputs → savings potential.",
+    "points": 200,
+    "payload": {
+      "fields": [
+        { "id": "users", "label": "Number of SAP users", "min": 1 },
+        { "id": "maint", "label": "Estimated annual ECC IT maintenance cost", "min": 0 },
+        { "id": "days", "label": "Days per monthly close", "min": 1 },
+        { "id": "custom", "label": "Number of custom developments", "optional": true, "min": 0 }
+      ]
+    }
+  },
+  {
+    "id": "finance-slow-reports",
+    "roleId": "finance",
+    "type": "swipe",
+    "title": "Tag the slow reports",
+    "subtitle": "Swipe the reports that take too long today.",
+    "points": 100,
+    "payload": {
+      "prompt": "How does this one feel today?",
+      "leftLabel": "Fine",
+      "rightLabel": "Too slow",
+      "cards": [
+        { "id": "r1", "label": "Month-end close" },
+        { "id": "r2", "label": "Cash-flow forecast" },
+        { "id": "r3", "label": "Profitability by product" },
+        { "id": "r4", "label": "Intercompany reconciliation" },
+        { "id": "r5", "label": "Ad-hoc 'can you pull this?' requests" }
+      ]
+    }
+  },
+  {
+    "id": "finance-close-check",
+    "roleId": "finance",
+    "type": "input",
+    "title": "Close check",
+    "subtitle": "How many days does your monthly close take?",
+    "points": 100,
+    "payload": {
+      "prompt": "Enter days for your monthly close:",
+      "inputType": "number",
+      "min": 1,
+      "max": 30,
+      "unit": "days"
+    }
+  },
   {
     "id": "finance-realtime",
     "roleId": "finance",
     "type": "quiz",
     "title": "What changes with real-time reporting?",
-    "subtitle": "Two quick ones for the numbers people.",
+    "subtitle": "What does real-time reporting mean — and what's in it for me?",
     "points": 120,
     "payload": {
       "questions": [
@@ -127,58 +189,70 @@
     }
   },
   {
-    "id": "finance-slow-reports",
+    "id": "finance-guess",
     "roleId": "finance",
-    "type": "swipe",
-    "title": "Tag the slow reports",
-    "subtitle": "Swipe the reports that take too long today. (A tiny, real pain-point check.)",
-    "points": 100,
-    "payload": {
-      "prompt": "How does this one feel today?",
-      "leftLabel": "Fine",
-      "rightLabel": "Too slow",
-      "cards": [
-        { "id": "r1", "label": "Month-end close" },
-        { "id": "r2", "label": "Cash-flow forecast" },
-        { "id": "r3", "label": "Profitability by product" },
-        { "id": "r4", "label": "Intercompany reconciliation" },
-        { "id": "r5", "label": "Ad-hoc 'can you pull this?' requests" }
-      ]
-    }
-  },
-
-  {
-    "id": "code-usage",
-    "roleId": "code",
     "type": "quiz",
-    "title": "Guess the custom-code truth",
-    "subtitle": "No wrong answers — just a gut check.",
-    "points": 100,
+    "title": "Guessing game",
+    "subtitle": "How many days does a real-time close save on average?",
+    "points": 80,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "Of all your custom developments, how many do you reckon are actually still used?",
+          "prompt": "How many days does a real-time close save on average?",
           "options": [
-            { "id": "a", "label": "Most of them" },
-            { "id": "b", "label": "About half" },
-            { "id": "c", "label": "Maybe a third" },
-            { "id": "d", "label": "Honestly? Nobody knows" }
+            { "id": "a", "label": "1-2 days", "correct": true },
+            { "id": "b", "label": "0 days", "correct": false },
+            { "id": "c", "label": "5 days", "correct": false }
           ],
-          "explanation": "Industry checks routinely find 40–60% of custom code is unused. Migration is the perfect moment to drop the dead weight."
+          "explanation": "Most companies save 1-2 days per month, which adds up to roughly a month saved per year!"
         }
       ]
     }
   },
   {
-    "id": "code-cleanup",
-    "roleId": "code",
+    "id": "finance-myth",
+    "roleId": "finance",
     "type": "swipe",
-    "title": "Keep or retire?",
-    "subtitle": "A quick clean-up pass on some custom objects.",
+    "title": "Myth or true?",
+    "subtitle": "Swipe cards on finance cloud topics.",
     "points": 100,
     "payload": {
-      "prompt": "This custom object — bring it along or leave it behind?",
+      "prompt": "Myth or true?",
+      "leftLabel": "Myth",
+      "rightLabel": "True",
+      "cards": [
+        { "id": "m1", "label": "Cloud ERP is less secure than on-premise." },
+        { "id": "m2", "label": "You can still run custom reports." },
+        { "id": "m3", "label": "Upgrades happen without downtime." }
+      ]
+    }
+  },
+
+  {
+    "id": "it-custom-code",
+    "roleId": "it",
+    "type": "input",
+    "title": "Custom code estimate",
+    "subtitle": "How many custom developments do you have — and how many do you actually use?",
+    "points": 150,
+    "payload": {
+      "prompt": "Percentage of custom developments actually used:",
+      "inputType": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    }
+  },
+  {
+    "id": "it-cleanup",
+    "roleId": "it",
+    "type": "swipe",
+    "title": "Clean core clean-up game",
+    "subtitle": "Sort Z-code examples.",
+    "points": 150,
+    "payload": {
+      "prompt": "Keep or Retire?",
       "leftLabel": "Retire",
       "rightLabel": "Keep",
       "cards": [
@@ -190,80 +264,104 @@
       ]
     }
   },
-
   {
-    "id": "data-temp",
-    "roleId": "data",
-    "type": "swipe",
-    "title": "Hot, warm or cold?",
-    "subtitle": "Sort what should come along live — and what can be archived.",
-    "points": 100,
+    "id": "it-data",
+    "roleId": "it",
+    "type": "sort",
+    "title": "Data sorting: Hot, warm, cold?",
+    "subtitle": "Sort data ranges from Hottest (Top) to Coldest (Bottom).",
+    "points": 150,
     "payload": {
-      "prompt": "How alive is this data?",
-      "leftLabel": "Cold (archive)",
-      "rightLabel": "Hot (keep live)",
-      "cards": [
-        { "id": "d1", "label": "Open customer orders" },
-        { "id": "d2", "label": "Invoices from 2011" },
-        { "id": "d3", "label": "Current stock levels" },
-        { "id": "d4", "label": "Employees who left a decade ago" },
-        { "id": "d5", "label": "Active supplier contracts" }
+      "prompt": "Sort from Hottest (Top) to Coldest (Bottom)",
+      "items": [
+        { "id": "d1", "label": "Current stock levels" },
+        { "id": "d2", "label": "Open customer orders" },
+        { "id": "d3", "label": "Active supplier contracts" },
+        { "id": "d4", "label": "Invoices from 2011" },
+        { "id": "d5", "label": "Employees who left a decade ago" }
       ]
     }
   },
   {
-    "id": "data-quality",
-    "roleId": "data",
+    "id": "it-profile",
+    "roleId": "it",
+    "type": "calculator",
+    "title": "System profile",
+    "subtitle": "Enter a few key figures to set up your character.",
+    "points": 150,
+    "payload": {
+      "fields": [
+        { "id": "version", "label": "Current ERP Version (e.g. 6.0)", "optional": true },
+        { "id": "volume", "label": "Approximate data volume (GB)", "min": 0 }
+      ]
+    }
+  },
+  {
+    "id": "it-quiz",
+    "roleId": "it",
     "type": "quiz",
-    "title": "Why data quality wins",
-    "subtitle": "One that every Data-Guardian knows in their bones.",
+    "title": "What is clean core?",
+    "subtitle": "And why does it save money later?",
     "points": 100,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "What's the golden rule of a migration?",
+          "prompt": "What does 'clean core' protect you from?",
           "options": [
-            { "id": "a", "label": "Bring everything, sort it later", "correct": false },
-            { "id": "b", "label": "Clean first, migrate clean", "correct": true }
+            { "id": "a", "label": "Custom code that blocks future updates", "correct": true },
+            { "id": "b", "label": "Having any custom code at all", "correct": false }
           ],
-          "explanation": "Migrating mess just gives you faster mess. A clean-up pass first pays for itself many times over."
+          "explanation": "Keeping the core clean (extensions, not modifications) is what keeps automatic updates frictionless."
         }
+      ]
+    }
+  },
+  {
+    "id": "it-myth",
+    "roleId": "it",
+    "type": "swipe",
+    "title": "Myth-busting",
+    "subtitle": "Custom code = update nightmare?",
+    "points": 100,
+    "payload": {
+      "prompt": "True or False?",
+      "leftLabel": "False",
+      "rightLabel": "True",
+      "cards": [
+        { "id": "m1", "label": "You have to recreate all custom code from scratch." },
+        { "id": "m2", "label": "Clean core means absolutely zero customizations." }
+      ]
+    }
+  },
+  {
+    "id": "it-safer",
+    "roleId": "it",
+    "type": "swipe",
+    "title": "Cloud safety",
+    "subtitle": "What makes the cloud safer / lower-maintenance?",
+    "points": 100,
+    "payload": {
+      "prompt": "Does this make it safer?",
+      "leftLabel": "No",
+      "rightLabel": "Yes",
+      "cards": [
+        { "id": "s1", "label": "Automated regular patching." },
+        { "id": "s2", "label": "Managed disaster recovery." },
+        { "id": "s3", "label": "Using old customized code." }
       ]
     }
   },
 
   {
-    "id": "flow-annoy",
-    "roleId": "flow",
-    "type": "quiz",
-    "title": "Which step annoys you most?",
-    "subtitle": "Low-barrier process check — pick your nemesis.",
-    "points": 100,
-    "payload": {
-      "questions": [
-        {
-          "id": "q1",
-          "prompt": "Which process step costs you the most patience today?",
-          "options": [
-            { "id": "a", "label": "Manual approvals that sit in inboxes" },
-            { "id": "b", "label": "Re-typing data between systems" },
-            { "id": "c", "label": "Chasing status updates" },
-            { "id": "d", "label": "Waiting on overnight jobs" }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "id": "flow-bottleneck",
-    "roleId": "flow",
+    "id": "prod-bottleneck",
+    "roleId": "production",
     "type": "swipe",
-    "title": "Smooth or bottleneck?",
-    "subtitle": "Swipe each step the way it really feels on the floor.",
+    "title": "Bottleneck tagging",
+    "subtitle": "From the material flow, tag the step that hiccups/annoys daily.",
     "points": 100,
     "payload": {
-      "prompt": "On a normal day, this step is...",
+      "prompt": "Smooth or Bottleneck?",
       "leftLabel": "Smooth",
       "rightLabel": "Bottleneck",
       "cards": [
@@ -275,71 +373,95 @@
       ]
     }
   },
-
   {
-    "id": "people-mood",
-    "roleId": "people",
-    "type": "chatbot",
-    "title": "How open is your team?",
-    "subtitle": "A short, friendly mood check.",
+    "id": "prod-downtime",
+    "roleId": "production",
+    "type": "sort",
+    "title": "Downtime check",
+    "subtitle": "Which process tolerates standstill the least? Sort from Least Tolerant (Top) to Most Tolerant (Bottom).",
     "points": 100,
     "payload": {
-      "start": "intro",
-      "nodes": {
-        "intro": {
-          "bot": "Quick vibe check — when people hear 'new system coming', the room mostly feels...?",
-          "options": [
-            { "label": "Curious & up for it", "next": "curious" },
-            { "label": "A bit nervous", "next": "nervous" },
-            { "label": "Tired of change", "next": "tired" }
-          ]
-        },
-        "curious": {
-          "bot": "Love that. Curiosity is rocket fuel. What would help them most?",
-          "options": [
-            { "label": "Early hands-on previews", "next": "done" },
-            { "label": "Clear 'what's in it for me'", "next": "done" }
-          ]
-        },
-        "nervous": {
-          "bot": "Totally normal. Nervous usually means 'I don't know what changes for me yet'. What would calm it?",
-          "options": [
-            { "label": "Honest, regular updates", "next": "done" },
-            { "label": "Training before go-live", "next": "done" }
-          ]
-        },
-        "tired": {
-          "bot": "Heard. Change fatigue is real. The trick is making this one feel different — lighter, with quick wins.",
-          "options": [
-            { "label": "Start with quick wins", "next": "done" },
-            { "label": "Involve them in decisions", "next": "done" }
-          ]
-        },
-        "done": {
-          "bot": "Logged. You just turned a feeling into a signal the whole team can act on. 💛",
-          "end": true
-        }
-      }
+      "prompt": "Sort from Least Tolerant to Standstill (Top) to Most (Bottom)",
+      "items": [
+        { "id": "p1", "label": "Assembly Line" },
+        { "id": "p2", "label": "Packaging" },
+        { "id": "p3", "label": "Quality Control" },
+        { "id": "p4", "label": "Warehouse Picking" }
+      ]
     }
   },
   {
-    "id": "people-quiz",
-    "roleId": "people",
+    "id": "prod-realtime",
+    "roleId": "production",
+    "type": "swipe",
+    "title": "Real-time potential",
+    "subtitle": "Where would you most urgently need live data?",
+    "points": 100,
+    "payload": {
+      "prompt": "Need Live Data Here?",
+      "leftLabel": "Not Urgent",
+      "rightLabel": "Urgent",
+      "cards": [
+        { "id": "l1", "label": "Machine Status" },
+        { "id": "l2", "label": "Material Shortages" },
+        { "id": "l3", "label": "Shift Schedules" }
+      ]
+    }
+  },
+  {
+    "id": "prod-quiz",
+    "roleId": "production",
     "type": "quiz",
-    "title": "What helps change land?",
-    "subtitle": "One quick one on the human side.",
+    "title": "Real-time value",
+    "subtitle": "What do real-time production data give me at my workstation?",
     "points": 100,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "What predicts a smooth rollout best?",
+          "prompt": "If a machine goes down, what does real-time data let you do?",
           "options": [
-            { "id": "a", "label": "Buying the most expensive licences", "correct": false },
-            { "id": "b", "label": "Involving people early and often", "correct": true }
+            { "id": "a", "label": "Wait for the shift manager to notice", "correct": false },
+            { "id": "b", "label": "Instantly reroute work to another line", "correct": true }
           ],
-          "explanation": "Adoption beats tooling. Teams that feel involved adopt faster and complain less."
+          "explanation": "Live data means instant reaction, saving precious production time."
         }
+      ]
+    }
+  },
+  {
+    "id": "prod-minigame",
+    "roleId": "production",
+    "type": "sort",
+    "title": "Build the process flow",
+    "subtitle": "Drag & drop steps into the right order.",
+    "points": 150,
+    "payload": {
+      "prompt": "Order the process flow (Start at Top, End at Bottom)",
+      "items": [
+        { "id": "s1", "label": "Receive Materials" },
+        { "id": "s2", "label": "Pre-Assembly" },
+        { "id": "s3", "label": "Final Assembly" },
+        { "id": "s4", "label": "Quality Check" },
+        { "id": "s5", "label": "Shipping" }
+      ]
+    }
+  },
+  {
+    "id": "prod-vote",
+    "roleId": "production",
+    "type": "swipe",
+    "title": "Voting",
+    "subtitle": "What would you improve about production if you could?",
+    "points": 100,
+    "payload": {
+      "prompt": "Would you improve this?",
+      "leftLabel": "No",
+      "rightLabel": "Yes",
+      "cards": [
+        { "id": "i1", "label": "Better communication between shifts." },
+        { "id": "i2", "label": "Less manual paperwork." },
+        { "id": "i3", "label": "Faster maintenance response." }
       ]
     }
   }

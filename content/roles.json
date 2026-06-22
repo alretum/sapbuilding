@@ -18,39 +18,21 @@
     "blurb": "You live in reports and closing cycles. Time to spot where real-time could give you back your evenings."
   },
   {
-    "id": "code",
-    "name": "Code-Crew",
-    "department": "Development / IT",
+    "id": "it",
+    "name": "Code-Crew & Data-Guardians",
+    "department": "IT",
     "character": "Custom developments & clean core.",
     "color": "#ff7a45",
     "avatar": "💻",
-    "blurb": "Keepers of the custom code. How much of it is treasure, and how much is just... still there?"
+    "blurb": "Keepers of the system. Let's see what custom code is still needed and sort what data comes along to the cloud."
   },
   {
-    "id": "data",
-    "name": "Data-Guardians",
-    "department": "IT / Data",
-    "character": "Data quality & order.",
-    "color": "#2d9cdb",
-    "avatar": "🗄️",
-    "blurb": "Hot, warm, cold — you know your data has temperature. Let's sort what comes along to the cloud."
-  },
-  {
-    "id": "flow",
-    "name": "Flow-Masters",
-    "department": "Production / Supply Chain",
+    "id": "production",
+    "name": "Ops-Heroes",
+    "department": "Production",
     "character": "Processes & workflows.",
     "color": "#27ae60",
     "avatar": "⚙️",
     "blurb": "Every process step is a chance to remove friction. Which ones quietly drive everyone crazy?"
-  },
-  {
-    "id": "people",
-    "name": "People-Champions",
-    "department": "HR",
-    "character": "Team & openness to change.",
-    "color": "#eb5757",
-    "avatar": "🤝",
-    "blurb": "Technology migrates; people decide whether it lands. You read the room and keep everyone on board."
   }
 ]

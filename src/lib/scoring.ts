@@ -96,6 +96,21 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     companyReadiness = meanReadiness * participatedShare;
   }
 
+  const boosterSent = session.completions.some(c => c.actionId === "captain-dashboard");
+
+  const roiComps = session.completions.filter(c => c.actionId === "finance-roi" && c.payload);
+  let financeROI: number | null = null;
+  if (roiComps.length > 0) {
+    let totalSavings = 0;
+    for (const c of roiComps) {
+       const v = (c.payload as any)?.values || {};
+       const users = v.users || 100;
+       const maint = v.maint || 10000;
+       totalSavings += (users * 500) + (maint * 0.2);
+    }
+    financeROI = Math.round(totalSavings / roiComps.length);
+  }
+
   return {
     sessionId: session.id,
     code: session.code,
@@ -107,5 +122,7 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     totalPoints: departments.reduce((sum, d) => sum + d.earned, 0),
     involvedRoles: involved,
     updatedAt: new Date().toISOString(),
+    financeROI,
+    boosterSent,
   };
 }

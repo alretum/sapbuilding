@@ -28,16 +28,22 @@ export function Dashboard({
       <ReadinessGauge value={snapshot.companyReadiness} />
 
       <section className="space-y-3">
-        <h2 className="px-1 font-display text-sm font-bold uppercase tracking-wide text-ink/45">Departments</h2>
+        <div className="flex items-center justify-between px-1">
+          <h2 className="font-display text-sm font-bold uppercase tracking-wide text-ink/45">Departments</h2>
+          {snapshot.boosterSent && (
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">🚀 Booster Active</span>
+          )}
+        </div>
         {ranked.map((d, i) => {
           const isMe = d.roleId === highlightRole;
           const isLeader = d.roleId === leaderId;
+          const isCaptain = d.roleId === "captain";
           return (
             <motion.div
               key={d.roleId}
               layout
               transition={{ type: "spring", stiffness: 200, damping: 26 }}
-              className={["card p-4", isMe ? "ring-2 ring-brand" : ""].join(" ")}
+              className={["card p-4", isMe ? "ring-2 ring-brand" : "", isCaptain ? "bg-brand/5 border-brand/20" : ""].join(" ")}
             >
               <div className="flex items-center gap-3">
                 <DeptAvatar emoji={d.avatar} color={d.color} size={44} />
@@ -66,6 +72,11 @@ export function Dashboard({
               <ProgressBar value={d.readiness} color={d.color} className="mt-3" />
               {!d.participated && (
                 <p className="mt-2 text-xs font-semibold text-sun">Not started yet — pulling the score down 👀</p>
+              )}
+              {d.roleId === "finance" && snapshot.financeROI !== null && (
+                <div className="mt-3 rounded-lg bg-green-50/50 p-2 text-xs font-medium text-green-800 ring-1 ring-inset ring-green-200">
+                  <span className="font-bold">Calculated Savings Potential:</span> ~€{snapshot.financeROI.toLocaleString()} / year
+                </div>
               )}
             </motion.div>
           );
