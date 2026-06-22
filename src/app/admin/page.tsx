@@ -84,24 +84,7 @@ export default function AdminPage() {
         {sessions.length === 0 ? (
           <p className="text-sm text-ink/40">None yet.</p>
         ) : (
-          sessions.map((s) => (
-            <Card key={s.id} className="flex items-center justify-between gap-3 p-4">
-              <div className="min-w-0">
-                <p className="truncate font-semibold">{s.name}</p>
-                <p className="text-xs text-ink/50">
-                  {s.players} player{s.players === 1 ? "" : "s"} · {s.involvedRoles.length} departments
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-3">
-                <span className="rounded-lg bg-brand/10 px-3 py-1 font-mono text-sm font-bold tracking-widest text-brand">
-                  {s.code}
-                </span>
-                <a className="text-sm text-brand underline" href={`/dashboard?session=${s.id}`}>
-                  dashboard
-                </a>
-              </div>
-            </Card>
-          ))
+          sessions.map((s) => <SessionCard key={s.id} session={s} headers={headers} onDeleted={refresh} />)
         )}
       </section>
     </Screen>
@@ -209,6 +192,106 @@ function CreateForm({
       <Button className="w-full" disabled={!name.trim() || selected.length === 0 || busy} onClick={create}>
         {busy ? "Creating…" : "Create challenge"}
       </Button>
+    </Card>
+  );
+}
+
+function SessionCard({
+  session,
+  headers,
+  onDeleted,
+}: {
+  session: SessionRow;
+  headers: (extra?: Record<string, string>) => Record<string, string>;
+  onDeleted: () => void;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const matches = typed.trim().toLowerCase() === session.name.trim().toLowerCase();
+
+  async function remove() {
+    if (!matches) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/sessions/${session.code}`, {
+        method: "DELETE",
+        headers: headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ confirm: typed.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "Could not delete");
+      onDeleted();
+    } catch (e) {
+      setError(e instanceof TypeError ? "Couldn't reach the server." : (e as Error).message);
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Card className="space-y-3 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate font-semibold">{session.name}</p>
+          <p className="text-xs text-ink/50">
+            {session.players} player{session.players === 1 ? "" : "s"} · {session.involvedRoles.length} departments
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="rounded-lg bg-brand/10 px-3 py-1 font-mono text-sm font-bold tracking-widest text-brand">
+            {session.code}
+          </span>
+          <a className="text-sm text-brand underline" href={`/dashboard?session=${session.id}`}>
+            dashboard
+          </a>
+          <button
+            onClick={() => {
+              setConfirming((v) => !v);
+              setError(null);
+              setTyped("");
+            }}
+            className="text-base text-red-500"
+            aria-label="Delete challenge"
+            title="Delete challenge"
+          >
+            🗑
+          </button>
+        </div>
+      </div>
+
+      {confirming && (
+        <div className="space-y-2 rounded-2xl bg-red-50 p-3">
+          <p className="text-xs text-red-700">
+            This permanently deletes <b>{session.name}</b> and all its players &amp; scores. Type the company name to
+            confirm.
+          </p>
+          <input
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && matches && remove()}
+            placeholder={session.name}
+            className="w-full rounded-xl border border-red-200 bg-white px-3 py-2 text-sm"
+            autoFocus
+          />
+          {error && <p className="text-xs text-red-600">{error}</p>}
+          <div className="flex gap-2">
+            <Button variant="ghost" className="flex-1" onClick={() => setConfirming(false)}>
+              Cancel
+            </Button>
+            <button
+              onClick={remove}
+              disabled={!matches || busy}
+              className="btn3d flex-1 bg-red-500 text-white disabled:pointer-events-none disabled:opacity-40"
+              style={{ "--btn-edge": "#c23a3a" } as React.CSSProperties}
+            >
+              {busy ? "Deleting…" : "Delete"}
+            </button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
