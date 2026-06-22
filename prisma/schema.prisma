@@ -21,6 +21,13 @@ model Session {
   involvedRoles     String[] // role ids (from content) participating in this session
   leaderboardPublic Boolean            @default(true)
   strictGate        Boolean            @default(false) // true = readiness gated on every dept participating
+  // Location for the Germany readiness map (set by SAP at setup). Optional —
+  // companies without a location simply don't appear on the map.
+  regionCode        String? // ISO 3166-2 DE code, e.g. "DE-BY"
+  city              String?
+  lat               Float?
+  lng               Float?
+  isDemo            Boolean            @default(false) // seeded demo company (for the map)
   createdAt         DateTime           @default(now())
   startedAt         DateTime?
   players           Player[]

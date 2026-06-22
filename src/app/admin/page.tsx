@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { Content } from "@/lib/content-schema";
+import { CITIES, REGIONS } from "@/lib/germany";
 import { Button, Card, Screen } from "@/components/ui";
 
 // SAP-facing setup. SAP creates a challenge per company; employees then join
@@ -103,12 +104,16 @@ function CreateForm({
   const [name, setName] = useState("");
   const [roleIds, setRoleIds] = useState<string[] | null>(null); // null = all
   const [strictGate, setStrictGate] = useState(false);
+  const [regionCode, setRegionCode] = useState("");
+  const [cityName, setCityName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<{ id: string; code: string } | null>(null);
 
   const allRoleIds = content?.roles.map((r) => r.id) ?? [];
   const selected = roleIds ?? allRoleIds;
+  const regionCities = CITIES.filter((c) => c.regionCode === regionCode);
+  const selectedCity = regionCities.find((c) => c.name === cityName);
 
   function toggleRole(id: string) {
     const base = roleIds ?? allRoleIds;
@@ -123,13 +128,23 @@ function CreateForm({
       const res = await fetch("/api/sessions", {
         method: "POST",
         headers: headers({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ name: name.trim(), involvedRoles: selected, strictGate }),
+        body: JSON.stringify({
+          name: name.trim(),
+          involvedRoles: selected,
+          strictGate,
+          regionCode: regionCode || undefined,
+          city: selectedCity?.name,
+          lat: selectedCity?.lat,
+          lng: selectedCity?.lng,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error === "unauthorized" ? "Invalid admin key." : data.error ?? "Failed");
       setCreated(data);
       setName("");
       setRoleIds(null);
+      setRegionCode("");
+      setCityName("");
       onCreated();
     } catch (e) {
       setError(e instanceof TypeError ? "Couldn't reach the server." : (e as Error).message);
@@ -161,6 +176,44 @@ function CreateForm({
           className="w-full rounded-2xl border border-black/10 px-4 py-3"
         />
       </label>
+
+      <div className="grid grid-cols-2 gap-2">
+        <label className="space-y-1">
+          <span className="text-sm font-medium">Region</span>
+          <select
+            value={regionCode}
+            onChange={(e) => {
+              setRegionCode(e.target.value);
+              setCityName("");
+            }}
+            className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm"
+          >
+            <option value="">— optional —</option>
+            {REGIONS.map((r) => (
+              <option key={r.code} value={r.code}>
+                {r.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="space-y-1">
+          <span className="text-sm font-medium">City</span>
+          <select
+            value={cityName}
+            onChange={(e) => setCityName(e.target.value)}
+            disabled={!regionCode}
+            className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm disabled:opacity-50"
+          >
+            <option value="">{regionCode ? "— select —" : "pick region first"}</option>
+            {regionCities.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <p className="-mt-2 text-xs text-ink/45">Location places this company on the national readiness map.</p>
 
       <div className="space-y-1">
         <span className="text-sm font-medium">Participating departments</span>

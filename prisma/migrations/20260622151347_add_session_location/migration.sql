@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Session" ADD COLUMN     "city" TEXT,
+ADD COLUMN     "isDemo" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "lat" DOUBLE PRECISION,
+ADD COLUMN     "lng" DOUBLE PRECISION,
+ADD COLUMN     "regionCode" TEXT;

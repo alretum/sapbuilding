@@ -101,7 +101,10 @@ export default function CompanyLeaderboardPage() {
         </div>
       )}
 
-      <a href="/dashboard" className="btn-ghost w-full">
+      <a href="/map" className="btn-ghost w-full">
+        🗺️ See the readiness map →
+      </a>
+      <a href="/dashboard" className="block text-center text-sm text-brand underline">
         ← Back to your dashboard
       </a>
     </Screen>
