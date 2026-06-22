@@ -5,8 +5,8 @@ import { isValidAvatar } from "@/lib/avatar-config";
 export const dynamic = "force-dynamic";
 
 // Used by the play view on load: identity + which actions are already done + avatar.
-export async function GET(_req: Request, { params }: { params: { playerId: string } }) {
-  const { playerId } = await params; // Promise on Next 15, plain object on Next 14
+export async function GET(_req: Request, { params }: { params: Promise<{ playerId: string }> }) {
+  const { playerId } = await params; // params is async in Next 15+
   const player = await prisma.player.findUnique({
     where: { id: playerId },
     include: { completions: true },
@@ -25,8 +25,8 @@ export async function GET(_req: Request, { params }: { params: { playerId: strin
 
 // Update the player's avatar (the only thing they can edit). No auth in the
 // prototype — possession of the playerId is enough.
-export async function PATCH(req: Request, { params }: { params: { playerId: string } }) {
-  const { playerId } = await params; // Promise on Next 15, plain object on Next 14
+export async function PATCH(req: Request, { params }: { params: Promise<{ playerId: string }> }) {
+  const { playerId } = await params; // params is async in Next 15+
   const body = (await req.json().catch(() => ({}))) as { avatar?: unknown };
   if (!isValidAvatar(body.avatar)) {
     return NextResponse.json({ error: "invalid avatar" }, { status: 400 });

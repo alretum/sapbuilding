@@ -5,8 +5,8 @@ import { computeSessionSnapshot } from "@/lib/scoring";
 export const dynamic = "force-dynamic";
 
 // Initial snapshot fetch (REST fallback); live updates come over the socket.
-export async function GET(_req: Request, { params }: { params: { code: string } }) {
-  const { code } = await params; // Promise on Next 15, plain object on Next 14
+export async function GET(_req: Request, { params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params; // params is async in Next 15+
   const session = await prisma.session.findUnique({ where: { code: code.toUpperCase() } });
   if (!session) return NextResponse.json({ error: "not found" }, { status: 404 });
 

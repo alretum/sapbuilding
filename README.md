@@ -10,10 +10,10 @@ This is the prototype skeleton: the engine, scoring, realtime, and screen flow a
 
 | Layer | Choice |
 |---|---|
-| App + API | Next.js 14 (App Router) + TypeScript |
+| App + API | Next.js 16 (App Router) + React 18 + TypeScript 6 |
 | Realtime | Socket.IO, hosted by a custom server (`server.ts`) alongside Next |
-| Data | PostgreSQL + Prisma |
-| UI | Tailwind CSS + Framer Motion (custom playful brand) |
+| Data | PostgreSQL + Prisma 6 |
+| UI | Tailwind CSS 4 + Framer Motion (custom playful brand) |
 | Content | Validated JSON in `/content` |
 | Deploy | Docker Compose (web + Postgres + Caddy) on a VPS |
 

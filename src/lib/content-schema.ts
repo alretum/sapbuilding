@@ -54,7 +54,9 @@ export const swipePayloadSchema = z.object({
 
 export const chatbotPayloadSchema = z.object({
   start: z.string(),
+  // Zod 4 requires an explicit key schema for z.record.
   nodes: z.record(
+    z.string(),
     z.object({
       bot: z.string(),
       options: z.array(z.object({ label: z.string(), next: z.string() })).optional(),
