@@ -9,7 +9,7 @@ import { AnimatedNumber } from "./AnimatedNumber";
 
 type RegionData = { code: string; name: string; avgReadiness: number | null; companies: number; participants: number };
 type CityData = { name: string; regionCode: string; lat: number; lng: number; avgReadiness: number; companies: number };
-type MapData = { regions: RegionData[]; cities: CityData[]; cityMinCompanies: number };
+type MapData = { regions: RegionData[]; cities: CityData[] };
 
 type Selected =
   | { kind: "region"; data: RegionData }
@@ -31,7 +31,7 @@ export default function GermanyMap() {
     fetch("/api/map")
       .then((r) => r.json())
       .then(setData)
-      .catch(() => setData({ regions: [], cities: [], cityMinCompanies: 3 }));
+      .catch(() => setData({ regions: [], cities: [] }));
   }, []);
 
   useEffect(() => {
@@ -218,7 +218,9 @@ function CityCard({ data }: { data: CityData }) {
         <AnimatedNumber value={data.avgReadiness} suffix="%" className="font-display text-3xl font-bold text-brand" />
         <span className="pb-1 text-xs text-ink/50">avg readiness</span>
       </div>
-      <p className="text-xs text-ink/50">{data.companies} companies (aggregated for privacy)</p>
+      <p className="text-xs text-ink/50">
+        {data.companies} compan{data.companies === 1 ? "y" : "ies"} here
+      </p>
     </div>
   );
 }

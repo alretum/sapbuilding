@@ -6,10 +6,6 @@ import { REGIONS } from "@/lib/germany";
 
 export const dynamic = "force-dynamic";
 
-// Minimum companies in a city before its score is shown (k-anonymity, k=3) so a
-// single company is never identifiable from the map.
-const CITY_MIN_COMPANIES = 3;
-
 type Agg = { sum: number; companies: number; participants: number };
 
 export async function GET() {
@@ -54,16 +50,14 @@ export async function GET() {
     };
   });
 
-  const cities = [...byCity.values()]
-    .filter((c) => c.companies >= CITY_MIN_COMPANIES)
-    .map((c) => ({
-      name: c.name,
-      regionCode: c.regionCode,
-      lat: c.lat,
-      lng: c.lng,
-      avgReadiness: Math.round(c.sum / c.companies),
-      companies: c.companies,
-    }));
+  const cities = [...byCity.values()].map((c) => ({
+    name: c.name,
+    regionCode: c.regionCode,
+    lat: c.lat,
+    lng: c.lng,
+    avgReadiness: Math.round(c.sum / c.companies),
+    companies: c.companies,
+  }));
 
-  return NextResponse.json({ regions, cities, cityMinCompanies: CITY_MIN_COMPANIES });
+  return NextResponse.json({ regions, cities });
 }
