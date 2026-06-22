@@ -33,7 +33,7 @@ export default function DashboardPage() {
     <Screen className="space-y-5">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-extrabold">{snapshot?.name ?? "Live Dashboard"}</h1>
+          <h1 className="font-display text-xl font-bold">{snapshot?.name ?? "Live Dashboard"}</h1>
           {snapshot && <p className="text-xs text-ink/50">Session {snapshot.code}</p>}
         </div>
         <a href="/play" className="text-sm text-brand underline">
@@ -50,6 +50,10 @@ export default function DashboardPage() {
       ) : (
         <Dashboard snapshot={snapshot} highlightRole={myRole} highlightPlayerId={myPlayerId} />
       )}
+
+      <a href="/leaderboard" className="btn-ghost w-full">
+        🏆 See how you rank against other companies →
+      </a>
     </Screen>
   );
 }

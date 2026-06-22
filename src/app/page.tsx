@@ -35,6 +35,10 @@ export default function HomePage() {
           router.push("/play");
         }}
       />
+
+      <a href="/leaderboard" className="block text-center text-sm font-semibold text-brand underline">
+        🏆 Browse the company leaderboard
+      </a>
     </Screen>
   );
 }
