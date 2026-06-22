@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { Footer } from "@/components/landing/Footer";
 import { Reveal, Section, SectionHeading } from "@/components/landing/primitives";
+import { PeerStories } from "@/components/PeerStories";
 import { ProgressBar } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -251,6 +252,16 @@ export default function DecisionMakerPage() {
             </div>
           </Reveal>
         </div>
+      </Section>
+
+      {/* Peer voices */}
+      <Section>
+        <Reveal>
+          <SectionHeading eyebrow="From those who've done it" title="Peers who already made the move" />
+        </Reveal>
+        <Reveal delay={0.05} className="mx-auto mt-8 max-w-2xl">
+          <PeerStories limit={2} />
+        </Reveal>
       </Section>
 
       {/* Honesty posture */}

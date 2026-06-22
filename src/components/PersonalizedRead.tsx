@@ -2,6 +2,7 @@
 
 import { recommend, type RecPath } from "@/lib/recommendation";
 import type { CompanyProfile } from "@/lib/profile";
+import { PeerStories } from "./PeerStories";
 
 const PATH_STYLE: Record<RecPath, { color: string; emoji: string }> = {
   GROW: { color: "#2bd4a8", emoji: "🌱" },
@@ -79,6 +80,9 @@ export function PersonalizedRead({ companyName, profile }: { companyName: string
           (Illustrative — real attributed references on request.)
         </p>
       </div>
+
+      {/* Peer voices */}
+      <PeerStories industry={profile.industry} />
 
       {/* Honesty */}
       <div className="card p-5">
