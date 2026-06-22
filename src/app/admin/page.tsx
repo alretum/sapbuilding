@@ -3,6 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Content } from "@/lib/content-schema";
 import { CITIES, REGIONS } from "@/lib/germany";
+import {
+  COMPANY_SIZES,
+  COUNTRIES,
+  DATA_SENSITIVITY,
+  INDUSTRIES,
+  SAP_VERSIONS,
+  type CompanyProfile,
+} from "@/lib/profile";
+import { KNOWN_COMPANIES } from "@/lib/known-companies";
 import { Button, Card, Screen } from "@/components/ui";
 
 // SAP-facing setup. SAP creates a challenge per company; employees then join
@@ -107,9 +116,10 @@ function CreateForm({
   const [leaderboardPublic, setLeaderboardPublic] = useState(false);
   const [regionCode, setRegionCode] = useState("");
   const [cityName, setCityName] = useState("");
+  const [profile, setProfile] = useState<CompanyProfile>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [created, setCreated] = useState<{ id: string; code: string } | null>(null);
+  const [created, setCreated] = useState<{ id: string; code: string; profileToken: string } | null>(null);
 
   const allRoleIds = content?.roles.map((r) => r.id) ?? [];
   const selected = roleIds ?? allRoleIds;
@@ -138,6 +148,7 @@ function CreateForm({
           city: selectedCity?.name,
           lat: selectedCity?.lat,
           lng: selectedCity?.lng,
+          ...profile,
         }),
       });
       const data = await res.json();
@@ -148,6 +159,7 @@ function CreateForm({
       setLeaderboardPublic(false);
       setRegionCode("");
       setCityName("");
+      setProfile({});
       onCreated();
     } catch (e) {
       setError(e instanceof TypeError ? "Couldn't reach the server." : (e as Error).message);
@@ -161,12 +173,37 @@ function CreateForm({
       <h2 className="font-bold">New company challenge</h2>
 
       {created && (
-        <div className="rounded-2xl bg-brand/5 p-4 text-center">
-          <p className="text-xs text-ink/60">Created! Share this join code:</p>
-          <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
-          <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
-            open live dashboard →
-          </a>
+        <div className="space-y-3">
+          <div className="rounded-2xl bg-brand/5 p-4 text-center">
+            <p className="text-xs text-ink/60">Created! Employees join with this code:</p>
+            <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
+            <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
+              open live dashboard →
+            </a>
+          </div>
+
+          {/* Simulated decision-maker invite (no real email is sent) */}
+          <div className="overflow-hidden rounded-2xl border border-black/10">
+            <div className="border-b border-black/5 bg-black/[0.03] px-4 py-2 text-xs text-ink/50">
+              📧 Preview — the email the decision-maker would receive
+            </div>
+            <div className="space-y-2 p-4 text-sm">
+              <p className="font-semibold">Your cloud-readiness starter is ready</p>
+              <p className="text-ink/65">
+                We&apos;ve put together a personalized read for your team — confirm a couple of details and see your
+                cloud path.
+              </p>
+              <a
+                href={`/welcome/${created.profileToken}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary inline-flex text-sm"
+              >
+                Confirm your company profile →
+              </a>
+              <p className="break-all pt-1 text-[11px] text-ink/40">Magic link: /welcome/{created.profileToken}</p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -179,6 +216,44 @@ function CreateForm({
           className="w-full rounded-2xl border border-black/10 px-4 py-3"
         />
       </label>
+
+      {/* Company profile (powers the decision-maker's personalized read) */}
+      <div className="space-y-3 rounded-2xl bg-black/[0.02] p-3">
+        <label className="block space-y-1">
+          <span className="text-sm font-medium">Pre-fill from a known customer (simulates SAP CRM)</span>
+          <select
+            value=""
+            onChange={(e) => {
+              const c = KNOWN_COMPANIES.find((k) => k.name === e.target.value);
+              if (c) {
+                setName(c.name);
+                setProfile({
+                  industry: c.industry,
+                  country: c.country,
+                  sapVersion: c.sapVersion,
+                  companySize: c.companySize,
+                  dataSensitivity: c.dataSensitivity,
+                });
+              }
+            }}
+            className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm"
+          >
+            <option value="">— pick one to auto-fill, or enter manually —</option>
+            {KNOWN_COMPANIES.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          <ProfileSelect label="Industry" value={profile.industry} options={INDUSTRIES} onChange={(v) => setProfile((p) => ({ ...p, industry: v }))} />
+          <ProfileSelect label="Country" value={profile.country} options={COUNTRIES} onChange={(v) => setProfile((p) => ({ ...p, country: v }))} />
+          <ProfileSelect label="SAP version" value={profile.sapVersion} options={SAP_VERSIONS} onChange={(v) => setProfile((p) => ({ ...p, sapVersion: v }))} />
+          <ProfileSelect label="Company size" value={profile.companySize} options={COMPANY_SIZES} onChange={(v) => setProfile((p) => ({ ...p, companySize: v }))} />
+        </div>
+        <ProfileSelect label="Data sensitivity" value={profile.dataSensitivity} options={DATA_SENSITIVITY} onChange={(v) => setProfile((p) => ({ ...p, dataSensitivity: v }))} />
+      </div>
 
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
@@ -262,6 +337,36 @@ function CreateForm({
         {busy ? "Creating…" : "Create challenge"}
       </Button>
     </Card>
+  );
+}
+
+function ProfileSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value?: string | null;
+  options: readonly string[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="space-y-1">
+      <span className="text-sm font-medium">{label}</span>
+      <select
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm"
+      >
+        <option value="">—</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 

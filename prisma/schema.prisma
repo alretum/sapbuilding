@@ -28,6 +28,15 @@ model Session {
   lat               Float?
   lng               Float?
   isDemo            Boolean            @default(false) // seeded demo company (for the map)
+  // Company profile for the personalized read (PR B). Pre-filled by SAP at setup,
+  // confirmed by the decision-maker via the magic link (profileToken).
+  industry          String?
+  country           String?
+  sapVersion        String?
+  companySize       String?
+  dataSensitivity   String?
+  profileToken      String?            @unique
+  profileConfirmedAt DateTime?
   createdAt         DateTime           @default(now())
   startedAt         DateTime?
   players           Player[]
