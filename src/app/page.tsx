@@ -9,7 +9,6 @@ import { Button, Card, Screen } from "@/components/ui";
 export default function HomePage() {
   const router = useRouter();
   const [content, setContent] = useState<Content | null>(null);
-  const [tab, setTab] = useState<"join" | "host">("join");
 
   useEffect(() => {
     fetch("/api/content")
@@ -23,35 +22,18 @@ export default function HomePage() {
       <header className="space-y-1 pt-4 text-center">
         <p className="text-4xl">🚀</p>
         <h1 className="text-2xl font-extrabold">Cloud Readiness Challenge</h1>
-        <p className="text-sm text-ink/60">Every department in. One shared Readiness Score.</p>
+        <p className="text-sm text-ink/60">
+          Got a join code? Enter it to join your company&apos;s challenge.
+        </p>
       </header>
 
-      <div className="flex rounded-full bg-black/5 p-1 text-sm font-semibold">
-        <button
-          className={`flex-1 rounded-full py-2 ${tab === "join" ? "bg-white shadow" : "text-ink/50"}`}
-          onClick={() => setTab("join")}
-        >
-          Join a challenge
-        </button>
-        <button
-          className={`flex-1 rounded-full py-2 ${tab === "host" ? "bg-white shadow" : "text-ink/50"}`}
-          onClick={() => setTab("host")}
-        >
-          Host
-        </button>
-      </div>
-
-      {tab === "join" ? (
-        <JoinFlow
-          content={content}
-          onJoined={(p) => {
-            savePlayer(p);
-            router.push("/play");
-          }}
-        />
-      ) : (
-        <HostPanel />
-      )}
+      <JoinFlow
+        content={content}
+        onJoined={(p) => {
+          savePlayer(p);
+          router.push("/play");
+        }}
+      />
     </Screen>
   );
 }
@@ -59,6 +41,7 @@ export default function HomePage() {
 // ---------------------------------------------------------------------------
 // Login flow: enter code → pick role → pick your name (or add a new one).
 // No passwords, no credentials. A "player" is just a name in a role.
+// Companies are set up by SAP (see /admin); employees only ever join here.
 // ---------------------------------------------------------------------------
 
 type Step = "code" | "role" | "name";
@@ -80,6 +63,11 @@ function JoinFlow({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  function friendlyError(e: unknown, fallback: string) {
+    if (e instanceof TypeError) return "Couldn't reach the server. Is it running?";
+    return (e as Error).message || fallback;
+  }
+
   async function checkCode() {
     setBusy(true);
     setError(null);
@@ -90,7 +78,7 @@ function JoinFlow({
       setSession({ id: data.sessionId, code: data.code, name: data.name });
       setStep("role");
     } catch (e) {
-      setError((e as Error).message);
+      setError(friendlyError(e, "Session not found"));
     } finally {
       setBusy(false);
     }
@@ -131,7 +119,7 @@ function JoinFlow({
         name: newName.trim(),
       });
     } catch (e) {
-      setError((e as Error).message);
+      setError(friendlyError(e, "Could not join"));
     } finally {
       setBusy(false);
     }
@@ -155,6 +143,9 @@ function JoinFlow({
         <Button className="w-full" disabled={!code || busy} onClick={checkCode}>
           {busy ? "Checking…" : "Continue →"}
         </Button>
+        <p className="text-center text-xs text-ink/40">
+          Your code comes from whoever set up your company&apos;s challenge.
+        </p>
       </Card>
     );
   }
@@ -163,7 +154,7 @@ function JoinFlow({
   if (step === "role") {
     return (
       <Card className="space-y-4">
-        <StepHeader title="Pick your department" onBack={() => setStep("code")} />
+        <StepHeader title={`Pick your department · ${session?.name ?? ""}`} onBack={() => setStep("code")} />
         <div className="grid grid-cols-2 gap-2">
           {content?.roles.map((r) => (
             <button
@@ -236,71 +227,5 @@ function StepHeader({ title, onBack }: { title: React.ReactNode; onBack: () => v
       </button>
       <h2 className="font-bold">{title}</h2>
     </div>
-  );
-}
-
-function HostPanel() {
-  const [name, setName] = useState("");
-  const [created, setCreated] = useState<{ id: string; code: string } | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function create() {
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/sessions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim() || undefined }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not create session");
-      setCreated(data);
-    } catch (e) {
-      setError(
-        e instanceof TypeError
-          ? "Couldn't reach the server. Is it running?"
-          : (e as Error).message,
-      );
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  if (created) {
-    return (
-      <Card className="space-y-4 text-center">
-        <p className="text-sm text-ink/60">Share this code with your team:</p>
-        <p className="text-4xl font-extrabold tracking-widest text-brand">{created.code}</p>
-        <a className="btn-primary w-full" href={`/dashboard?session=${created.id}`}>
-          Open the live dashboard →
-        </a>
-        <button className="text-sm text-ink/50 underline" onClick={() => setCreated(null)}>
-          Create another
-        </button>
-      </Card>
-    );
-  }
-
-  return (
-    <Card className="space-y-4">
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">Challenge name (optional)</span>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. ACME GmbH — Readiness Day"
-          className="w-full rounded-2xl border border-black/10 px-4 py-3"
-        />
-      </label>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <Button className="w-full" disabled={busy} onClick={create}>
-        {busy ? "Creating…" : "Create a session"}
-      </Button>
-      <p className="text-xs text-ink/50">
-        You&apos;ll get a join code for the team and a live dashboard link for the big screen.
-      </p>
-    </Card>
   );
 }

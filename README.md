@@ -28,6 +28,7 @@ CEO dashboard  ─────────────────┘   live "sc
 
 - **Scoring** (`src/lib/scoring.ts`): `companyReadiness = mean(departmentReadiness)`, where `departmentReadiness = earned / max`. Scores are always derived from `action_completions`, never stored counters.
 - **Action engine** (`src/components/actions/`): a registry maps `type → component`. Add content = edit JSON; add a new *kind* of action = one component + one registry line.
+- **Roles**: SAP sets up a challenge per company at **`/admin`** (gated by `ADMIN_KEY`) and hands out the join code. Employees only ever use the join flow.
 - **Login**: no credentials. Enter a session code → pick a department → pick your name (or add a new one).
 
 ## Project layout
@@ -66,6 +67,10 @@ npm run db:seed
 # 5. dev server (Next + Socket.IO on http://localhost:3000)
 npm run dev
 ```
+
+Then:
+- **SAP setup** — open `/admin` to create a company challenge and get its join code (or use the seeded `DEMO` code).
+- **Employees** — open `/` and join with the code, or watch the live `/dashboard`.
 
 Open two browser windows: join with code `DEMO` on one (play), open `/dashboard` on the other (watch the score move live).
 

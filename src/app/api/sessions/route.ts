@@ -2,15 +2,45 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getContent } from "@/lib/content";
 import { generateCode } from "@/lib/code";
+import { isAdminAuthorized } from "@/lib/admin";
 
-// Create a session (the "host" / facilitator action). Returns a join code.
+export const dynamic = "force-dynamic";
+
+// List company challenges (SAP admin view).
+export async function GET(req: Request) {
+  if (!isAdminAuthorized(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const sessions = await prisma.session.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { players: true } } },
+  });
+  return NextResponse.json({
+    sessions: sessions.map((s) => ({
+      id: s.id,
+      code: s.code,
+      name: s.name,
+      involvedRoles: s.involvedRoles,
+      strictGate: s.strictGate,
+      players: s._count.players,
+      createdAt: s.createdAt,
+    })),
+  });
+}
+
+// Create a company challenge. SAP sets these up on behalf of the company;
+// employees then just join with the code. Admin-gated (see isAdminAuthorized).
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({}) as Record<string, unknown>);
+  if (!isAdminAuthorized(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const content = getContent();
 
   const involvedRoles =
     Array.isArray(body.involvedRoles) && body.involvedRoles.length > 0
-      ? (body.involvedRoles as string[])
+      ? (body.involvedRoles as string[]).filter((id) => content.roles.some((r) => r.id === id))
       : content.roles.map((r) => r.id);
 
   // Generate a unique join code (retry a few times on the rare collision).
@@ -24,7 +54,7 @@ export async function POST(req: Request) {
   const session = await prisma.session.create({
     data: {
       code,
-      name: typeof body.name === "string" && body.name.trim() ? body.name : "Cloud Readiness Challenge",
+      name: typeof body.name === "string" && body.name.trim() ? body.name.trim() : "Cloud Readiness Challenge",
       involvedRoles,
       status: "active",
       startedAt: new Date(),
