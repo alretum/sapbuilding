@@ -1,0 +1,57 @@
+// Cloud Readiness Challenge — data model.
+// Roles and actions live in /content (JSON), not the DB — they are the same for
+// every session. Only session-specific facts are persisted here. Scores are
+// always *derived* from action_completions (see src/lib/scoring.ts), never
+// stored as mutable counters, so the live dashboard is always consistent.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id                String             @id @default(cuid())
+  code              String             @unique // short join code, e.g. "K7Q2M"
+  name              String
+  status            String             @default("active") // lobby | active | finished
+  involvedRoles     String[] // role ids (from content) participating in this session
+  leaderboardPublic Boolean            @default(true)
+  strictGate        Boolean            @default(false) // true = readiness gated on every dept participating
+  createdAt         DateTime           @default(now())
+  startedAt         DateTime?
+  players           Player[]
+  completions       ActionCompletion[]
+}
+
+model Player {
+  id          String             @id @default(cuid())
+  sessionId   String
+  session     Session            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  name        String
+  roleId      String // role id from content
+  avatar      String?
+  createdAt   DateTime           @default(now())
+  completions ActionCompletion[]
+
+  @@index([sessionId])
+}
+
+model ActionCompletion {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  playerId    String
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  actionId    String // action id from content
+  roleId      String // denormalized from player for fast aggregation
+  score       Int
+  payload     Json? // raw answers/choices, for later analysis
+  completedAt DateTime @default(now())
+
+  @@unique([playerId, actionId]) // a player completes each action at most once
+  @@index([sessionId])
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "captain",
+    "name": "Captain",
+    "department": "CEO / Management",
+    "character": "Sets the vision & commitment — and sees everyone else.",
+    "color": "#6d5df6",
+    "avatar": "🧭",
+    "blurb": "You are the Captain. Your job isn't to know every detail — it's to point the ship at the cloud and get everyone rowing together."
+  },
+  {
+    "id": "finance",
+    "name": "Finance-Pros",
+    "department": "Finance",
+    "character": "Reporting & numbers.",
+    "color": "#00b5ad",
+    "avatar": "📊",
+    "blurb": "You live in reports and closing cycles. Time to spot where real-time could give you back your evenings."
+  },
+  {
+    "id": "code",
+    "name": "Code-Crew",
+    "department": "Development / IT",
+    "character": "Custom developments & clean core.",
+    "color": "#ff7a45",
+    "avatar": "💻",
+    "blurb": "Keepers of the custom code. How much of it is treasure, and how much is just... still there?"
+  },
+  {
+    "id": "data",
+    "name": "Data-Guardians",
+    "department": "IT / Data",
+    "character": "Data quality & order.",
+    "color": "#2d9cdb",
+    "avatar": "🗄️",
+    "blurb": "Hot, warm, cold — you know your data has temperature. Let's sort what comes along to the cloud."
+  },
+  {
+    "id": "flow",
+    "name": "Flow-Masters",
+    "department": "Production / Supply Chain",
+    "character": "Processes & workflows.",
+    "color": "#27ae60",
+    "avatar": "⚙️",
+    "blurb": "Every process step is a chance to remove friction. Which ones quietly drive everyone crazy?"
+  },
+  {
+    "id": "people",
+    "name": "People-Champions",
+    "department": "HR",
+    "character": "Team & openness to change.",
+    "color": "#eb5757",
+    "avatar": "🤝",
+    "blurb": "Technology migrates; people decide whether it lands. You read the room and keep everyone on board."
+  }
+]

@@ -1,0 +1,8 @@
+# {$DOMAIN} is injected from the environment (see .env / docker-compose).
+# - In production set DOMAIN=your.domain.tld for automatic HTTPS.
+# - For local testing DOMAIN=:80 serves plain HTTP.
+# reverse_proxy transparently upgrades WebSocket connections (Socket.IO).
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy web:3000
+}

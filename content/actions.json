@@ -1,0 +1,346 @@
+[
+  {
+    "id": "captain-vision",
+    "roleId": "captain",
+    "type": "swipe",
+    "title": "Set the vision",
+    "subtitle": "Where should the company be in 2027? Swipe the statements that fit.",
+    "points": 100,
+    "payload": {
+      "prompt": "That's us in 2027 — or not?",
+      "leftLabel": "Not us",
+      "rightLabel": "That's us",
+      "cards": [
+        { "id": "v1", "label": "Closing the books in real time, not real weeks." },
+        { "id": "v2", "label": "Fewer late nights, more time for the actual business." },
+        { "id": "v3", "label": "Updates arrive automatically — no more big-bang upgrades." },
+        { "id": "v4", "label": "Decisions based on live data, not last month's export." },
+        { "id": "v5", "label": "A clean core: standard where possible, custom where it counts." }
+      ]
+    }
+  },
+  {
+    "id": "captain-benefits",
+    "roleId": "captain",
+    "type": "quiz",
+    "title": "The business case in 90 seconds",
+    "subtitle": "Three quick ones on what the cloud actually buys you.",
+    "points": 120,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "What's the biggest reporting shift with S/4HANA Cloud?",
+          "options": [
+            { "id": "a", "label": "Reports run overnight in batches", "correct": false },
+            { "id": "b", "label": "Real-time insight on live data", "correct": true },
+            { "id": "c", "label": "Reports move to paper", "correct": false }
+          ],
+          "explanation": "In-memory processing means you analyse live operational data — no waiting for the nightly batch."
+        },
+        {
+          "id": "q2",
+          "prompt": "How do upgrades work in the cloud model?",
+          "options": [
+            { "id": "a", "label": "Continuous, automatic updates", "correct": true },
+            { "id": "b", "label": "One painful upgrade every 5–7 years", "correct": false }
+          ],
+          "explanation": "Regular automatic updates replace the big, risky upgrade projects."
+        },
+        {
+          "id": "q3",
+          "prompt": "What does 'clean core' protect you from?",
+          "options": [
+            { "id": "a", "label": "Custom code that blocks future updates", "correct": true },
+            { "id": "b", "label": "Having any custom code at all", "correct": false }
+          ],
+          "explanation": "Keeping the core clean (extensions, not modifications) is what keeps automatic updates frictionless."
+        }
+      ]
+    }
+  },
+  {
+    "id": "captain-commit",
+    "roleId": "captain",
+    "type": "chatbot",
+    "title": "Make your commitment",
+    "subtitle": "Unlock a commitment statement everyone can see.",
+    "points": 80,
+    "payload": {
+      "start": "intro",
+      "nodes": {
+        "intro": {
+          "bot": "As Captain, your visible commitment sets the tone. Ready to lock one in?",
+          "options": [
+            { "label": "Let's do it", "next": "ambition" },
+            { "label": "What's at stake?", "next": "why" }
+          ]
+        },
+        "why": {
+          "bot": "When the CEO commits out loud, departments stop waiting and start moving. That's the whole game. Shall we?",
+          "options": [{ "label": "Okay, I'm in", "next": "ambition" }]
+        },
+        "ambition": {
+          "bot": "Pick the tone of your commitment:",
+          "options": [
+            { "label": "\"We move together, no one left behind.\"", "next": "done" },
+            { "label": "\"Curiosity first — we explore, then decide.\"", "next": "done" },
+            { "label": "\"Future-proof by 2027.\"", "next": "done" }
+          ]
+        },
+        "done": {
+          "bot": "Locked in and shared with the crew. The whole company can see the Captain is on board. 🚀",
+          "end": true
+        }
+      }
+    }
+  },
+
+  {
+    "id": "finance-realtime",
+    "roleId": "finance",
+    "type": "quiz",
+    "title": "What changes with real-time reporting?",
+    "subtitle": "Two quick ones for the numbers people.",
+    "points": 120,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "Today, how fresh is the data in most of your management reports?",
+          "options": [
+            { "id": "a", "label": "Live, to the minute" },
+            { "id": "b", "label": "Yesterday's batch" },
+            { "id": "c", "label": "Last week / last close" }
+          ]
+        },
+        {
+          "id": "q2",
+          "prompt": "Which reconciliation step disappears when finance & controlling share one source of truth?",
+          "options": [
+            { "id": "a", "label": "Matching FI and CO totals by hand", "correct": true },
+            { "id": "b", "label": "Printing the balance sheet", "correct": false }
+          ],
+          "explanation": "The universal journal means FI and CO read the same line items — no more reconciliation between them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "finance-slow-reports",
+    "roleId": "finance",
+    "type": "swipe",
+    "title": "Tag the slow reports",
+    "subtitle": "Swipe the reports that take too long today. (A tiny, real pain-point check.)",
+    "points": 100,
+    "payload": {
+      "prompt": "How does this one feel today?",
+      "leftLabel": "Fine",
+      "rightLabel": "Too slow",
+      "cards": [
+        { "id": "r1", "label": "Month-end close" },
+        { "id": "r2", "label": "Cash-flow forecast" },
+        { "id": "r3", "label": "Profitability by product" },
+        { "id": "r4", "label": "Intercompany reconciliation" },
+        { "id": "r5", "label": "Ad-hoc 'can you pull this?' requests" }
+      ]
+    }
+  },
+
+  {
+    "id": "code-usage",
+    "roleId": "code",
+    "type": "quiz",
+    "title": "Guess the custom-code truth",
+    "subtitle": "No wrong answers — just a gut check.",
+    "points": 100,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "Of all your custom developments, how many do you reckon are actually still used?",
+          "options": [
+            { "id": "a", "label": "Most of them" },
+            { "id": "b", "label": "About half" },
+            { "id": "c", "label": "Maybe a third" },
+            { "id": "d", "label": "Honestly? Nobody knows" }
+          ],
+          "explanation": "Industry checks routinely find 40–60% of custom code is unused. Migration is the perfect moment to drop the dead weight."
+        }
+      ]
+    }
+  },
+  {
+    "id": "code-cleanup",
+    "roleId": "code",
+    "type": "swipe",
+    "title": "Keep or retire?",
+    "subtitle": "A quick clean-up pass on some custom objects.",
+    "points": 100,
+    "payload": {
+      "prompt": "This custom object — bring it along or leave it behind?",
+      "leftLabel": "Retire",
+      "rightLabel": "Keep",
+      "cards": [
+        { "id": "c1", "label": "Z_REPORT_2009_FINAL_v3" },
+        { "id": "c2", "label": "Custom invoice PDF layout" },
+        { "id": "c3", "label": "That user-exit nobody documented" },
+        { "id": "c4", "label": "Pricing routine for a discontinued product" },
+        { "id": "c5", "label": "Integration to the warehouse scanners" }
+      ]
+    }
+  },
+
+  {
+    "id": "data-temp",
+    "roleId": "data",
+    "type": "swipe",
+    "title": "Hot, warm or cold?",
+    "subtitle": "Sort what should come along live — and what can be archived.",
+    "points": 100,
+    "payload": {
+      "prompt": "How alive is this data?",
+      "leftLabel": "Cold (archive)",
+      "rightLabel": "Hot (keep live)",
+      "cards": [
+        { "id": "d1", "label": "Open customer orders" },
+        { "id": "d2", "label": "Invoices from 2011" },
+        { "id": "d3", "label": "Current stock levels" },
+        { "id": "d4", "label": "Employees who left a decade ago" },
+        { "id": "d5", "label": "Active supplier contracts" }
+      ]
+    }
+  },
+  {
+    "id": "data-quality",
+    "roleId": "data",
+    "type": "quiz",
+    "title": "Why data quality wins",
+    "subtitle": "One that every Data-Guardian knows in their bones.",
+    "points": 100,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "What's the golden rule of a migration?",
+          "options": [
+            { "id": "a", "label": "Bring everything, sort it later", "correct": false },
+            { "id": "b", "label": "Clean first, migrate clean", "correct": true }
+          ],
+          "explanation": "Migrating mess just gives you faster mess. A clean-up pass first pays for itself many times over."
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "flow-annoy",
+    "roleId": "flow",
+    "type": "quiz",
+    "title": "Which step annoys you most?",
+    "subtitle": "Low-barrier process check — pick your nemesis.",
+    "points": 100,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "Which process step costs you the most patience today?",
+          "options": [
+            { "id": "a", "label": "Manual approvals that sit in inboxes" },
+            { "id": "b", "label": "Re-typing data between systems" },
+            { "id": "c", "label": "Chasing status updates" },
+            { "id": "d", "label": "Waiting on overnight jobs" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "flow-bottleneck",
+    "roleId": "flow",
+    "type": "swipe",
+    "title": "Smooth or bottleneck?",
+    "subtitle": "Swipe each step the way it really feels on the floor.",
+    "points": 100,
+    "payload": {
+      "prompt": "On a normal day, this step is...",
+      "leftLabel": "Smooth",
+      "rightLabel": "Bottleneck",
+      "cards": [
+        { "id": "f1", "label": "Order entry" },
+        { "id": "f2", "label": "Availability check" },
+        { "id": "f3", "label": "Production scheduling" },
+        { "id": "f4", "label": "Goods receipt" },
+        { "id": "f5", "label": "Shipping & paperwork" }
+      ]
+    }
+  },
+
+  {
+    "id": "people-mood",
+    "roleId": "people",
+    "type": "chatbot",
+    "title": "How open is your team?",
+    "subtitle": "A short, friendly mood check.",
+    "points": 100,
+    "payload": {
+      "start": "intro",
+      "nodes": {
+        "intro": {
+          "bot": "Quick vibe check — when people hear 'new system coming', the room mostly feels...?",
+          "options": [
+            { "label": "Curious & up for it", "next": "curious" },
+            { "label": "A bit nervous", "next": "nervous" },
+            { "label": "Tired of change", "next": "tired" }
+          ]
+        },
+        "curious": {
+          "bot": "Love that. Curiosity is rocket fuel. What would help them most?",
+          "options": [
+            { "label": "Early hands-on previews", "next": "done" },
+            { "label": "Clear 'what's in it for me'", "next": "done" }
+          ]
+        },
+        "nervous": {
+          "bot": "Totally normal. Nervous usually means 'I don't know what changes for me yet'. What would calm it?",
+          "options": [
+            { "label": "Honest, regular updates", "next": "done" },
+            { "label": "Training before go-live", "next": "done" }
+          ]
+        },
+        "tired": {
+          "bot": "Heard. Change fatigue is real. The trick is making this one feel different — lighter, with quick wins.",
+          "options": [
+            { "label": "Start with quick wins", "next": "done" },
+            { "label": "Involve them in decisions", "next": "done" }
+          ]
+        },
+        "done": {
+          "bot": "Logged. You just turned a feeling into a signal the whole team can act on. 💛",
+          "end": true
+        }
+      }
+    }
+  },
+  {
+    "id": "people-quiz",
+    "roleId": "people",
+    "type": "quiz",
+    "title": "What helps change land?",
+    "subtitle": "One quick one on the human side.",
+    "points": 100,
+    "payload": {
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "What predicts a smooth rollout best?",
+          "options": [
+            { "id": "a", "label": "Buying the most expensive licences", "correct": false },
+            { "id": "b", "label": "Involving people early and often", "correct": true }
+          ],
+          "explanation": "Adoption beats tooling. Teams that feel involved adopt faster and complain less."
+        }
+      ]
+    }
+  }
+]

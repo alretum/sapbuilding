@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply text-ink antialiased;
+  background:
+    radial-gradient(1200px 600px at 8% -10%, #efeaff 0%, transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, #e3fff8 0%, transparent 55%),
+    #f6f6fb;
+  min-height: 100dvh;
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl2 bg-white shadow-card border border-black/5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-dark;
+  }
+  .btn-ghost {
+    @apply btn bg-black/5 text-ink hover:bg-black/10;
+  }
+}
