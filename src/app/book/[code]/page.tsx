@@ -57,7 +57,7 @@ export default function BookPage() {
         <Button className="w-full" disabled={!name.trim() || !email.trim()} onClick={() => setDone(true)}>
           Request my session →
         </Button>
-        <p className="text-center text-xs text-ink/40">Demo — no email is actually sent.</p>
+        <p className="text-center text-xs text-ink/40">Demo — nothing is sent or stored; this is a stub.</p>
       </Card>
     </Screen>
   );

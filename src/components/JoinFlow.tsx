@@ -178,6 +178,9 @@ export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) 
         <Button className="w-full" disabled={!newName.trim() || busy} onClick={createNew}>
           {busy ? "Joining…" : "Join as new player →"}
         </Button>
+        <p className="text-center text-xs text-ink/40">
+          We only store your first name — no accounts, no email, no tracking.
+        </p>
       </div>
     </Card>
   );
