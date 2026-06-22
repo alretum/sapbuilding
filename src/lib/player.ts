@@ -9,6 +9,7 @@ export interface StoredPlayer {
   playerId: string;
   roleId: string;
   name: string;
+  avatar?: string | null; // JSON AvatarConfig
 }
 
 const KEY = "crc:player";

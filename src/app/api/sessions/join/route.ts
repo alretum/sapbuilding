@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getContent } from "@/lib/content";
+import { defaultAvatar } from "@/lib/avatar-config";
 
 // Join a session by code, picking a role. Creates a player.
 export async function POST(req: Request) {
@@ -24,8 +25,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "session not found" }, { status: 404 });
   }
 
+  // Assign a random avatar by default — no onboarding step; editable later.
   const player = await prisma.player.create({
-    data: { sessionId: session.id, name: name.trim(), roleId },
+    data: { sessionId: session.id, name: name.trim(), roleId, avatar: JSON.stringify(defaultAvatar()) },
   });
 
   return NextResponse.json({
@@ -33,5 +35,6 @@ export async function POST(req: Request) {
     code: session.code,
     playerId: player.id,
     roleId,
+    avatar: player.avatar,
   });
 }

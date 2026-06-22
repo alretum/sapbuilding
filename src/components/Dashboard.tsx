@@ -1,71 +1,112 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MAX_LEVEL, type SessionSnapshot } from "@/lib/snapshot-types";
+import { type SessionSnapshot } from "@/lib/snapshot-types";
+import { AnimatedNumber } from "./AnimatedNumber";
+import { LevelBadge } from "./LevelBadge";
+import { DeptAvatar, UserAvatar } from "./Avatar";
+import { ProgressBar } from "./ui";
 
-// The shared dashboard: company Readiness Score + every department side by side.
-// Used standalone (CEO view) and embedded in the player view. `highlightRole`
-// emphasises the viewer's own department.
+// The shared dashboard: company Readiness Score, every department side by side,
+// and the internal employee leaderboard. Used standalone (CEO view) and embedded
+// in the player view. `highlightRole` / `highlightPlayerId` emphasise the viewer.
 export function Dashboard({
   snapshot,
   highlightRole,
+  highlightPlayerId,
 }: {
   snapshot: SessionSnapshot;
   highlightRole?: string;
+  highlightPlayerId?: string;
 }) {
   const ranked = [...snapshot.departments].sort((a, b) => b.readiness - a.readiness);
+  const leaderId = ranked[0]?.participated ? ranked[0].roleId : undefined;
+  const topPlayers = snapshot.leaderboard.slice(0, 10);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <ReadinessGauge value={snapshot.companyReadiness} />
 
-      <div className="space-y-3">
+      <section className="space-y-3">
+        <h2 className="px-1 font-display text-sm font-bold uppercase tracking-wide text-ink/45">Departments</h2>
         {ranked.map((d, i) => {
           const isMe = d.roleId === highlightRole;
+          const isLeader = d.roleId === leaderId;
           return (
             <motion.div
               key={d.roleId}
               layout
-              className={[
-                "card p-4",
-                isMe ? "ring-2 ring-brand" : "",
-              ].join(" ")}
+              transition={{ type: "spring", stiffness: 200, damping: 26 }}
+              className={["card p-4", isMe ? "ring-2 ring-brand" : ""].join(" ")}
             >
               <div className="flex items-center gap-3">
-                <span className="text-2xl" aria-hidden>
-                  {d.avatar}
-                </span>
+                <DeptAvatar emoji={d.avatar} color={d.color} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate font-semibold">
+                    <p className="flex items-center gap-1 truncate font-display text-[15px] font-semibold">
+                      {isLeader && <span title="In the lead">👑</span>}
                       {d.name}
-                      {isMe && <span className="ml-1 text-xs text-brand">(you)</span>}
+                      {isMe && <span className="text-xs font-bold text-brand">(you)</span>}
                     </p>
-                    <span className="shrink-0 text-xs text-ink/50">#{i + 1}</span>
+                    <span className="shrink-0 text-xs font-bold text-ink/40">#{i + 1}</span>
                   </div>
-                  <p className="text-xs text-ink/50">
-                    Lvl {d.level}/{MAX_LEVEL} · {d.earned}/{d.max} pts · {d.playerCount} player
-                    {d.playerCount === 1 ? "" : "s"}
-                  </p>
+                  <div className="flex items-center gap-2 text-xs text-ink/50">
+                    <LevelBadge level={d.level} color={d.color} />
+                    <span>·</span>
+                    <span>
+                      {d.playerCount} player{d.playerCount === 1 ? "" : "s"}
+                    </span>
+                  </div>
                 </div>
+                <span className="shrink-0 font-display text-lg font-bold" style={{ color: d.color }}>
+                  <AnimatedNumber value={Math.round(d.readiness * 100)} suffix="%" />
+                </span>
               </div>
 
-              <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-black/5">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ backgroundColor: d.color }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.round(d.readiness * 100)}%` }}
-                  transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                />
-              </div>
+              <ProgressBar value={d.readiness} color={d.color} className="mt-3" />
               {!d.participated && (
-                <p className="mt-2 text-xs text-amber-600">Not started yet — dragging the score down 👀</p>
+                <p className="mt-2 text-xs font-semibold text-sun">Not started yet — pulling the score down 👀</p>
               )}
             </motion.div>
           );
         })}
-      </div>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="px-1 font-display text-sm font-bold uppercase tracking-wide text-ink/45">Leaderboard</h2>
+        {topPlayers.length === 0 ? (
+          <p className="px-1 text-sm text-ink/40">No players yet.</p>
+        ) : (
+          <div className="card divide-y divide-ink/5 p-2">
+            {topPlayers.map((p, i) => {
+              const isMe = p.playerId === highlightPlayerId;
+              return (
+                <motion.div
+                  key={p.playerId}
+                  layout
+                  className={`flex items-center gap-3 rounded-xl px-2 py-2 ${isMe ? "bg-brand/5" : ""}`}
+                >
+                  <span className="w-6 text-center font-display text-sm font-bold text-ink/40">
+                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+                  </span>
+                  <UserAvatar raw={p.avatar} fallbackSeed={p.name} size={36} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">
+                      {p.name}
+                      {isMe && <span className="ml-1 text-xs font-bold text-brand">(you)</span>}
+                    </p>
+                    <p className="flex items-center gap-1 text-xs text-ink/45">
+                      <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
+                      {p.roleName}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-display font-bold text-ink/70">{p.points}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
@@ -73,25 +114,18 @@ export function Dashboard({
 function ReadinessGauge({ value }: { value: number }) {
   return (
     <div className="card flex flex-col items-center gap-2 p-6 text-center">
-      <p className="text-sm font-medium uppercase tracking-wide text-ink/50">Company Readiness</p>
+      <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Company Readiness</p>
       <div
-        className="grid h-40 w-40 place-items-center rounded-full"
+        className="grid h-44 w-44 place-items-center rounded-full"
         style={{
-          background: `conic-gradient(#6d5df6 ${value * 3.6}deg, rgba(0,0,0,0.06) 0deg)`,
+          background: `conic-gradient(#6d5df6 ${value * 3.6}deg, #2bd4a8 ${value * 3.6}deg, rgba(22,26,62,0.06) 0deg)`,
         }}
       >
-        <div className="grid h-32 w-32 place-items-center rounded-full bg-white">
-          <motion.span
-            key={value}
-            initial={{ scale: 0.85 }}
-            animate={{ scale: 1 }}
-            className="text-4xl font-extrabold text-brand"
-          >
-            {value}%
-          </motion.span>
+        <div className="grid h-36 w-36 place-items-center rounded-full bg-white shadow-inner">
+          <AnimatedNumber value={value} suffix="%" className="font-display text-5xl font-bold text-brand" />
         </div>
       </div>
-      <p className="text-xs text-ink/50">Arithmetic mean of all departments&apos; readiness</p>
+      <p className="text-xs text-ink/45">Arithmetic mean of every department&apos;s readiness</p>
     </div>
   );
 }

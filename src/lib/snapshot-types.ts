@@ -15,6 +15,16 @@ export interface DepartmentSnapshot {
   level: number; // 0..MAX_LEVEL
 }
 
+export interface PlayerScore {
+  playerId: string;
+  name: string;
+  roleId: string;
+  roleName: string;
+  color: string;
+  points: number;
+  avatar: string | null; // JSON AvatarConfig, or null
+}
+
 export interface SessionSnapshot {
   sessionId: string;
   code: string;
@@ -22,6 +32,7 @@ export interface SessionSnapshot {
   status: string;
   companyReadiness: number; // 0..100 — arithmetic mean of department readiness
   departments: DepartmentSnapshot[];
+  leaderboard: PlayerScore[]; // every employee, ranked by points within the company
   totalPoints: number;
   involvedRoles: string[];
   updatedAt: string;
