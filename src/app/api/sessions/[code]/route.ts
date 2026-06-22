@@ -6,12 +6,13 @@ export const dynamic = "force-dynamic";
 
 // Delete a challenge (and, by cascade, its players + completions). Admin-gated,
 // and requires the caller to confirm the exact company name as a safety check.
-export async function DELETE(req: Request, { params }: { params: { code: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ code: string }> }) {
   if (!isAdminAuthorized(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const session = await prisma.session.findUnique({ where: { code: params.code.toUpperCase() } });
+  const { code } = await params; // params is async in Next 15+
+  const session = await prisma.session.findUnique({ where: { code: code.toUpperCase() } });
   if (!session) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   const body = (await req.json().catch(() => ({}))) as { confirm?: string };

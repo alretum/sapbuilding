@@ -1,4 +1,5 @@
-FROM node:20-alpine
+# Node 24 (current LTS) — satisfies Next 16 (>=20.9) and Prisma.
+FROM node:24-alpine
 
 # Prisma needs these on Alpine
 RUN apk add --no-cache libc6-compat openssl

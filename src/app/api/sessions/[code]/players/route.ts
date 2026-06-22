@@ -5,8 +5,10 @@ export const dynamic = "force-dynamic";
 
 // List players already in a session (optionally filtered by role). Powers the
 // "pick your name, or add a new one" login — no credentials, just identity.
-export async function GET(req: Request, { params }: { params: { code: string } }) {
-  const session = await prisma.session.findUnique({ where: { code: params.code.toUpperCase() } });
+export async function GET(req: Request, { params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params; // params is async in Next 15+
+
+  const session = await prisma.session.findUnique({ where: { code: code.toUpperCase() } });
   if (!session) return NextResponse.json({ error: "session not found" }, { status: 404 });
 
   const roleId = new URL(req.url).searchParams.get("roleId") ?? undefined;

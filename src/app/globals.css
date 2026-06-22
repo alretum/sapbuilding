@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Keep using the existing JS theme (colours, fonts, keyframes) from tailwind.config.ts */
+@config "../../tailwind.config.ts";
 
 :root {
   color-scheme: light;
@@ -32,28 +33,39 @@ body {
     @apply rounded-xl2 border border-white/60 bg-white/80 shadow-card backdrop-blur-sm;
   }
 
-  /* Tactile "3D" button: presses down on tap, with a coloured bottom edge. */
-  .btn3d {
+  /* Tactile "3D" button: presses down on tap, with a coloured bottom edge.
+     Tailwind 4's @apply only accepts real utilities, so the shared base is
+     composed via grouped selectors rather than @apply-ing a custom class. */
+  .btn3d,
+  .btn-primary,
+  .btn-ghost,
+  .btn-success {
     @apply relative inline-flex select-none items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold transition-all duration-100 ease-out;
     box-shadow: 0 4px 0 0 var(--btn-edge, rgba(0, 0, 0, 0.18));
   }
-  .btn3d:active {
+  .btn3d:active,
+  .btn-primary:active,
+  .btn-ghost:active,
+  .btn-success:active {
     transform: translateY(3px);
     box-shadow: 0 1px 0 0 var(--btn-edge, rgba(0, 0, 0, 0.18));
   }
-  .btn3d:disabled {
+  .btn3d:disabled,
+  .btn-primary:disabled,
+  .btn-ghost:disabled,
+  .btn-success:disabled {
     @apply pointer-events-none opacity-40;
   }
   .btn-primary {
-    @apply btn3d bg-brand text-white;
+    @apply bg-brand text-white;
     --btn-edge: #4b3fd6;
   }
   .btn-ghost {
-    @apply btn3d bg-white text-ink;
+    @apply bg-white text-ink;
     --btn-edge: rgba(22, 26, 62, 0.14);
   }
   .btn-success {
-    @apply btn3d bg-mint text-white;
+    @apply bg-mint text-white;
     --btn-edge: #1aa886;
   }
 }
