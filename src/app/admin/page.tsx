@@ -182,6 +182,23 @@ function CreateForm({
             </a>
           </div>
 
+          {/* Employee invite — the simulated email that gets the team playing */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Employee invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              The email your departments receive. The link drops them straight into joining (code pre-filled), or they
+              can type the code.
+            </p>
+            <a
+              href={`/invite/${created.code}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost mt-3 inline-flex text-sm"
+            >
+              📧 Open the employee invite email →
+            </a>
+          </div>
+
           {/* Decision-maker invite — opens the simulated email, which leads to /welcome */}
           <div className="rounded-2xl border border-black/10 p-4 text-center">
             <p className="text-sm font-semibold">Decision-maker invite</p>
