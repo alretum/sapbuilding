@@ -49,6 +49,7 @@ export function Dashboard({
             🏆 See how you rank against other companies →
           </a>
         </div>
+        <BookEvoKitCTA code={snapshot.code} />
       </section>
 
       <section className="space-y-3">
@@ -282,8 +283,6 @@ export function Dashboard({
           📄 Your challenge brief is ready — open it →
         </a>
       )}
-
-      <BookEvoKitCTA code={snapshot.code} />
     </div>
   );
 }

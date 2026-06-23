@@ -140,6 +140,8 @@ function ReadyView({
 
   return (
     <div className="space-y-4">
+      {played && <BookEvoKitCTA code={code} className="w-full" />}
+
       {/* Preliminary hypothesis — clearly labelled, not the real report */}
       <Card className="space-y-1 text-center">
         <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Preliminary read</p>
@@ -184,7 +186,6 @@ function ReadyView({
             📊 {participation.departmentsPlayed}/{participation.totalDepartments} departments in ·{" "}
             {participation.preparationScore}% preparation
           </p>
-          <BookEvoKitCTA code={code} />
         </Card>
       ) : (
         <Card className="space-y-2 text-center">

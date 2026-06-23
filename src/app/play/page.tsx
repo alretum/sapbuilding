@@ -149,6 +149,10 @@ export default function PlayPage() {
         </div>
       </div>
 
+      {doneCount === actions.length && actions.length > 0 && (
+        <BookEvoKitCTA code={player.code} className="w-full" />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         {/* Left Column: Identity & Progress */}
         <div className="md:col-span-5 space-y-5">
@@ -222,11 +226,6 @@ export default function PlayPage() {
         </div>
       </div>
 
-      {doneCount === actions.length && actions.length > 0 && (
-        <div className="mt-6">
-          <BookEvoKitCTA code={player.code} />
-        </div>
-      )}
       {/* Active action sheet */}
       <AnimatePresence>
         {active && (
