@@ -5,9 +5,7 @@ import type { CalculatorPayload } from "@/lib/content-schema";
 import type { ActionProps } from "./types";
 import { Button } from "../ui";
 import { motion } from "framer-motion";
-
-// SAP's official value/ROI guidance. TODO: swap for the exact SAP value-calculator URL.
-const SAP_VALUE_URL = "https://www.sap.com/products/erp/rise.html";
+import { SAP_ROI_CALCULATOR } from "@/lib/sap-links";
 
 export function CalculatorAction({ action, onComplete }: ActionProps) {
   const payload = action.payload as CalculatorPayload;
@@ -57,12 +55,12 @@ export function CalculatorAction({ action, onComplete }: ActionProps) {
               a guess from us.
             </p>
             <a
-              href={SAP_VALUE_URL}
+              href={SAP_ROI_CALCULATOR}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block font-semibold text-brand underline"
             >
-              Get your real ROI from SAP&apos;s value tooling →
+              Get your real ROI from SAP&apos;s calculator →
             </a>
           </div>
           <Button onClick={finish} className="w-full">

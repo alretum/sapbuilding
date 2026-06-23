@@ -2,6 +2,7 @@
 
 import { recommend, type RecPath } from "@/lib/recommendation";
 import type { CompanyProfile } from "@/lib/profile";
+import { SAP_READINESS_CHECK, SAP_ROI_CALCULATOR } from "@/lib/sap-links";
 import { PeerStories } from "./PeerStories";
 
 const PATH_STYLE: Record<RecPath, { color: string; emoji: string }> = {
@@ -84,7 +85,7 @@ export function PersonalizedRead({ companyName, profile }: { companyName: string
       {/* Peer voices */}
       <PeerStories industry={profile.industry} />
 
-      {/* Honesty */}
+      {/* Honesty + the real SAP tools */}
       <div className="card p-5">
         <p className="font-display font-bold">🤝 Straight talk</p>
         <ul className="mt-2 space-y-1 text-sm text-ink/60">
@@ -95,6 +96,25 @@ export function PersonalizedRead({ companyName, profile }: { companyName: string
             </li>
           ))}
         </ul>
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-ink/5 pt-3 text-sm">
+          <span className="text-xs font-bold uppercase tracking-wide text-ink/40">The real versions, from SAP:</span>
+          <a
+            href={SAP_READINESS_CHECK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand underline"
+          >
+            🔍 Readiness Check ↗
+          </a>
+          <a
+            href={SAP_ROI_CALCULATOR}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand underline"
+          >
+            💶 ROI calculator ↗
+          </a>
+        </div>
       </div>
     </div>
   );

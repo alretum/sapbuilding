@@ -4,6 +4,7 @@ import { Footer } from "@/components/landing/Footer";
 import { Reveal, Section, SectionHeading } from "@/components/landing/primitives";
 import { PeerStories } from "@/components/PeerStories";
 import { ProgressBar } from "@/components/ui";
+import { SAP_READINESS_CHECK, SAP_ROI_CALCULATOR } from "@/lib/sap-links";
 
 export const metadata: Metadata = {
   title: "Cloud Readiness Challenge — the business case",
@@ -274,6 +275,27 @@ export default function DecisionMakerPage() {
             honestly. This isn&apos;t a sales funnel dressed as a game: no fabricated ROI numbers, no &ldquo;you&apos;re
             100% ready&rdquo; theatre. If now isn&apos;t your moment, we&apos;ll say so. An honest read is the whole
             point.
+          </p>
+          <p className="text-sm text-ink/55">
+            When you want the rigorous versions, they live with SAP:{" "}
+            <a
+              href={SAP_READINESS_CHECK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-brand underline"
+            >
+              the Readiness Check
+            </a>{" "}
+            (your real technical readiness) and{" "}
+            <a
+              href={SAP_ROI_CALCULATOR}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-brand underline"
+            >
+              the ROI calculator
+            </a>{" "}
+            (your real numbers).
           </p>
         </Reveal>
       </Section>
