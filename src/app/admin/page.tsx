@@ -67,10 +67,19 @@ export default function AdminPage() {
   }
 
   return (
-    <Screen className="space-y-5">
-      <header className="space-y-1 pt-2">
-        <h1 className="text-xl font-extrabold">SAP Admin · Company challenges</h1>
-        <p className="text-sm text-ink/60">Set up a challenge for a company. Employees join with the code.</p>
+    <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-10 space-y-5">
+      <header className="flex items-center justify-between border-b border-black/5 pb-3">
+        <div className="text-left">
+          <h1 className="font-display text-xl font-bold">SAP Admin</h1>
+          <p className="text-xs text-ink/50">Manage company challenges</p>
+        </div>
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🎮</a>
+          <a href="/dashboard" title="Dashboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">📊</a>
+          <a href="/leaderboard" title="Company Leaderboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🏆</a>
+          <a href="/map" title="Readiness Map" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🗺️</a>
+          <a href="/admin" title="SAP Admin" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition font-bold border border-brand bg-brand/5">⚙️</a>
+        </div>
       </header>
 
       <Card className="space-y-2">
@@ -97,7 +106,7 @@ export default function AdminPage() {
           sessions.map((s) => <SessionCard key={s.id} session={s} headers={headers} onDeleted={refresh} />)
         )}
       </section>
-    </Screen>
+    </main>
   );
 }
 

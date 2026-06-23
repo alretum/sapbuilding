@@ -12,11 +12,19 @@ const GermanyMap = dynamic(() => import("@/components/GermanyMap"), {
 
 export default function MapPage() {
   return (
-    <Screen className="max-w-2xl space-y-4">
-      <header className="space-y-1 pt-2 text-center">
-        <p className="text-4xl">🗺️</p>
-        <h1 className="font-display text-2xl font-bold">Preparation Map</h1>
-        <p className="text-sm text-ink/60">How prepared is Germany? Tap a region, then zoom into its cities.</p>
+    <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10 space-y-5">
+      <header className="flex items-center justify-between border-b border-black/5 pb-3">
+        <div className="text-left">
+          <h1 className="font-display text-xl font-bold">Readiness Map</h1>
+          <p className="text-xs text-ink/50">Germany's cloud state</p>
+        </div>
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🎮</a>
+          <a href="/dashboard" title="Dashboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">📊</a>
+          <a href="/leaderboard" title="Company Leaderboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🏆</a>
+          <a href="/map" title="Readiness Map" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition font-bold border border-brand bg-brand/5">🗺️</a>
+          <a href="/admin" title="SAP Admin" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">⚙️</a>
+        </div>
       </header>
 
       <GermanyMap />
@@ -24,6 +32,6 @@ export default function MapPage() {
       <a href="/leaderboard" className="btn-ghost w-full">
         🏆 Company leaderboard →
       </a>
-    </Screen>
+    </main>
   );
 }

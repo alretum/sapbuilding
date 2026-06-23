@@ -30,28 +30,30 @@ export default function DashboardPage() {
   const snapshot = useSessionSnapshot(sessionId);
 
   return (
-    <Screen className="space-y-5">
+    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:py-10 space-y-5">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-xl font-bold">{snapshot?.name ?? "Live Dashboard"}</h1>
           {snapshot && <p className="text-xs text-ink/50">Session {snapshot.code}</p>}
         </div>
-        <NavButton href="/play">← Play</NavButton>
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🎮</a>
+          <a href="/dashboard" title="Dashboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition font-bold border border-brand bg-brand/5">📊</a>
+          <a href="/leaderboard" title="Company Leaderboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🏆</a>
+          <a href="/map" title="Readiness Map" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🗺️</a>
+          <a href="/admin" title="SAP Admin" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">⚙️</a>
+        </div>
       </header>
 
       {!sessionId ? (
-        <Card className="text-center text-sm text-ink/60">
+        <Card className="text-center text-sm text-ink/60 max-w-md mx-auto">
           No session selected. Join a challenge first, or open a host dashboard link.
         </Card>
       ) : !snapshot ? (
-        <Card className="text-center text-sm text-ink/50">Connecting to the live scores…</Card>
+        <Card className="text-center text-sm text-ink/50 max-w-md mx-auto">Connecting to the live scores…</Card>
       ) : (
         <Dashboard snapshot={snapshot} highlightRole={myRole} highlightPlayerId={myPlayerId} />
       )}
-
-      <a href="/leaderboard" className="btn-ghost w-full">
-        🏆 See how you rank against other companies →
-      </a>
-    </Screen>
+    </main>
   );
 }

@@ -67,8 +67,24 @@ export const chatbotPayloadSchema = z.object({
 
 // ---- Action + Content ------------------------------------------------------
 
-export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster"]);
+export const matchPayloadSchema = z.object({
+  prompt: z.string(),
+  items: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
+  targets: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
+  correctMatches: z.record(z.string(), z.union([z.string(), z.array(z.string())])).optional(),
+  randomLimit: z.number().optional(),
+});
 
+export const multiselectPayloadSchema = z.object({
+  prompt: z.string(),
+  options: z.array(z.object({ id: z.string(), label: z.string(), correct: z.boolean().optional() })).min(1),
+  maxSelect: z.number().optional(),
+  randomLimit: z.number().optional(),
+  pointsPerCorrect: z.number().optional(),
+  penaltyPerWrong: z.number().optional(),
+});
+
+export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster", "match", "multiselect"]);
 export const calculatorPayloadSchema = z.object({
   fields: z.array(
     z.object({
@@ -126,6 +142,8 @@ export type CalculatorPayload = z.infer<typeof calculatorPayloadSchema>;
 export type SortPayload = z.infer<typeof sortPayloadSchema>;
 export type InputPayload = z.infer<typeof inputPayloadSchema>;
 export type DashboardBoosterPayload = z.infer<typeof dashboardBoosterPayloadSchema>;
+export type MatchPayload = z.infer<typeof matchPayloadSchema>;
+export type MultiselectPayload = z.infer<typeof multiselectPayloadSchema>;
 export type Content = z.infer<typeof contentSchema>;
 
 // Map of action type -> its payload schema, used to validate payloads on load.
@@ -137,4 +155,6 @@ export const payloadSchemas = {
   sort: sortPayloadSchema,
   input: inputPayloadSchema,
   "dashboard-booster": dashboardBoosterPayloadSchema,
+  match: matchPayloadSchema,
+  multiselect: multiselectPayloadSchema,
 } as const;

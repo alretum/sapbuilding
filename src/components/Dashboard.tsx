@@ -25,8 +25,15 @@ export function Dashboard({
   const topPlayers = snapshot.leaderboard.slice(0, 10);
 
   return (
-    <div className="space-y-6">
-      <ReadinessGauge value={snapshot.companyReadiness} />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <section className="space-y-4">
+        <ReadinessGauge value={snapshot.companyReadiness} />
+        <div className="pt-4">
+          <a href="/leaderboard" className="btn-ghost w-full">
+            🏆 See how you rank against other companies →
+          </a>
+        </div>
+      </section>
 
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">
@@ -52,7 +59,7 @@ export function Dashboard({
                   <div className="flex items-center justify-between gap-2">
                     <p className="flex items-center gap-1 truncate font-display text-[15px] font-semibold">
                       {isLeader && <span title="In the lead">👑</span>}
-                      {d.name}
+                      {d.department}
                       {isMe && <span className="text-xs font-bold text-brand">(you)</span>}
                     </p>
                     <span className="shrink-0 text-xs font-bold text-ink/40">#{i + 1}</span>
@@ -73,6 +80,142 @@ export function Dashboard({
               <ProgressBar value={d.readiness} color={d.color} className="mt-3" />
               {!d.participated && (
                 <p className="mt-2 text-xs font-semibold text-sun">Not started yet — pulling the score down 👀</p>
+              )}
+              {d.roleId === "finance" && snapshot.financeROI !== null && (
+                <div className="mt-3 rounded-lg bg-green-50/50 p-2 text-xs font-medium text-green-800 ring-1 ring-inset ring-green-200">
+                  <span className="font-bold">Calculated Savings Potential:</span> ~€{snapshot.financeROI.toLocaleString()} / year
+                </div>
+              )}
+              {d.roleId === "finance" && (snapshot.financeBadges?.length > 0 || snapshot.financeFeedback) && (
+                <div className="mt-3 rounded-lg bg-blue-50/50 p-3 text-xs text-blue-900 ring-1 ring-inset ring-blue-200 space-y-2">
+                  {snapshot.financeBadges?.length > 0 && (
+                    <div>
+                      <span className="font-bold block mb-1">Unlocked Badges:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {snapshot.financeBadges.map(b => (
+                           <span key={b} className="bg-blue-100 px-2 py-0.5 rounded text-blue-800 font-medium">🏅 {b}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {snapshot.financeMissingBadges?.length > 0 && (
+                    <div>
+                       <span className="font-bold block mb-1 text-red-700">Missing Badges:</span>
+                       <div className="flex flex-wrap gap-1">
+                        {snapshot.financeMissingBadges.map(b => (
+                           <span key={b} className="bg-red-50 text-red-700 ring-1 ring-red-200 px-2 py-0.5 rounded font-medium opacity-70">🏅 {b}</span>
+                        ))}
+                       </div>
+                    </div>
+                  )}
+                  {snapshot.financeFeedback && (
+                    <div className="pt-2 border-t border-blue-200/50 italic text-blue-800/80">
+                      {snapshot.financeFeedback}
+                    </div>
+                  )}
+                </div>
+              )}
+              {d.roleId === "captain" && (snapshot.captainBadges?.length > 0 || snapshot.captainFeedback) && (
+                <div className="mt-3 rounded-lg bg-indigo-50/50 p-3 text-xs text-indigo-900 ring-1 ring-inset ring-indigo-200 space-y-2">
+                  {snapshot.captainBadges?.length > 0 && (
+                    <div>
+                      <span className="font-bold block mb-1">Earned Badges:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {snapshot.captainBadges.map(b => (
+                           <span key={b} className="bg-indigo-100 px-2 py-0.5 rounded text-indigo-800 font-medium">🏅 {b}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {snapshot.captainFeedback && (
+                    <div className="pt-2 border-t border-indigo-200/50 italic text-indigo-800/80">
+                      {snapshot.captainFeedback}
+                    </div>
+                  )}
+                </div>
+              )}
+              {d.roleId === "it" && (snapshot.itBadges?.length > 0 || snapshot.itFeedback) && (
+                <div className="mt-3 rounded-lg bg-orange-50/50 p-3 text-xs text-orange-900 ring-1 ring-inset ring-orange-200 space-y-2">
+                  {snapshot.itBadges?.length > 0 && (
+                    <div>
+                      <span className="font-bold block mb-1">Earned Badges:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {snapshot.itBadges.map(b => (
+                           <span key={b} className="bg-orange-100 px-2 py-0.5 rounded text-orange-800 font-medium">🏅 {b}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {snapshot.itMissingBadges?.length > 0 && (
+                    <div>
+                       <span className="font-bold block mb-1 text-red-700">Missing Badges:</span>
+                       <div className="flex flex-wrap gap-1">
+                        {snapshot.itMissingBadges.map(b => (
+                           <span key={b} className="bg-red-50 text-red-700 ring-1 ring-red-200 px-2 py-0.5 rounded font-medium opacity-70">🏅 {b}</span>
+                        ))}
+                       </div>
+                    </div>
+                  )}
+                  {snapshot.itFeedback && (
+                    <div className="pt-2 border-t border-orange-200/50 space-y-1.5 text-[11px] text-orange-950/90">
+                      <div><span className="font-bold">Custom Code:</span> {snapshot.itFeedback.customCode}</div>
+                      <div><span className="font-bold">Clean Core:</span> {snapshot.itFeedback.cleanCore}</div>
+                      <div><span className="font-bold">Interfaces:</span> {snapshot.itFeedback.interfaces}</div>
+                      <div><span className="font-bold">Operations:</span> {snapshot.itFeedback.operations}</div>
+                      <div className="pt-1.5 border-t border-orange-200/50"><span className="font-bold text-red-800">Biggest Risk:</span> {snapshot.itFeedback.biggestRisk}</div>
+                      <div><span className="font-bold text-green-800">Strongest Driver:</span> {snapshot.itFeedback.strongestDriver}</div>
+                      <div><span className="font-bold text-ink/75">Next Step:</span> {snapshot.itFeedback.recommendedNextStep}</div>
+                      <div className="pt-1.5 border-t border-orange-200/50 italic font-medium">{snapshot.itFeedback.finalMessage}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {d.roleId === "production" && (snapshot.productionBadges?.length > 0 || snapshot.productionFeedback) && (
+                <div className="mt-3 rounded-lg bg-green-50/50 p-3 text-xs text-green-900 ring-1 ring-inset ring-green-200 space-y-2">
+                  {snapshot.productionBadges?.length > 0 && (
+                    <div>
+                      <span className="font-bold block mb-1">Earned Badges:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {snapshot.productionBadges.map(b => (
+                           <span key={b} className="bg-green-100 px-2 py-0.5 rounded text-green-800 font-medium">🏅 {b}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {snapshot.productionMissingBadges?.length > 0 && (
+                    <div>
+                       <span className="font-bold block mb-1 text-red-700">Missing Badges:</span>
+                       <div className="flex flex-wrap gap-1">
+                        {snapshot.productionMissingBadges.map(b => (
+                           <span key={b} className="bg-red-50 text-red-700 ring-1 ring-red-200 px-2 py-0.5 rounded font-medium opacity-70">🏅 {b}</span>
+                        ))}
+                       </div>
+                    </div>
+                  )}
+                  {snapshot.productionFeedback && (
+                    <div className="pt-2 border-t border-green-200/50 space-y-1.5 text-[11px] text-green-950/90">
+                      <div><span className="font-bold">Unplanned Downtime:</span> {snapshot.productionFeedback.unplannedDowntime}</div>
+                      <div><span className="font-bold">Scrap/Rework Rate:</span> {snapshot.productionFeedback.scrapRate}</div>
+                      <div><span className="font-bold">Plan Alignment:</span> {snapshot.productionFeedback.planAlignment}</div>
+                      <div className="pt-1.5 border-t border-green-200/50"><span className="font-bold text-red-800">Biggest Risk:</span> {snapshot.productionFeedback.biggestRisk}</div>
+                      <div><span className="font-bold text-green-800">Strongest Driver:</span> {snapshot.productionFeedback.strongestDriver}</div>
+                      <div><span className="font-bold text-ink/75">Next Step:</span> {snapshot.productionFeedback.recommendedNextStep}</div>
+                      <div className="pt-1.5 border-t border-green-200/50 italic font-medium">{snapshot.productionFeedback.finalMessage}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {d.roleId === "hr" && snapshot.hrBadges?.length > 0 && (
+                <div className="mt-3 rounded-lg bg-pink-50/50 p-3 text-xs text-pink-900 ring-1 ring-inset ring-pink-200 space-y-2">
+                  <div>
+                    <span className="font-bold block mb-1">Earned Badges:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {snapshot.hrBadges.map(b => (
+                         <span key={b} className="bg-pink-100 px-2 py-0.5 rounded text-pink-800 font-medium">🏅 {b}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               )}
             </motion.div>
           );

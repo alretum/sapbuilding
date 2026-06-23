@@ -34,5 +34,14 @@
     "color": "#27ae60",
     "avatar": "⚙️",
     "blurb": "Every process step is a chance to remove friction. Which ones quietly drive everyone crazy?"
+  },
+  {
+    "id": "hr",
+    "name": "People-Champions",
+    "department": "HR",
+    "character": "Prepare the People",
+    "color": "#e84393",
+    "avatar": "🤝",
+    "blurb": "Change management and training are your focus. Ensure the people are ready for the cloud."
   }
 ]

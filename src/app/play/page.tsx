@@ -120,7 +120,7 @@ export default function PlayPage() {
   }
 
   return (
-    <Screen className="space-y-5">
+    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-10 space-y-5">
       {/* Top bar: editable avatar + identity */}
       <div className="flex items-center gap-3">
         <UserAvatar raw={player.avatar} fallbackSeed={player.name} size={52} onClick={() => setEditing(true)} />
@@ -130,81 +130,103 @@ export default function PlayPage() {
             <span>{role?.avatar}</span> {role?.name}
           </Pill>
         </div>
-        <NavButton
-          onClick={() => {
-            clearPlayer();
-            router.replace("/");
-          }}
-        >
-          🚪 Leave
-        </NavButton>
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition font-bold border border-brand bg-brand/5">🎮</a>
+          <a href="/dashboard" title="Dashboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">📊</a>
+          <a href="/leaderboard" title="Company Leaderboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🏆</a>
+          <a href="/map" title="Readiness Map" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🗺️</a>
+          <a href="/admin" title="SAP Admin" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">⚙️</a>
+          <button
+            title="Leave Session"
+            className="flex items-center justify-center h-9 w-9 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 text-lg transition ml-1"
+            onClick={() => {
+              clearPlayer();
+              router.replace("/");
+            }}
+          >
+            🚪
+          </button>
+        </div>
       </div>
 
-      {/* Role hero */}
-      <Card className="space-y-3">
-        <div className="flex items-center gap-3">
-          <DeptAvatar emoji={role?.avatar ?? "⭐"} color={role?.color ?? "#6d5df6"} size={56} />
-          <div>
-            <p className="font-display text-lg font-bold leading-tight">{role?.name}</p>
-            <p className="text-xs text-ink/50">{role?.department}</p>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Identity & Progress */}
+        <div className="md:col-span-5 space-y-5">
+          {/* Role hero */}
+          <Card className="space-y-3">
+            <div className="flex items-center gap-3">
+              <DeptAvatar emoji={role?.avatar ?? "⭐"} color={role?.color ?? "#6d5df6"} size={56} />
+              <div>
+                <p className="font-display text-lg font-bold leading-tight">{role?.name}</p>
+                <p className="text-xs text-ink/50">{role?.department}</p>
+              </div>
+            </div>
+            <p className="text-sm text-ink/70">{role?.blurb}</p>
+            <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+              <Stat label="Your points" value={<AnimatedNumber value={myEntry?.points ?? 0} />} color={role?.color} />
+              <Stat label="Level" value={<LevelBadge level={myDept?.level ?? 0} color={role?.color} />} />
+              <Stat label="Rank" value={myRank ? `#${myRank}` : "—"} />
+            </div>
+          </Card>
+
+          {/* Progress */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between px-1 text-xs font-semibold text-ink/50">
+              <span>Your tasks</span>
+              <span>
+                {doneCount}/{actions.length} done
+              </span>
+            </div>
+            <ProgressBar value={progress} color={role?.color ?? "#6d5df6"} />
+          </div>
+
+          <a href="/dashboard" className="btn-ghost w-full block text-center">
+            🏆 Leaderboard & dashboard →
+          </a>
+        </div>
+
+        {/* Right Column: Actions / Tasks */}
+        <div className="md:col-span-7 space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-ink/40 px-1">Your games & tasks</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {actions.map((a) => {
+              const isDone = completed.includes(a.id);
+              return (
+                <button
+                  key={a.id}
+                  disabled={isDone}
+                  onClick={() => {
+                    haptic(10);
+                    setActive(a);
+                  }}
+                  className={`card flex flex-col justify-between items-start gap-3 p-4 text-left transition ${
+                    isDone ? "opacity-60" : "hover:-translate-y-0.5 hover:shadow-pop"
+                  }`}
+                >
+                  <div className="flex w-full items-start justify-between gap-2">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand/10 text-xl">
+                      {a.type === "swipe" ? "👆" : a.type === "match" ? "🧩" : a.type === "sort" ? "↕️" : a.type === "multiselect" ? "✅" : a.type === "calculator" ? "🧮" : "❓"}
+                    </span>
+                    <span className="shrink-0 font-display text-sm font-bold text-brand">
+                      {isDone ? "✓ done" : `+${a.points}`}
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1 w-full">
+                    <span className="block font-display font-semibold line-clamp-2 leading-tight">{a.title}</span>
+                    {a.subtitle && <span className="block mt-1 text-[11px] text-ink/50 line-clamp-3 leading-snug">{a.subtitle}</span>}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
-        <p className="text-sm text-ink/70">{role?.blurb}</p>
-        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-          <Stat label="Your points" value={<AnimatedNumber value={myEntry?.points ?? 0} />} color={role?.color} />
-          <Stat label="Level" value={<LevelBadge level={myDept?.level ?? 0} color={role?.color} />} />
-          <Stat label="Rank" value={myRank ? `#${myRank}` : "—"} />
-        </div>
-      </Card>
-
-      {/* Progress */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between px-1 text-xs font-semibold text-ink/50">
-          <span>Your tasks</span>
-          <span>
-            {doneCount}/{actions.length} done
-          </span>
-        </div>
-        <ProgressBar value={progress} color={role?.color ?? "#6d5df6"} />
       </div>
 
-      {/* Action feed */}
-      <div className="space-y-3">
-        {actions.map((a) => {
-          const isDone = completed.includes(a.id);
-          return (
-            <button
-              key={a.id}
-              disabled={isDone}
-              onClick={() => {
-                haptic(10);
-                setActive(a);
-              }}
-              className={`card flex w-full items-center gap-3 p-4 text-left transition ${
-                isDone ? "opacity-60" : "hover:-translate-y-0.5 hover:shadow-pop"
-              }`}
-            >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand/10 text-xl">
-                {a.type === "quiz" ? "❓" : a.type === "swipe" ? "👆" : "💬"}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block font-display font-semibold">{a.title}</span>
-                {a.subtitle && <span className="block text-xs text-ink/50">{a.subtitle}</span>}
-              </span>
-              <span className="shrink-0 font-display text-sm font-bold text-brand">
-                {isDone ? "✓ done" : `+${a.points}`}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {doneCount === actions.length && actions.length > 0 && <BookEvoKitCTA code={player.code} />}
-
-      <a href="/dashboard" className="btn-ghost w-full">
-        🏆 Leaderboard & dashboard →
-      </a>
-
+      {doneCount === actions.length && actions.length > 0 && (
+        <div className="mt-6">
+          <BookEvoKitCTA code={player.code} />
+        </div>
+      )}
       {/* Active action sheet */}
       <AnimatePresence>
         {active && (
@@ -275,7 +297,7 @@ export default function PlayPage() {
           />
         )}
       </AnimatePresence>
-    </Screen>
+    </main>
   );
 }
 

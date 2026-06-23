@@ -54,11 +54,19 @@ export default function CompanyLeaderboardPage() {
   }, [refetch]);
 
   return (
-    <Screen className="space-y-5">
-      <header className="space-y-1 pt-2 text-center">
-        <p className="text-4xl">🏆</p>
-        <h1 className="font-display text-2xl font-bold">Company Leaderboard</h1>
-        <p className="text-sm text-ink/60">Every company competing, ranked by Preparation Score.</p>
+    <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-10 space-y-5">
+      <header className="flex items-center justify-between border-b border-black/5 pb-3">
+        <div className="text-left">
+          <h1 className="font-display text-xl font-bold">Company Leaderboard</h1>
+          <p className="text-xs text-ink/50">Every company ranked by Readiness Score</p>
+        </div>
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🎮</a>
+          <a href="/dashboard" title="Dashboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">📊</a>
+          <a href="/leaderboard" title="Company Leaderboard" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition font-bold border border-brand bg-brand/5">🏆</a>
+          <a href="/map" title="Readiness Map" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🗺️</a>
+          <a href="/admin" title="SAP Admin" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">⚙️</a>
+        </div>
       </header>
 
       {companies === null ? (
@@ -104,9 +112,6 @@ export default function CompanyLeaderboardPage() {
       <a href="/map" className="btn-ghost w-full">
         🗺️ See the preparation map →
       </a>
-      <div className="text-center">
-        <NavButton href="/dashboard">← Back to your dashboard</NavButton>
-      </div>
-    </Screen>
+    </main>
   );
 }

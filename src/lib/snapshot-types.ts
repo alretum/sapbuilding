@@ -5,6 +5,7 @@
 export interface DepartmentSnapshot {
   roleId: string;
   name: string;
+  department: string;
   color: string;
   avatar: string;
   earned: number;
@@ -37,6 +38,36 @@ export interface SessionSnapshot {
   involvedRoles: string[];
   updatedAt: string;
   boosterSent: boolean;
+  financeROI: number | null;
+  financeBadges: string[];
+  financeMissingBadges: string[];
+  financeFeedback: string | null;
+  captainFeedback: string | null;
+  captainBadges: string[];
+  itBadges: string[];
+  itMissingBadges: string[];
+  itFeedback: {
+    customCode: string;
+    cleanCore: string;
+    interfaces: string;
+    operations: string;
+    biggestRisk: string;
+    strongestDriver: string;
+    recommendedNextStep: string;
+    finalMessage: string;
+  } | null;
+  hrBadges: string[];
+  productionBadges: string[];
+  productionMissingBadges: string[];
+  productionFeedback: {
+    unplannedDowntime: string;
+    scrapRate: string;
+    planAlignment: string;
+    biggestRisk: string;
+    strongestDriver: string;
+    recommendedNextStep: string;
+    finalMessage: string;
+  } | null;
 }
 
 export const MAX_LEVEL = 5;
