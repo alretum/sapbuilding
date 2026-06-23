@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { getSocket } from "@/lib/socketClient";
 import { loadPlayer } from "@/lib/player";
-import { Card, Screen, ProgressBar } from "@/components/ui";
+import { Card, NavButton, Screen, ProgressBar } from "@/components/ui";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 
 type Company = {
@@ -110,10 +110,7 @@ export default function CompanyLeaderboardPage() {
       )}
 
       <a href="/map" className="btn-ghost w-full">
-        🗺️ See the readiness map →
-      </a>
-      <a href="/dashboard" className="block text-center text-sm text-brand underline">
-        ← Back to your dashboard
+        🗺️ See the preparation map →
       </a>
     </main>
   );

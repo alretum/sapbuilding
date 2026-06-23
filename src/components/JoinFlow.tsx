@@ -12,7 +12,13 @@ import { DeptAvatar } from "@/components/Avatar";
 type Step = "code" | "role" | "name";
 type ExistingPlayer = { id: string; name: string; roleId: string };
 
-export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) {
+export function JoinFlow({
+  onJoined,
+  initialCode,
+}: {
+  onJoined: (p: StoredPlayer) => void;
+  initialCode?: string;
+}) {
   const [content, setContent] = useState<Content | null>(null);
   const [step, setStep] = useState<Step>("code");
   const [code, setCode] = useState("");
@@ -22,6 +28,7 @@ export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) 
   const [newName, setNewName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [autoTried, setAutoTried] = useState(false);
 
   useEffect(() => {
     fetch("/api/content")
@@ -30,16 +37,26 @@ export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) 
       .catch(() => setContent(null));
   }, []);
 
+  // Deep-link from the employee invite: pre-fill the code and skip the code step.
+  useEffect(() => {
+    if (initialCode && !autoTried) {
+      setAutoTried(true);
+      setCode(initialCode.toUpperCase());
+      checkCode(initialCode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCode, autoTried]);
+
   function friendlyError(e: unknown, fallback: string) {
     if (e instanceof TypeError) return "Couldn't reach the server. Is it running?";
     return (e as Error).message || fallback;
   }
 
-  async function checkCode() {
+  async function checkCode(rawCode: string = code) {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`/api/sessions/${code.trim().toUpperCase()}/players`);
+      const res = await fetch(`/api/sessions/${rawCode.trim().toUpperCase()}/players`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Session not found");
       setSession({ id: data.sessionId, code: data.code, name: data.name });
@@ -106,7 +123,7 @@ export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) 
           />
         </label>
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <Button className="w-full" disabled={!code || busy} onClick={checkCode}>
+        <Button className="w-full" disabled={!code || busy} onClick={() => checkCode()}>
           {busy ? "Checking…" : "Continue →"}
         </Button>
         <p className="text-center text-xs text-ink/40">
@@ -178,6 +195,9 @@ export function JoinFlow({ onJoined }: { onJoined: (p: StoredPlayer) => void }) 
         <Button className="w-full" disabled={!newName.trim() || busy} onClick={createNew}>
           {busy ? "Joining…" : "Join as new player →"}
         </Button>
+        <p className="text-center text-xs text-ink/40">
+          We only store your first name — no accounts, no email, no tracking.
+        </p>
       </div>
     </Card>
   );

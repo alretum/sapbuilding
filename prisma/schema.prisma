@@ -19,7 +19,7 @@ model Session {
   name              String
   status            String             @default("active") // lobby | active | finished
   involvedRoles     String[] // role ids (from content) participating in this session
-  leaderboardPublic Boolean            @default(true)
+  leaderboardPublic Boolean            @default(false) // opt-in: shown on public leaderboard + map only if true
   strictGate        Boolean            @default(false) // true = readiness gated on every dept participating
   // Location for the Germany readiness map (set by SAP at setup). Optional —
   // companies without a location simply don't appear on the map.
@@ -28,6 +28,15 @@ model Session {
   lat               Float?
   lng               Float?
   isDemo            Boolean            @default(false) // seeded demo company (for the map)
+  // Company profile for the personalized read (PR B). Pre-filled by SAP at setup,
+  // confirmed by the decision-maker via the magic link (profileToken).
+  industry          String?
+  country           String?
+  sapVersion        String?
+  companySize       String?
+  dataSensitivity   String?
+  profileToken      String?            @unique
+  profileConfirmedAt DateTime?
   createdAt         DateTime           @default(now())
   startedAt         DateTime?
   players           Player[]

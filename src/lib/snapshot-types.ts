@@ -37,8 +37,8 @@ export interface SessionSnapshot {
   totalPoints: number;
   involvedRoles: string[];
   updatedAt: string;
-  financeROI: number | null;
   boosterSent: boolean;
+  financeROI: number | null;
   financeBadges: string[];
   financeMissingBadges: string[];
   financeFeedback: string | null;

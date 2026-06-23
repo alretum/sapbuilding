@@ -36,7 +36,6 @@ export const quizPayloadSchema = z.object({
               // `correct` optional: knowledge questions mark right answers,
               // opinion/poll questions simply omit it.
               correct: z.boolean().optional(),
-              points: z.number().optional(),
             }),
           )
           .min(2),
@@ -50,7 +49,7 @@ export const swipePayloadSchema = z.object({
   prompt: z.string(),
   leftLabel: z.string(),
   rightLabel: z.string(),
-  cards: z.array(z.object({ id: z.string(), label: z.string(), hint: z.string().optional(), correctSide: z.enum(["left", "right"]).optional() })).min(1),
+  cards: z.array(z.object({ id: z.string(), label: z.string(), hint: z.string().optional() })).min(1),
 });
 
 export const chatbotPayloadSchema = z.object({
@@ -101,7 +100,6 @@ export const calculatorPayloadSchema = z.object({
 export const sortPayloadSchema = z.object({
   prompt: z.string(),
   items: z.array(z.object({ id: z.string(), label: z.string() })).min(2),
-  correctOrder: z.array(z.string()).optional(),
 });
 
 export const inputPayloadSchema = z.object({

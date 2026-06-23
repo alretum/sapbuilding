@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { loadPlayer } from "@/lib/player";
 import { useSessionSnapshot } from "@/lib/useSessionSnapshot";
 import { Dashboard } from "@/components/Dashboard";
-import { Card, Screen } from "@/components/ui";
+import { Card, NavButton, Screen } from "@/components/ui";
 
 // Live dashboard. Resolves which session to show from ?session=<id> (host link)
 // or from the stored player (a participant peeking at the standings).

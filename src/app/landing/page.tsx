@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { Footer } from "@/components/landing/Footer";
 import { Reveal, Section, SectionHeading } from "@/components/landing/primitives";
+import { PeerStories } from "@/components/PeerStories";
 import { ProgressBar } from "@/components/ui";
+import { SAP_READINESS_CHECK, SAP_ROI_CALCULATOR } from "@/lib/sap-links";
 
 export const metadata: Metadata = {
   title: "Cloud Readiness Challenge — the business case",
@@ -233,7 +235,7 @@ export default function DecisionMakerPage() {
                     <span className="font-display text-3xl font-bold text-brand">66%</span>
                   </div>
                 </div>
-                <p className="text-xs text-ink/45">Company readiness (illustrative)</p>
+                <p className="text-xs text-ink/45">Company preparation (illustrative)</p>
               </div>
               <div className="space-y-2">
                 {SAMPLE_DEPTS.map((d) => (
@@ -251,6 +253,51 @@ export default function DecisionMakerPage() {
             </div>
           </Reveal>
         </div>
+      </Section>
+
+      {/* Peer voices */}
+      <Section>
+        <Reveal>
+          <SectionHeading eyebrow="From those who've done it" title="Peers who already made the move" />
+        </Reveal>
+        <Reveal delay={0.05} className="mx-auto mt-8 max-w-2xl">
+          <PeerStories limit={2} />
+        </Reveal>
+      </Section>
+
+      {/* Honesty posture */}
+      <Section className="bg-white/40">
+        <Reveal className="mx-auto max-w-3xl space-y-3 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand">Our promise</p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">We won&apos;t pretend the move is trivial.</h2>
+          <p className="text-ink/65">
+            Migration is real work, and the cloud genuinely limits some customization — we&apos;ll tell you that
+            honestly. This isn&apos;t a sales funnel dressed as a game: no fabricated ROI numbers, no &ldquo;you&apos;re
+            100% ready&rdquo; theatre. If now isn&apos;t your moment, we&apos;ll say so. An honest read is the whole
+            point.
+          </p>
+          <p className="text-sm text-ink/55">
+            When you want the rigorous versions, they live with SAP:{" "}
+            <a
+              href={SAP_READINESS_CHECK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-brand underline"
+            >
+              the Readiness Check
+            </a>{" "}
+            (your real technical readiness) and{" "}
+            <a
+              href={SAP_ROI_CALCULATOR}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-brand underline"
+            >
+              the ROI calculator
+            </a>{" "}
+            (your real numbers).
+          </p>
+        </Reveal>
       </Section>
 
       {/* CTA */}

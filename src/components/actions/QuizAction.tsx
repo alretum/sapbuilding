@@ -28,26 +28,7 @@ export function QuizAction({ action, onComplete }: ActionProps) {
   }
 
   function finish() {
-    let score = action.points;
-    const hasPointsOrCorrect = payload.questions.some(q => 
-      q.options.some(o => o.points !== undefined || o.correct !== undefined)
-    );
-    if (hasPointsOrCorrect) {
-      score = 0;
-      const pointsPerCorrect = Math.floor(action.points / payload.questions.length);
-      payload.questions.forEach(q => {
-        const chosenOptionId = answers[q.id];
-        const chosenOption = q.options.find(o => o.id === chosenOptionId);
-        if (chosenOption) {
-          if (chosenOption.points !== undefined) {
-            score += chosenOption.points;
-          } else if (chosenOption.correct) {
-            score += pointsPerCorrect;
-          }
-        }
-      });
-    }
-    onComplete({ actionId: action.id, score, payload: { answers } });
+    onComplete({ actionId: action.id, score: action.points, payload: { answers } });
   }
 
   return (

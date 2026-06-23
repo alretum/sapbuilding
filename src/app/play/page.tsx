@@ -10,11 +10,12 @@ import { useSessionSnapshot } from "@/lib/useSessionSnapshot";
 import { completeAction } from "@/lib/completeAction";
 import { celebrateBig, celebrateSmall } from "@/lib/celebrate";
 import { haptic } from "@/lib/haptics";
-import { Button, Card, Pill, ProgressBar, Screen } from "@/components/ui";
+import { Button, Card, NavButton, Pill, ProgressBar, Screen } from "@/components/ui";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { LevelBadge } from "@/components/LevelBadge";
 import { DeptAvatar, UserAvatar } from "@/components/Avatar";
 import { AvatarEditor } from "@/components/AvatarEditor";
+import { BookEvoKitCTA } from "@/components/BookEvoKitCTA";
 import { ActionRenderer } from "@/components/actions/ActionRenderer";
 import type { ActionResult } from "@/components/actions/types";
 
@@ -221,6 +222,11 @@ export default function PlayPage() {
         </div>
       </div>
 
+      {doneCount === actions.length && actions.length > 0 && (
+        <div className="mt-6">
+          <BookEvoKitCTA code={player.code} />
+        </div>
+      )}
       {/* Active action sheet */}
       <AnimatePresence>
         {active && (
@@ -274,7 +280,7 @@ export default function PlayPage() {
               <p className="mt-1 font-display text-3xl font-extrabold text-brand">
                 +<AnimatedNumber value={reward} duration={900} />
               </p>
-              <p className="text-xs font-semibold text-ink/50">readiness points</p>
+              <p className="text-xs font-semibold text-ink/50">preparation points</p>
             </motion.div>
           </motion.div>
         )}
