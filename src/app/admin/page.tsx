@@ -3,6 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Content } from "@/lib/content-schema";
 import { CITIES, REGIONS } from "@/lib/germany";
+import {
+  COMPANY_SIZES,
+  COUNTRIES,
+  DATA_SENSITIVITY,
+  INDUSTRIES,
+  SAP_VERSIONS,
+  type CompanyProfile,
+} from "@/lib/profile";
+import { KNOWN_COMPANIES } from "@/lib/known-companies";
 import { Button, Card, Screen } from "@/components/ui";
 
 // SAP-facing setup. SAP creates a challenge per company; employees then join
@@ -104,11 +113,13 @@ function CreateForm({
   const [name, setName] = useState("");
   const [roleIds, setRoleIds] = useState<string[] | null>(null); // null = all
   const [strictGate, setStrictGate] = useState(false);
+  const [leaderboardPublic, setLeaderboardPublic] = useState(false);
   const [regionCode, setRegionCode] = useState("");
   const [cityName, setCityName] = useState("");
+  const [profile, setProfile] = useState<CompanyProfile>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [created, setCreated] = useState<{ id: string; code: string } | null>(null);
+  const [created, setCreated] = useState<{ id: string; code: string; profileToken: string } | null>(null);
 
   const allRoleIds = content?.roles.map((r) => r.id) ?? [];
   const selected = roleIds ?? allRoleIds;
@@ -132,10 +143,12 @@ function CreateForm({
           name: name.trim(),
           involvedRoles: selected,
           strictGate,
+          leaderboardPublic,
           regionCode: regionCode || undefined,
           city: selectedCity?.name,
           lat: selectedCity?.lat,
           lng: selectedCity?.lng,
+          ...profile,
         }),
       });
       const data = await res.json();
@@ -143,8 +156,10 @@ function CreateForm({
       setCreated(data);
       setName("");
       setRoleIds(null);
+      setLeaderboardPublic(false);
       setRegionCode("");
       setCityName("");
+      setProfile({});
       onCreated();
     } catch (e) {
       setError(e instanceof TypeError ? "Couldn't reach the server." : (e as Error).message);
@@ -157,16 +172,6 @@ function CreateForm({
     <Card className="space-y-4">
       <h2 className="font-bold">New company challenge</h2>
 
-      {created && (
-        <div className="rounded-2xl bg-brand/5 p-4 text-center">
-          <p className="text-xs text-ink/60">Created! Share this join code:</p>
-          <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
-          <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
-            open live dashboard →
-          </a>
-        </div>
-      )}
-
       <label className="block space-y-1">
         <span className="text-sm font-medium">Company name</span>
         <input
@@ -176,6 +181,44 @@ function CreateForm({
           className="w-full rounded-2xl border border-black/10 px-4 py-3"
         />
       </label>
+
+      {/* Company profile (powers the decision-maker's personalized read) */}
+      <div className="space-y-3 rounded-2xl bg-black/[0.02] p-3">
+        <label className="block space-y-1">
+          <span className="text-sm font-medium">Pre-fill from a known customer (simulates SAP CRM)</span>
+          <select
+            value=""
+            onChange={(e) => {
+              const c = KNOWN_COMPANIES.find((k) => k.name === e.target.value);
+              if (c) {
+                setName(c.name);
+                setProfile({
+                  industry: c.industry,
+                  country: c.country,
+                  sapVersion: c.sapVersion,
+                  companySize: c.companySize,
+                  dataSensitivity: c.dataSensitivity,
+                });
+              }
+            }}
+            className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm"
+          >
+            <option value="">— pick one to auto-fill, or enter manually —</option>
+            {KNOWN_COMPANIES.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          <ProfileSelect label="Industry" value={profile.industry} options={INDUSTRIES} onChange={(v) => setProfile((p) => ({ ...p, industry: v }))} />
+          <ProfileSelect label="Country" value={profile.country} options={COUNTRIES} onChange={(v) => setProfile((p) => ({ ...p, country: v }))} />
+          <ProfileSelect label="SAP version" value={profile.sapVersion} options={SAP_VERSIONS} onChange={(v) => setProfile((p) => ({ ...p, sapVersion: v }))} />
+          <ProfileSelect label="Company size" value={profile.companySize} options={COMPANY_SIZES} onChange={(v) => setProfile((p) => ({ ...p, companySize: v }))} />
+        </div>
+        <ProfileSelect label="Data sensitivity" value={profile.dataSensitivity} options={DATA_SENSITIVITY} onChange={(v) => setProfile((p) => ({ ...p, dataSensitivity: v }))} />
+      </div>
 
       <div className="grid grid-cols-2 gap-2">
         <label className="space-y-1">
@@ -213,7 +256,7 @@ function CreateForm({
           </select>
         </label>
       </div>
-      <p className="-mt-2 text-xs text-ink/45">Location places this company on the national readiness map.</p>
+      <p className="-mt-2 text-xs text-ink/45">Location places this company on the national preparation map (if you opt in below).</p>
 
       <div className="space-y-1">
         <span className="text-sm font-medium">Participating departments</span>
@@ -238,14 +281,104 @@ function CreateForm({
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={strictGate} onChange={(e) => setStrictGate(e.target.checked)} />
-        Strict gate (readiness capped until every department has started)
+        Strict gate (preparation capped until every department has started)
+      </label>
+
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={leaderboardPublic}
+          onChange={(e) => setLeaderboardPublic(e.target.checked)}
+          className="mt-0.5"
+        />
+        <span>
+          List this company on the <b>public</b> national leaderboard &amp; map (optional). Off by default — internal
+          dashboards always work either way.
+        </span>
       </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       <Button className="w-full" disabled={!name.trim() || selected.length === 0 || busy} onClick={create}>
         {busy ? "Creating…" : "Create challenge"}
       </Button>
+
+      {created && (
+        <div className="space-y-3 border-t border-black/5 pt-4">
+          <div className="rounded-2xl bg-brand/5 p-4 text-center">
+            <p className="text-xs text-ink/60">Created! Employees join with this code:</p>
+            <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
+            <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
+              open live dashboard →
+            </a>
+          </div>
+
+          {/* Employee invite — the simulated email that gets the team playing */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Employee invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              The email your departments receive. The link drops them straight into joining (code pre-filled), or they
+              can type the code.
+            </p>
+            <a
+              href={`/invite/${created.code}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost mt-3 inline-flex text-sm"
+            >
+              📧 Open the employee invite email →
+            </a>
+          </div>
+
+          {/* Decision-maker invite — opens the simulated email, which leads to /welcome */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Decision-maker invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              We&apos;ve pre-filled this company&apos;s profile. Open the email they&apos;d receive and click through to
+              their personalized cloud-path read.
+            </p>
+            <a
+              href={`/email/${created.profileToken}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-3 inline-flex text-sm"
+            >
+              📧 Open the decision-maker&apos;s email →
+            </a>
+            <p className="break-all pt-2 text-[11px] text-ink/40">Email link: /email/{created.profileToken}</p>
+          </div>
+        </div>
+      )}
     </Card>
+  );
+}
+
+function ProfileSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value?: string | null;
+  options: readonly string[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="space-y-1">
+      <span className="text-sm font-medium">{label}</span>
+      <select
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-2xl border border-black/10 bg-white px-3 py-3 text-sm"
+      >
+        <option value="">—</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 

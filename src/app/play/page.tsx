@@ -10,11 +10,12 @@ import { useSessionSnapshot } from "@/lib/useSessionSnapshot";
 import { completeAction } from "@/lib/completeAction";
 import { celebrateBig, celebrateSmall } from "@/lib/celebrate";
 import { haptic } from "@/lib/haptics";
-import { Button, Card, Pill, ProgressBar, Screen } from "@/components/ui";
+import { Button, Card, NavButton, Pill, ProgressBar, Screen } from "@/components/ui";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { LevelBadge } from "@/components/LevelBadge";
 import { DeptAvatar, UserAvatar } from "@/components/Avatar";
 import { AvatarEditor } from "@/components/AvatarEditor";
+import { BookEvoKitCTA } from "@/components/BookEvoKitCTA";
 import { ActionRenderer } from "@/components/actions/ActionRenderer";
 import type { ActionResult } from "@/components/actions/types";
 
@@ -129,15 +130,14 @@ export default function PlayPage() {
             <span>{role?.avatar}</span> {role?.name}
           </Pill>
         </div>
-        <button
-          className="text-xs text-ink/40 underline"
+        <NavButton
           onClick={() => {
             clearPlayer();
             router.replace("/");
           }}
         >
-          leave
-        </button>
+          🚪 Leave
+        </NavButton>
       </div>
 
       {/* Role hero */}
@@ -199,6 +199,8 @@ export default function PlayPage() {
         })}
       </div>
 
+      {doneCount === actions.length && actions.length > 0 && <BookEvoKitCTA code={player.code} />}
+
       <a href="/dashboard" className="btn-ghost w-full">
         🏆 Leaderboard & dashboard →
       </a>
@@ -256,7 +258,7 @@ export default function PlayPage() {
               <p className="mt-1 font-display text-3xl font-extrabold text-brand">
                 +<AnimatedNumber value={reward} duration={900} />
               </p>
-              <p className="text-xs font-semibold text-ink/50">readiness points</p>
+              <p className="text-xs font-semibold text-ink/50">preparation points</p>
             </motion.div>
           </motion.div>
         )}

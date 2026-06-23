@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { getSocket } from "@/lib/socketClient";
 import { loadPlayer } from "@/lib/player";
-import { Card, Screen, ProgressBar } from "@/components/ui";
+import { Card, NavButton, Screen, ProgressBar } from "@/components/ui";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 
 type Company = {
@@ -58,7 +58,7 @@ export default function CompanyLeaderboardPage() {
       <header className="space-y-1 pt-2 text-center">
         <p className="text-4xl">🏆</p>
         <h1 className="font-display text-2xl font-bold">Company Leaderboard</h1>
-        <p className="text-sm text-ink/60">Every company competing, ranked by Readiness Score.</p>
+        <p className="text-sm text-ink/60">Every company competing, ranked by Preparation Score.</p>
       </header>
 
       {companies === null ? (
@@ -102,11 +102,11 @@ export default function CompanyLeaderboardPage() {
       )}
 
       <a href="/map" className="btn-ghost w-full">
-        🗺️ See the readiness map →
+        🗺️ See the preparation map →
       </a>
-      <a href="/dashboard" className="block text-center text-sm text-brand underline">
-        ← Back to your dashboard
-      </a>
+      <div className="text-center">
+        <NavButton href="/dashboard">← Back to your dashboard</NavButton>
+      </div>
     </Screen>
   );
 }

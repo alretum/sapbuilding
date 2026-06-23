@@ -35,8 +35,11 @@ export default {
           "66%": { transform: "translateY(14px) translateX(-18px) scale(0.97)" },
         },
         shimmer: {
-          "0%": { transform: "translateX(-120%)" },
-          "100%": { transform: "translateX(220%)" },
+          // The shine is 1/3 of the bar wide; travel from fully off the left
+          // (-100%) to fully off the right (300%) so it clears the edge before
+          // looping — no pop, seamless return from the left.
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(300%)" },
         },
         wiggle: {
           "0%,100%": { transform: "rotate(-6deg)" },
@@ -46,7 +49,7 @@ export default {
       animation: {
         pop: "pop 0.35s cubic-bezier(0.34,1.56,0.64,1)",
         float: "float 18s ease-in-out infinite",
-        shimmer: "shimmer 1.8s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
         wiggle: "wiggle 0.6s ease-in-out",
       },
     },

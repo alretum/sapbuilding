@@ -15,8 +15,8 @@ export default function MapPage() {
     <Screen className="max-w-2xl space-y-4">
       <header className="space-y-1 pt-2 text-center">
         <p className="text-4xl">🗺️</p>
-        <h1 className="font-display text-2xl font-bold">Readiness Map</h1>
-        <p className="text-sm text-ink/60">How ready is Germany? Tap a region, then zoom into its cities.</p>
+        <h1 className="font-display text-2xl font-bold">Preparation Map</h1>
+        <p className="text-sm text-ink/60">How prepared is Germany? Tap a region, then zoom into its cities.</p>
       </header>
 
       <GermanyMap />

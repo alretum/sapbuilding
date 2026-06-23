@@ -18,7 +18,7 @@ export function Teasers() {
         <SectionHeading
           eyebrow="A friendly competition"
           title="Climb the boards. Light up the map."
-          subtitle="Companies compete on readiness, and regions across Germany light up as more teams play."
+          subtitle="Companies compete on preparation, and regions across Germany light up as more teams play."
         />
       </Reveal>
 
@@ -52,7 +52,7 @@ export function Teasers() {
         {/* Map teaser */}
         <Reveal delay={0.05}>
           <div className="card flex h-full flex-col p-5">
-            <p className="font-display font-bold">🗺️ The readiness map</p>
+            <p className="font-display font-bold">🗺️ The preparation map</p>
             <p className="mt-1 text-sm text-ink/60">
               A live, colour-coded map of Germany — zoom into regions and cities to see how ready they are.
             </p>

@@ -10,7 +10,8 @@ type Agg = { sum: number; companies: number; participants: number };
 
 export async function GET() {
   const sessions = await prisma.session.findMany({
-    where: { regionCode: { not: null } },
+    // Only companies that opted in to public visibility appear on the map.
+    where: { regionCode: { not: null }, leaderboardPublic: true },
     include: { players: true, completions: true },
   });
   const content = getContent();

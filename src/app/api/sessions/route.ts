@@ -51,6 +51,10 @@ export async function POST(req: Request) {
   const lat = regionCode && typeof body.lat === "number" ? body.lat : null;
   const lng = regionCode && typeof body.lng === "number" ? body.lng : null;
 
+  // Company profile (pre-filled by SAP) for the personalized read.
+  const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : null);
+  const profileToken = generateCode(12);
+
   // Generate a unique join code (retry a few times on the rare collision).
   let code = generateCode();
   for (let i = 0; i < 5; i++) {
@@ -67,7 +71,13 @@ export async function POST(req: Request) {
       status: "active",
       startedAt: new Date(),
       strictGate: Boolean(body.strictGate),
-      leaderboardPublic: body.leaderboardPublic === undefined ? true : Boolean(body.leaderboardPublic),
+      leaderboardPublic: Boolean(body.leaderboardPublic), // opt-in (default false)
+      industry: str(body.industry),
+      country: str(body.country),
+      sapVersion: str(body.sapVersion),
+      companySize: str(body.companySize),
+      dataSensitivity: str(body.dataSensitivity),
+      profileToken,
       regionCode,
       city,
       lat,
@@ -75,5 +85,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return NextResponse.json({ id: session.id, code: session.code });
+  return NextResponse.json({ id: session.id, code: session.code, profileToken: session.profileToken });
 }

@@ -105,7 +105,7 @@ export function TryItDemo() {
                   <p className="text-5xl">🚀</p>
                   <p className="font-display text-xl font-bold">You&apos;ve got the idea!</p>
                   <p className="text-sm text-ink/60">
-                    Real readiness happens when your whole team plays together. Each department adds its part.
+                    Real preparation happens when your whole team plays together. Each department adds its part.
                   </p>
                   <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
                     <Button onClick={scrollToJoin}>Get your code → join</Button>
@@ -136,7 +136,7 @@ export function TryItDemo() {
                     <p className="font-display text-3xl font-extrabold text-brand">
                       +<AnimatedNumber value={burst} duration={800} />
                     </p>
-                    <p className="text-xs font-semibold text-ink/50">readiness points</p>
+                    <p className="text-xs font-semibold text-ink/50">preparation points</p>
                   </motion.div>
                 </motion.div>
               )}
@@ -145,7 +145,7 @@ export function TryItDemo() {
 
           {/* Right: live readiness meter */}
           <div className="card flex flex-col items-center justify-center gap-3 p-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Your demo readiness</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Your demo preparation</p>
             <div
               className="grid h-36 w-36 place-items-center rounded-full"
               style={{

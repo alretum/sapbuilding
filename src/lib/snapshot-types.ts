@@ -36,7 +36,6 @@ export interface SessionSnapshot {
   totalPoints: number;
   involvedRoles: string[];
   updatedAt: string;
-  financeROI: number | null;
   boosterSent: boolean;
 }
 
