@@ -197,6 +197,21 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     }
   }
 
+  let captainFeedback: string | null = null;
+  const captainRole = departments.find(d => d.roleId === "captain");
+  if (captainRole && captainRole.participated) {
+    const score = captainRole.earned;
+    if (score <= 70) {
+      captainFeedback = "Level: Unclear Direction - Cloud is still seen mainly as an IT project or deadline topic. Business value and risk ownership are unclear.";
+    } else if (score <= 130) {
+      captainFeedback = "Level: First Direction Set - Some business drivers are understood, but decision evidence and risk trade-offs need more clarity.";
+    } else if (score <= 175) {
+      captainFeedback = "Level: Decision Conversation Ready - Management can enter a structured migration discussion with clear expectations around value, risk, and department input.";
+    } else {
+      captainFeedback = "Level: Cloud Direction Leader - Management has strong strategic clarity, understands business-critical risks, and can motivate departments around a shared cloud direction.";
+    }
+  }
+
   return {
     sessionId: session.id,
     code: session.code,
@@ -213,6 +228,7 @@ export function buildSnapshot(session: LoadedSession, content: Content): Session
     financeBadges,
     financeMissingBadges,
     financeFeedback,
+    captainFeedback,
     captainBadges,
     itBadges,
     hrBadges,

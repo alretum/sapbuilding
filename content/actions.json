@@ -3,19 +3,19 @@
     "id": "captain-vision",
     "roleId": "captain",
     "type": "swipe",
-    "title": "Vision Swipe",
-    "subtitle": "Where should we be in 2027?",
-    "points": 40,
+    "title": "Set the Vision",
+    "subtitle": "Where should the company be in 2027?",
+    "points": 50,
     "payload": {
       "prompt": "Strategic Cloud Driver or Weak Driver?",
       "leftLabel": "Weak Driver",
-      "rightLabel": "Strategic Cloud Driver",
+      "rightLabel": "Strong Cloud Driver",
       "cards": [
-        { "id": "c1", "label": "Faster business decisions through real-time data", "correctSide": "right" },
-        { "id": "c2", "label": "Moving only because SAP says so", "correctSide": "left" },
-        { "id": "c3", "label": "More scalable IT for future growth", "correctSide": "right" },
-        { "id": "c4", "label": "Avoiding every process change", "correctSide": "left" },
-        { "id": "c5", "label": "Reducing long-term system limitations", "correctSide": "right" }
+        { "id": "c1", "label": "We want faster business decisions based on real-time data.", "correctSide": "right" },
+        { "id": "c2", "label": "We only move because ECC support is ending.", "correctSide": "left" },
+        { "id": "c3", "label": "We want to reduce dependency on outdated, heavily customized systems.", "correctSide": "right" },
+        { "id": "c4", "label": "We want to keep every current process exactly as it is.", "correctSide": "left" },
+        { "id": "c5", "label": "We want a more scalable IT setup for future growth or new sites.", "correctSide": "right" }
       ]
     }
   },
@@ -23,21 +23,23 @@
     "id": "captain-decision",
     "roleId": "captain",
     "type": "multiselect",
-    "title": "Decision Gate Builder",
-    "subtitle": "Choose the 4 elements a CEO should require before approving the next migration step.",
-    "points": 40,
+    "title": "Build the Decision Gate",
+    "subtitle": "Choose the five evidence items a CEO should require before approving the next migration phase.",
+    "points": 50,
     "payload": {
-      "prompt": "Select the required elements:",
-      "maxSelect": 4,
+      "prompt": "What evidence do you need before approving the next step toward SAP S/4HANA Cloud?",
+      "maxSelect": 5,
       "options": [
-        { "id": "o1", "label": "Clear business case", "correct": true },
-        { "id": "o2", "label": "Department risk overview", "correct": true },
-        { "id": "o3", "label": "Downtime tolerance", "correct": true },
-        { "id": "o4", "label": "Migration path options", "correct": true },
-        { "id": "o5", "label": "New logo for the project", "correct": false },
-        { "id": "o6", "label": "Only IT recommendation", "correct": false },
-        { "id": "o7", "label": "Final decision without department input", "correct": false },
-        { "id": "o8", "label": "Wait until deadline pressure", "correct": false }
+        { "id": "o1", "label": "Business case with cost, expected value, and payback logic", "correct": true },
+        { "id": "o2", "label": "Downtime tolerance per critical business area", "correct": true },
+        { "id": "o3", "label": "Department risk overview from Finance, IT, Production, and HR", "correct": true },
+        { "id": "o4", "label": "Migration path comparison: greenfield, brownfield, or selective transition", "correct": true },
+        { "id": "o5", "label": "Clear go/no-go responsibility and escalation process", "correct": true },
+        { "id": "o6", "label": "Only a technical recommendation from IT", "correct": false },
+        { "id": "o7", "label": "A project name and internal campaign logo", "correct": false },
+        { "id": "o8", "label": "Waiting until deadline pressure forces a decision", "correct": false },
+        { "id": "o9", "label": "Final approval without department input", "correct": false },
+        { "id": "o10", "label": "Assuming cloud automatically reduces all costs", "correct": false }
       ]
     }
   },
@@ -45,16 +47,16 @@
     "id": "captain-risk",
     "roleId": "captain",
     "type": "sort",
-    "title": "Risk Ranking",
-    "subtitle": "What hurts the business most?",
-    "points": 40,
+    "title": "Prioritize the Risks",
+    "subtitle": "Rank the risks from most business-critical to least business-critical.",
+    "points": 50,
     "payload": {
       "prompt": "Rank from most critical (Top) to least critical (Bottom)",
       "items": [
-        { "id": "r1", "label": "Business-critical downtime" },
-        { "id": "r2", "label": "Data loss / inconsistent data" },
-        { "id": "r3", "label": "Unclear total cost" },
-        { "id": "r4", "label": "Different user interface color" }
+        { "id": "r1", "label": "No tested rollback plan if go-live fails" },
+        { "id": "r2", "label": "Production downtime tolerance not confirmed" },
+        { "id": "r3", "label": "Critical financial reports not validated yet" },
+        { "id": "r4", "label": "Some employees are unhappy about the new interface" }
       ],
       "correctOrder": ["r1", "r2", "r3", "r4"]
     }
@@ -63,28 +65,31 @@
     "id": "captain-benefit",
     "roleId": "captain",
     "type": "match",
-    "title": "Benefit Match",
-    "subtitle": "Match business benefit to CEO concern.",
-    "points": 40,
+    "title": "Business Case in 90 Seconds",
+    "subtitle": "Match each CEO fear with the strongest business argument or control mechanism.",
+    "points": 50,
     "payload": {
-      "prompt": "Match Concern to Cloud Benefit",
+      "prompt": "Match Fear to Argument",
       "items": [
-        { "id": "p1", "label": "Slow decisions" },
-        { "id": "p2", "label": "Growing business complexity" },
-        { "id": "p3", "label": "Old system limitations" },
-        { "id": "p4", "label": "High maintenance effort" }
+        { "id": "f1", "label": "\"Will this only create cost?\"" },
+        { "id": "f2", "label": "\"Will operations stop?\"" },
+        { "id": "f3", "label": "\"Will we lose control over data?\"" },
+        { "id": "f4", "label": "\"Will employees resist?\"" },
+        { "id": "f5", "label": "\"What is the strategic value?\"" }
       ],
       "targets": [
-        { "id": "b1", "label": "Real-time insights" },
-        { "id": "b2", "label": "Scalability" },
-        { "id": "b3", "label": "Future-proof IT" },
-        { "id": "b4", "label": "Lower internal maintenance burden" }
+        { "id": "a1", "label": "Lower long-term maintenance effort and better cost transparency can improve the business case." },
+        { "id": "a2", "label": "A controlled migration path, dry runs, fallback planning, and phased rollout reduce business continuity risk." },
+        { "id": "a3", "label": "Data validation, ownership, backup, and migration testing make data risk visible and controllable." },
+        { "id": "a4", "label": "Early key-user involvement and role-specific training reduce change resistance." },
+        { "id": "a5", "label": "Real-time insights, scalability, and future-proof processes support faster and better decisions." }
       ],
       "correctMatches": {
-        "p1": "b1",
-        "p2": "b2",
-        "p3": "b3",
-        "p4": "b4"
+        "f1": "a1",
+        "f2": "a2",
+        "f3": "a3",
+        "f4": "a4",
+        "f5": "a5"
       }
     }
   },
@@ -92,19 +97,19 @@
     "id": "captain-booster",
     "roleId": "captain",
     "type": "quiz",
-    "title": "Booster Task",
-    "subtitle": "Pick the best motivational nudge to send to a lagging department.",
-    "points": 40,
+    "title": "Send a Booster",
+    "subtitle": "One department is behind in the challenge. Choose the best leadership message.",
+    "points": 25,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "Which message would you send?",
+          "prompt": "Which message should the CEO send to motivate a lagging department?",
           "options": [
-            { "id": "a", "label": "\"Why are you so slow?\"", "correct": false },
-            { "id": "b", "label": "\"Your input is important because your processes are business-critical.\"", "correct": true },
-            { "id": "c", "label": "\"IT will handle everything.\"", "correct": false },
-            { "id": "d", "label": "\"Just finish the quiz.\"", "correct": false }
+            { "id": "a", "label": "\"Please finish this quickly, we need the points.\"", "correct": false },
+            { "id": "b", "label": "\"Your input is important because your department sees risks management cannot see from the top.\"", "correct": true },
+            { "id": "c", "label": "\"IT will solve the cloud topic for everyone.\"", "correct": false },
+            { "id": "d", "label": "\"If you do not participate, the score will look bad.\"", "correct": false }
           ],
           "explanation": "A CEO needs to emphasize the business-criticality of the department's input."
         }

@@ -41,6 +41,7 @@ export interface SessionSnapshot {
   financeBadges: string[];
   financeMissingBadges: string[];
   financeFeedback: string | null;
+  captainFeedback: string | null;
   captainBadges: string[];
   itBadges: string[];
   hrBadges: string[];

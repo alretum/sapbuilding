@@ -107,16 +107,23 @@ export function Dashboard({
                   )}
                 </div>
               )}
-              {d.roleId === "captain" && snapshot.captainBadges?.length > 0 && (
+              {d.roleId === "captain" && (snapshot.captainBadges?.length > 0 || snapshot.captainFeedback) && (
                 <div className="mt-3 rounded-lg bg-indigo-50/50 p-3 text-xs text-indigo-900 ring-1 ring-inset ring-indigo-200 space-y-2">
-                  <div>
-                    <span className="font-bold block mb-1">Earned Badges:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {snapshot.captainBadges.map(b => (
-                         <span key={b} className="bg-indigo-100 px-2 py-0.5 rounded text-indigo-800 font-medium">🏅 {b}</span>
-                      ))}
+                  {snapshot.captainBadges?.length > 0 && (
+                    <div>
+                      <span className="font-bold block mb-1">Earned Badges:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {snapshot.captainBadges.map(b => (
+                           <span key={b} className="bg-indigo-100 px-2 py-0.5 rounded text-indigo-800 font-medium">🏅 {b}</span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {snapshot.captainFeedback && (
+                    <div className="pt-2 border-t border-indigo-200/50 italic text-indigo-800/80">
+                      {snapshot.captainFeedback}
+                    </div>
+                  )}
                 </div>
               )}
               {d.roleId === "it" && snapshot.itBadges?.length > 0 && (
