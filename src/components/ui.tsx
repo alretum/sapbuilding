@@ -48,6 +48,41 @@ export function Button({
   );
 }
 
+// Secondary navigation (back / leave / adjust). Reuses the 3D ghost button at a
+// smaller, softer size so it's tactile and on-brand without competing with the
+// primary CTAs. Renders an <a> when given href, a <button> when given onClick.
+export function NavButton({
+  children,
+  href,
+  onClick,
+  className,
+}: {
+  children: React.ReactNode;
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+}) {
+  const cls = clsx("btn-ghost rounded-xl px-3 py-1.5 text-sm font-semibold text-ink/70", className);
+  if (href) {
+    return (
+      <a href={href} className={cls}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button
+      onClick={() => {
+        haptic(10);
+        onClick?.();
+      }}
+      className={cls}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function Pill({
   children,
   color,

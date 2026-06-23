@@ -10,7 +10,7 @@ import { useSessionSnapshot } from "@/lib/useSessionSnapshot";
 import { completeAction } from "@/lib/completeAction";
 import { celebrateBig, celebrateSmall } from "@/lib/celebrate";
 import { haptic } from "@/lib/haptics";
-import { Button, Card, Pill, ProgressBar, Screen } from "@/components/ui";
+import { Button, Card, NavButton, Pill, ProgressBar, Screen } from "@/components/ui";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { LevelBadge } from "@/components/LevelBadge";
 import { DeptAvatar, UserAvatar } from "@/components/Avatar";
@@ -130,15 +130,14 @@ export default function PlayPage() {
             <span>{role?.avatar}</span> {role?.name}
           </Pill>
         </div>
-        <button
-          className="text-xs text-ink/40 underline"
+        <NavButton
           onClick={() => {
             clearPlayer();
             router.replace("/");
           }}
         >
-          leave
-        </button>
+          🚪 Leave
+        </NavButton>
       </div>
 
       {/* Role hero */}

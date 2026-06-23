@@ -11,7 +11,7 @@ import {
   type CompanyProfile,
 } from "@/lib/profile";
 import { recommend, type RecPath } from "@/lib/recommendation";
-import { Button, Card, Screen } from "@/components/ui";
+import { Button, Card, NavButton, Screen } from "@/components/ui";
 import { BookEvoKitCTA } from "@/components/BookEvoKitCTA";
 
 type View = "loading" | "confirm" | "ready" | "notfound";
@@ -115,9 +115,9 @@ export default function WelcomePage() {
       {view === "ready" && <ReadyView name={name} code={code} profile={profile} participation={participation} onRefresh={load} />}
 
       {view === "ready" && (
-        <button onClick={() => setView("confirm")} className="block w-full text-center text-sm text-brand underline">
-          Adjust my details
-        </button>
+        <div className="text-center">
+          <NavButton onClick={() => setView("confirm")}>Adjust my details</NavButton>
+        </div>
       )}
     </Screen>
   );
@@ -192,9 +192,7 @@ function ReadyView({
             📊 Your full report builds as your team plays. Once departments join in, you&apos;ll see the real read here —
             grounded in what your own people said.
           </p>
-          <button onClick={onRefresh} className="text-sm font-semibold text-brand underline">
-            Refresh
-          </button>
+          <NavButton onClick={onRefresh}>↻ Refresh</NavButton>
         </Card>
       )}
     </div>

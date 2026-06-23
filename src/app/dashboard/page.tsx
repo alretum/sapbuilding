@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { loadPlayer } from "@/lib/player";
 import { useSessionSnapshot } from "@/lib/useSessionSnapshot";
 import { Dashboard } from "@/components/Dashboard";
-import { Card, Screen } from "@/components/ui";
+import { Card, NavButton, Screen } from "@/components/ui";
 
 // Live dashboard. Resolves which session to show from ?session=<id> (host link)
 // or from the stored player (a participant peeking at the standings).
@@ -36,9 +36,7 @@ export default function DashboardPage() {
           <h1 className="font-display text-xl font-bold">{snapshot?.name ?? "Live Dashboard"}</h1>
           {snapshot && <p className="text-xs text-ink/50">Session {snapshot.code}</p>}
         </div>
-        <a href="/play" className="text-sm text-brand underline">
-          back to play
-        </a>
+        <NavButton href="/play">← Play</NavButton>
       </header>
 
       {!sessionId ? (

@@ -3,7 +3,7 @@ import { getContent } from "@/lib/content";
 import { buildBrief } from "@/lib/brief";
 import { PersonalizedRead } from "@/components/PersonalizedRead";
 import { PrintButton } from "@/components/PrintButton";
-import { Screen } from "@/components/ui";
+import { NavButton, Screen } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -29,9 +29,7 @@ export default async function BriefPage({ params }: { params: Promise<{ code: st
   return (
     <Screen className="max-w-3xl space-y-5">
       <div className="flex items-center justify-between print:hidden">
-        <a href={`/dashboard?session=${session.id}`} className="text-sm text-brand underline">
-          ← back
-        </a>
+        <NavButton href={`/dashboard?session=${session.id}`}>← Back</NavButton>
         <PrintButton />
       </div>
 
