@@ -40,8 +40,9 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
           <h1 className="font-display text-xl font-bold">You&apos;re invited to your team&apos;s cloud challenge 🎉</h1>
           <p className="text-sm text-ink/75">Hi team,</p>
           <p className="text-sm text-ink/75">
-            {session.name} is taking a quick, playful look at moving to SAP S/4HANA Cloud — and every department plays a
-            part. It&apos;s a couple of two-minute games, and your answers help build the company&apos;s picture. Jump in:
+            <strong>{session.name}</strong>{" "}is taking a quick, playful look at moving to SAP S/4HANA Cloud — and
+            every department plays a part. It&apos;s a couple of two-minute games, and your answers help build the
+            company&apos;s picture. Jump in:
           </p>
           <a href={`/join/${session.code}`} className="btn-primary inline-flex">
             Join now →

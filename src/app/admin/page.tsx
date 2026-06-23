@@ -172,53 +172,6 @@ function CreateForm({
     <Card className="space-y-4">
       <h2 className="font-bold">New company challenge</h2>
 
-      {created && (
-        <div className="space-y-3">
-          <div className="rounded-2xl bg-brand/5 p-4 text-center">
-            <p className="text-xs text-ink/60">Created! Employees join with this code:</p>
-            <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
-            <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
-              open live dashboard →
-            </a>
-          </div>
-
-          {/* Employee invite — the simulated email that gets the team playing */}
-          <div className="rounded-2xl border border-black/10 p-4 text-center">
-            <p className="text-sm font-semibold">Employee invite</p>
-            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
-              The email your departments receive. The link drops them straight into joining (code pre-filled), or they
-              can type the code.
-            </p>
-            <a
-              href={`/invite/${created.code}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost mt-3 inline-flex text-sm"
-            >
-              📧 Open the employee invite email →
-            </a>
-          </div>
-
-          {/* Decision-maker invite — opens the simulated email, which leads to /welcome */}
-          <div className="rounded-2xl border border-black/10 p-4 text-center">
-            <p className="text-sm font-semibold">Decision-maker invite</p>
-            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
-              We&apos;ve pre-filled this company&apos;s profile. Open the email they&apos;d receive and click through to
-              their personalized cloud-path read.
-            </p>
-            <a
-              href={`/email/${created.profileToken}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary mt-3 inline-flex text-sm"
-            >
-              📧 Open the decision-maker&apos;s email →
-            </a>
-            <p className="break-all pt-2 text-[11px] text-ink/40">Email link: /email/{created.profileToken}</p>
-          </div>
-        </div>
-      )}
-
       <label className="block space-y-1">
         <span className="text-sm font-medium">Company name</span>
         <input
@@ -348,6 +301,53 @@ function CreateForm({
       <Button className="w-full" disabled={!name.trim() || selected.length === 0 || busy} onClick={create}>
         {busy ? "Creating…" : "Create challenge"}
       </Button>
+
+      {created && (
+        <div className="space-y-3 border-t border-black/5 pt-4">
+          <div className="rounded-2xl bg-brand/5 p-4 text-center">
+            <p className="text-xs text-ink/60">Created! Employees join with this code:</p>
+            <p className="text-3xl font-extrabold tracking-widest text-brand">{created.code}</p>
+            <a className="text-sm text-brand underline" href={`/dashboard?session=${created.id}`}>
+              open live dashboard →
+            </a>
+          </div>
+
+          {/* Employee invite — the simulated email that gets the team playing */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Employee invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              The email your departments receive. The link drops them straight into joining (code pre-filled), or they
+              can type the code.
+            </p>
+            <a
+              href={`/invite/${created.code}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost mt-3 inline-flex text-sm"
+            >
+              📧 Open the employee invite email →
+            </a>
+          </div>
+
+          {/* Decision-maker invite — opens the simulated email, which leads to /welcome */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Decision-maker invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              We&apos;ve pre-filled this company&apos;s profile. Open the email they&apos;d receive and click through to
+              their personalized cloud-path read.
+            </p>
+            <a
+              href={`/email/${created.profileToken}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-3 inline-flex text-sm"
+            >
+              📧 Open the decision-maker&apos;s email →
+            </a>
+            <p className="break-all pt-2 text-[11px] text-ink/40">Email link: /email/{created.profileToken}</p>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
