@@ -10,18 +10,36 @@ export function MatchAction({ action, onComplete }: ActionProps) {
   const [matches, setMatches] = useState<Record<string, string>>({}); // itemId -> targetId
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-  const allMatched = payload.items.every(i => matches[i.id] !== undefined);
+  // Randomly subset items if randomLimit is configured
+  const [displayedItems] = useState(() => {
+    if (payload.randomLimit && payload.randomLimit < payload.items.length) {
+      const shuffled = [...payload.items].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, payload.randomLimit);
+    }
+    return payload.items;
+  });
+
+  const allMatched = displayedItems.every(i => matches[i.id] !== undefined);
 
   function finish() {
     let score = action.points;
     if (payload.correctMatches) {
-      const correctPointsPerMatch = Math.floor(action.points / payload.items.length);
-      score = 0;
-      payload.items.forEach(item => {
-        if (matches[item.id] === payload.correctMatches![item.id]) {
-          score += correctPointsPerMatch;
+      const correctPointsPerMatch = action.points / displayedItems.length;
+      let calculatedScore = 0;
+      displayedItems.forEach(item => {
+        const correct = payload.correctMatches![item.id];
+        const userMatch = matches[item.id];
+        if (Array.isArray(correct)) {
+          if (correct.includes(userMatch)) {
+            calculatedScore += correctPointsPerMatch;
+          }
+        } else {
+          if (userMatch === correct) {
+            calculatedScore += correctPointsPerMatch;
+          }
         }
       });
+      score = Math.round(calculatedScore);
     }
     onComplete({ actionId: action.id, score, payload: { matches } });
   }
@@ -58,7 +76,7 @@ export function MatchAction({ action, onComplete }: ActionProps) {
       <div className="flex gap-4">
         <div className="flex-1 space-y-2">
           <p className="text-xs font-bold uppercase text-black/40 text-center mb-2">Items</p>
-          {payload.items.map(item => {
+          {displayedItems.map(item => {
             const isMatched = matches[item.id] !== undefined;
             const isSelected = selectedItem === item.id;
             return (
@@ -79,7 +97,7 @@ export function MatchAction({ action, onComplete }: ActionProps) {
         <div className="flex-1 space-y-2">
           <p className="text-xs font-bold uppercase text-black/40 text-center mb-2">Categories</p>
           {payload.targets.map(target => {
-            const matchedItems = payload.items.filter(i => matches[i.id] === target.id);
+            const matchedItems = displayedItems.filter(i => matches[i.id] === target.id);
             return (
               <button
                 key={target.id}

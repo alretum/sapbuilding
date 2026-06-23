@@ -10,9 +10,18 @@ export function MultiselectAction({ action, onComplete }: ActionProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
+  // Randomly subset options if randomLimit is configured
+  const [displayedOptions] = useState(() => {
+    if (payload.randomLimit && payload.randomLimit < payload.options.length) {
+      const shuffled = [...payload.options].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, payload.randomLimit);
+    }
+    return payload.options;
+  });
+
   const canSubmit = selected.size > 0;
   
-  const hasKnowledge = payload.options.some(o => o.correct !== undefined);
+  const hasKnowledge = displayedOptions.some(o => o.correct !== undefined);
 
   function toggle(id: string) {
     if (submitted) return;
@@ -31,21 +40,21 @@ export function MultiselectAction({ action, onComplete }: ActionProps) {
   function finish() {
     let score = action.points;
     if (hasKnowledge) {
-      const correctOptions = payload.options.filter(o => o.correct);
-      const pointsPerCorrect = Math.floor(action.points / Math.max(1, correctOptions.length));
-      const penaltyPerWrong = Math.floor(pointsPerCorrect / 2);
+      const correctOptions = displayedOptions.filter(o => o.correct);
+      const pointsPerCorrect = payload.pointsPerCorrect ?? Math.floor(action.points / Math.max(1, correctOptions.length));
+      const penaltyPerWrong = payload.penaltyPerWrong ?? Math.floor(pointsPerCorrect / 2);
       
       score = 0;
       selected.forEach(id => {
-        const option = payload.options.find(o => o.id === id);
+        const option = displayedOptions.find(o => o.id === id);
         if (option?.correct) {
           score += pointsPerCorrect;
         } else {
-          score = Math.max(0, score - penaltyPerWrong);
+          score -= penaltyPerWrong;
         }
       });
-      // Cap at max points just in case
-      score = Math.min(action.points, score);
+      // Cap at max points and floor at 0
+      score = Math.max(0, Math.min(action.points, score));
     }
     
     onComplete({ actionId: action.id, score, payload: { selected: Array.from(selected) } });
@@ -59,7 +68,7 @@ export function MultiselectAction({ action, onComplete }: ActionProps) {
       )}
 
       <div className="space-y-2">
-        {payload.options.map((o) => {
+        {displayedOptions.map((o) => {
           const isChosen = selected.has(o.id);
           const showCorrect = submitted && o.correct === true;
           const showWrong = submitted && isChosen && o.correct === false;

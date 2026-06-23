@@ -16,12 +16,13 @@ export async function GET(req: Request) {
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { players: true } } },
   });
+  const content = getContent();
   return NextResponse.json({
     sessions: sessions.map((s) => ({
       id: s.id,
       code: s.code,
       name: s.name,
-      involvedRoles: s.involvedRoles,
+      involvedRoles: s.involvedRoles.filter((id) => content.roles.some((r) => r.id === id)),
       strictGate: s.strictGate,
       players: s._count.players,
       createdAt: s.createdAt,

@@ -7,7 +7,13 @@ async function main() {
   const content = getContent();
   const existing = await prisma.session.findUnique({ where: { code: "DEMO" } });
   if (existing) {
-    console.log('Demo session already exists — join code "DEMO".');
+    await prisma.session.update({
+      where: { code: "DEMO" },
+      data: {
+        involvedRoles: content.roles.map((r) => r.id),
+      },
+    });
+    console.log('Updated existing demo session roles — join code "DEMO".');
     return;
   }
   await prisma.session.create({

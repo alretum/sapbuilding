@@ -69,7 +69,10 @@ export function ChatbotAction({ action, onComplete }: ActionProps) {
       ) : (
         <Button
           className="w-full"
-          onClick={() => onComplete({ actionId: action.id, score: action.points, payload: { path } })}
+          onClick={() => {
+            const userAnswers = history.filter((line) => line.from === "user").map((line) => line.text);
+            onComplete({ actionId: action.id, score: action.points, payload: { path, answers: userAnswers } });
+          }}
         >
           Collect {action.points} points →
         </Button>

@@ -72,13 +72,17 @@ export const matchPayloadSchema = z.object({
   prompt: z.string(),
   items: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
   targets: z.array(z.object({ id: z.string(), label: z.string() })).min(1),
-  correctMatches: z.record(z.string(), z.string()).optional(),
+  correctMatches: z.record(z.string(), z.union([z.string(), z.array(z.string())])).optional(),
+  randomLimit: z.number().optional(),
 });
 
 export const multiselectPayloadSchema = z.object({
   prompt: z.string(),
   options: z.array(z.object({ id: z.string(), label: z.string(), correct: z.boolean().optional() })).min(1),
   maxSelect: z.number().optional(),
+  randomLimit: z.number().optional(),
+  pointsPerCorrect: z.number().optional(),
+  penaltyPerWrong: z.number().optional(),
 });
 
 export const actionTypeSchema = z.enum(["quiz", "swipe", "chatbot", "calculator", "sort", "input", "dashboard-booster", "match", "multiselect"]);

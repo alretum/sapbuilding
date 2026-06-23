@@ -265,50 +265,54 @@
     "roleId": "it",
     "type": "quiz",
     "title": "Custom Code Reality Check",
-    "subtitle": "Find out whether custom developments are known, actively used, and cloud-relevant.",
+    "subtitle": "Find out whether the company understands its custom code landscape and whether it is ready for a clean-core migration.",
     "points": 40,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "Approximately how many custom Z/Y objects exist in your ECC system?",
+          "prompt": "How many custom Z/Y objects exist in your ECC system?",
           "options": [
             { "id": "a", "label": "< 100", "points": 10 },
             { "id": "b", "label": "100–500", "points": 8 },
             { "id": "c", "label": "500–2,000", "points": 5 },
             { "id": "d", "label": "> 2,000", "points": 2 },
             { "id": "e", "label": "Unknown", "points": 0 }
-          ]
+          ],
+          "explanation": "A high number of Z/Y objects increases migration complexity, especially if usage and ownership are unclear."
         },
         {
           "id": "q2",
-          "prompt": "Do you know which custom objects are actively used?",
+          "prompt": "Do you know which custom objects are actually used?",
           "options": [
-            { "id": "a", "label": "Yes, based on usage statistics / monitoring", "points": 10 },
+            { "id": "a", "label": "Yes, based on usage statistics / monitoring / SCMON", "points": 10 },
             { "id": "b", "label": "Partly, based on expert knowledge", "points": 7 },
             { "id": "c", "label": "Only for business-critical objects", "points": 5 },
             { "id": "d", "label": "No clear overview", "points": 0 }
-          ]
+          ],
+          "explanation": "Usage data is critical. Without it, old custom code may be migrated unnecessarily."
         },
         {
           "id": "q3",
-          "prompt": "How much of your custom code modifies or enhances SAP standard processes?",
+          "prompt": "How many custom developments modify or enhance SAP standard behavior?",
           "options": [
-            { "id": "a", "label": "Very little, mostly reports or external add-ons", "points": 10 },
-            { "id": "b", "label": "Some enhancements exist", "points": 7 },
-            { "id": "c", "label": "Many core process modifications/enhancements", "points": 2 },
+            { "id": "a", "label": "Very few — mostly reports, forms, or external add-ons", "points": 10 },
+            { "id": "b", "label": "Some exits, BADIs, enhancements, or user exits exist", "points": 7 },
+            { "id": "c", "label": "Many core process modifications / enhancements exist", "points": 2 },
             { "id": "d", "label": "Unknown", "points": 0 }
-          ]
+          ],
+          "explanation": "Enhancements close to SAP standard processes are critical because they may conflict with clean-core principles."
         },
         {
           "id": "q4",
-          "prompt": "How often is unused custom code cleaned up?",
+          "prompt": "How often do you clean up unused custom code?",
           "options": [
-            { "id": "a", "label": "Regularly", "points": 10 },
+            { "id": "a", "label": "Regularly, based on usage data", "points": 10 },
             { "id": "b", "label": "Before major releases only", "points": 7 },
             { "id": "c", "label": "Rarely", "points": 3 },
             { "id": "d", "label": "Never / unknown", "points": 0 }
-          ]
+          ],
+          "explanation": "Code cleanup before migration reduces technical debt and lowers testing effort."
         }
       ]
     }
@@ -318,23 +322,28 @@
     "roleId": "it",
     "type": "match",
     "title": "Cloud Fit Sorting",
-    "subtitle": "Sort current technical objects into the right cloud strategy.",
+    "subtitle": "Sort technical SAP objects into the correct cloud strategy.",
     "points": 40,
     "payload": {
-      "prompt": "Match Object to Category",
+      "prompt": "Sort technical SAP objects into the correct cloud strategy:",
+      "randomLimit": 10,
       "items": [
-        { "id": "o1", "label": "Z-report used daily for legal reporting with no standard alternative" },
-        { "id": "o2", "label": "Custom approval workflow similar to standard SAP flexible workflow" },
-        { "id": "o3", "label": "Old Z-transaction not used in the last 24 months" },
-        { "id": "o4", "label": "Direct database update in custom program" },
-        { "id": "o5", "label": "Interface using outdated file transfer without owner" },
-        { "id": "o6", "label": "Duplicate custom report with same logic as standard analytics" },
-        { "id": "o7", "label": "Critical warehouse interface with clear owner and documentation" },
-        { "id": "o8", "label": "Modification in SAP standard object" }
+        { "id": "o1", "label": "Z-report used daily for legal reporting, no standard alternative" },
+        { "id": "o2", "label": "Custom approval workflow similar to SAP Flexible Workflow" },
+        { "id": "o3", "label": "Old Z-transaction not used in 24 months" },
+        { "id": "o4", "label": "Custom program with direct database update" },
+        { "id": "o5", "label": "Interface using local file path and no owner" },
+        { "id": "o6", "label": "Duplicate custom report with same logic as standard SAP analytics" },
+        { "id": "o7", "label": "Critical warehouse interface with owner, documentation, monitoring" },
+        { "id": "o8", "label": "Modification in SAP standard object" },
+        { "id": "o9", "label": "Custom Fiori app built on released API" },
+        { "id": "o10", "label": "Old batch job with unknown business owner" },
+        { "id": "o11", "label": "Custom table storing historical data only" },
+        { "id": "o12", "label": "Enhancement in order-to-cash process without documentation" }
       ],
       "targets": [
         { "id": "t1", "label": "Keep as Extension" },
-        { "id": "t2", "label": "Replace with Standard" },
+        { "id": "t2", "label": "Replace with SAP Standard" },
         { "id": "t3", "label": "Retire" },
         { "id": "t4", "label": "Needs Deep Analysis" }
       ],
@@ -346,7 +355,11 @@
         "o5": "t4",
         "o6": "t2",
         "o7": "t1",
-        "o8": "t4"
+        "o8": "t4",
+        "o9": "t1",
+        "o10": "t4",
+        "o11": "t3",
+        "o12": "t4"
       }
     }
   },
@@ -355,19 +368,24 @@
     "roleId": "it",
     "type": "match",
     "title": "Interface Risk Radar",
-    "subtitle": "Identify whether interfaces are cloud-ready or risky.",
+    "subtitle": "Identify which integrations are cloud-ready and which ones may become migration blockers.",
     "points": 40,
     "payload": {
-      "prompt": "Classify interface scenario risk:",
+      "prompt": "Identify interface scenario risk level:",
+      "randomLimit": 8,
       "items": [
         { "id": "s1", "label": "API-based interface, documented owner, monitored errors" },
         { "id": "s2", "label": "IDoc interface used daily, owner known, documentation partly outdated" },
         { "id": "s3", "label": "File-based interface via local server path, no owner, business-critical" },
-        { "id": "s4", "label": "Direct database access from external system to ECC tables" },
+        { "id": "s4", "label": "External system directly reads ECC database tables" },
         { "id": "s5", "label": "Middleware-managed interface with logging and retry mechanism" },
         { "id": "s6", "label": "Manual Excel upload used for monthly postings" },
-        { "id": "s7", "label": "Interface to MES with no clear fallback process" },
-        { "id": "s8", "label": "Standard BAPI-based integration with monitoring" }
+        { "id": "s7", "label": "MES interface with no fallback process" },
+        { "id": "s8", "label": "Standard BAPI-based integration with monitoring" },
+        { "id": "s9", "label": "RFC connection used by multiple systems, owner unclear" },
+        { "id": "s10", "label": "OData service used by Fiori app with proper authorization concept" },
+        { "id": "s11", "label": "Interface depends on custom table with unknown data owner" },
+        { "id": "s12", "label": "Batch interface with no error notification" }
       ],
       "targets": [
         { "id": "r1", "label": "Low Risk" },
@@ -382,7 +400,11 @@
         "s5": "r1",
         "s6": "r2",
         "s7": "r3",
-        "s8": "r1"
+        "s8": "r1",
+        "s9": "r3",
+        "s10": "r1",
+        "s11": "r2",
+        "s12": "r2"
       }
     }
   },
@@ -391,59 +413,64 @@
     "roleId": "it",
     "type": "quiz",
     "title": "Clean Core Decision Gate",
-    "subtitle": "Decide the best cloud-readiness action in realistic IT situations.",
+    "subtitle": "Test whether IT understands SAP clean-core principles and cloud-native migration decisions.",
     "points": 40,
     "payload": {
       "questions": [
         {
           "id": "q1",
-          "prompt": "A custom approval workflow exists, but S/4HANA Cloud offers a standard flexible workflow. What should you do first?",
+          "prompt": "A custom approval workflow exists, but S/4HANA Cloud offers SAP Flexible Workflow. What should you do first?",
           "options": [
             { "id": "a", "label": "Move the custom workflow unchanged", "correct": false },
-            { "id": "b", "label": "Compare business requirements with standard workflow and standardize where possible", "correct": true },
+            { "id": "b", "label": "Compare business requirements with SAP standard workflow and standardize where possible", "correct": true },
             { "id": "c", "label": "Delete the workflow immediately", "correct": false },
             { "id": "d", "label": "Ignore it until after go-live", "correct": false }
-          ]
+          ],
+          "explanation": "Cloud migration is a chance to replace custom logic with standard SAP capabilities."
         },
         {
           "id": "q2",
-          "prompt": "A business-critical Z-report is used daily, but no owner is defined. What is the best next step?",
+          "prompt": "A business-critical Z-report is used daily, but no owner is defined. Best next step?",
           "options": [
             { "id": "a", "label": "Keep it without documentation", "correct": false },
             { "id": "b", "label": "Retire it", "correct": false },
-            { "id": "c", "label": "Assign owner, check usage, and evaluate standard/cloud alternative", "correct": true },
+            { "id": "c", "label": "Assign owner, check usage, document logic, and evaluate SAP standard alternative", "correct": true },
             { "id": "d", "label": "Rebuild it immediately without analysis", "correct": false }
-          ]
+          ],
+          "explanation": "Every critical custom object needs ownership and a target decision."
         },
         {
           "id": "q3",
-          "prompt": "An external system reads directly from ECC database tables. What is the main issue for a cloud move?",
+          "prompt": "An external system reads directly from ECC database tables. Main issue for cloud migration?",
           "options": [
             { "id": "a", "label": "It is always faster", "correct": false },
-            { "id": "b", "label": "Direct database access may not fit a cloud architecture and creates dependency risk", "correct": true },
+            { "id": "b", "label": "Direct database access may not fit cloud architecture and creates dependency risk", "correct": true },
             { "id": "c", "label": "It improves clean core", "correct": false },
             { "id": "d", "label": "It has no relevance", "correct": false }
-          ]
+          ],
+          "explanation": "Cloud-ready integrations should use released APIs, services, middleware, or standard integration patterns."
         },
         {
           "id": "q4",
-          "prompt": "Which extension approach is most aligned with a clean-core strategy?",
+          "prompt": "Which extension approach is most aligned with clean core?",
           "options": [
             { "id": "a", "label": "Modify SAP standard directly", "correct": false },
-            { "id": "b", "label": "Use side-by-side extensions / released APIs where possible", "correct": true },
+            { "id": "b", "label": "Use side-by-side extensions, released APIs, SAP BTP, or in-app extensibility where possible", "correct": true },
             { "id": "c", "label": "Copy old ECC code unchanged", "correct": false },
             { "id": "d", "label": "Avoid documentation", "correct": false }
-          ]
+          ],
+          "explanation": "Clean core does not mean “no extensions.” It means extensions should avoid modifying the SAP core."
         },
         {
           "id": "q5",
-          "prompt": "Which action improves readiness before moving from on-premise to cloud?",
+          "prompt": "Which action improves readiness before moving from ECC/on-premise to S/4HANA Cloud?",
           "options": [
-            { "id": "a", "label": "Identify custom code usage, interface ownership, data volume, and critical dependencies", "correct": true },
+            { "id": "a", "label": "Identify custom code usage, interfaces, data volume, roles, critical dependencies, and simplification impacts", "correct": true },
             { "id": "b", "label": "Start only with UI training", "correct": false },
             { "id": "c", "label": "Freeze all business processes without analysis", "correct": false },
             { "id": "d", "label": "Wait until go-live weekend", "correct": false }
-          ]
+          ],
+          "explanation": "Technical readiness needs a system-wide view: code, data, integration, authorization, testing, and operations."
         }
       ]
     }
@@ -453,26 +480,41 @@
     "roleId": "it",
     "type": "multiselect",
     "title": "Cloud Operations Readiness Check",
-    "subtitle": "Select all items that are essential before moving from an on-premise ECC landscape toward S/4HANA Cloud.",
+    "subtitle": "Check whether the IT team has the operational basics for a controlled cloud transition.",
     "points": 40,
     "payload": {
-      "prompt": "Select the essential operational readiness items:",
+      "prompt": "Select all items that are essential before moving from ECC/on-premise toward S/4HANA Cloud:",
+      "randomLimit": 12,
+      "pointsPerCorrect": 5,
+      "penaltyPerWrong": 3,
       "options": [
-        { "id": "o1", "label": "Defined interface monitoring and error handling", "correct": true },
-        { "id": "o2", "label": "Role and authorization review", "correct": true },
-        { "id": "o3", "label": "Test migration / sandbox validation", "correct": true },
-        { "id": "o4", "label": "Cutover and rollback concept", "correct": true },
-        { "id": "o5", "label": "Data volume and archiving assessment", "correct": true },
-        { "id": "o6", "label": "Security and access concept", "correct": true },
-        { "id": "o7", "label": "Business process testing with key users", "correct": true },
-        { "id": "o8", "label": "Integration fallback plan", "correct": true },
+        { "id": "o1", "label": "SAP Readiness Check / technical assessment completed", "correct": true },
+        { "id": "o2", "label": "Custom code usage analysis completed", "correct": true },
+        { "id": "o3", "label": "ATC checks for custom code compatibility", "correct": true },
+        { "id": "o4", "label": "Simplification items reviewed", "correct": true },
+        { "id": "o5", "label": "Interface inventory with owner and criticality", "correct": true },
+        { "id": "o6", "label": "Defined interface monitoring and error handling", "correct": true },
+        { "id": "o7", "label": "Role and authorization review", "correct": true },
+        { "id": "o8", "label": "Fiori / business role readiness checked", "correct": true },
+        { "id": "o9", "label": "Test migration or sandbox validation", "correct": true },
+        { "id": "o10", "label": "Cutover and rollback concept", "correct": true },
+        { "id": "o11", "label": "Data volume and archiving assessment", "correct": true },
+        { "id": "o12", "label": "Security and access concept", "correct": true },
+        { "id": "o13", "label": "Business process testing with key users", "correct": true },
+        { "id": "o14", "label": "Integration fallback plan", "correct": true },
+        { "id": "o15", "label": "Transport and release management concept", "correct": true },
+        { "id": "o16", "label": "Backup / recovery responsibilities clarified", "correct": true },
+        { "id": "o17", "label": "Operations model clarified: what stays internal, what moves to SAP / cloud provider", "correct": true },
         { "id": "w1", "label": "Keep all roles unchanged without review", "correct": false },
         { "id": "w2", "label": "Only test technical login", "correct": false },
         { "id": "w3", "label": "Ignore archived data volume", "correct": false },
         { "id": "w4", "label": "Document interfaces after go-live", "correct": false },
         { "id": "w5", "label": "Move all custom developments without usage check", "correct": false },
         { "id": "w6", "label": "Let IT test alone without business users", "correct": false },
-        { "id": "w7", "label": "Skip rollback planning", "correct": false }
+        { "id": "w7", "label": "Skip rollback planning", "correct": false },
+        { "id": "w8", "label": "Ignore authorizations until after go-live", "correct": false },
+        { "id": "w9", "label": "Assume all Z-code will work unchanged", "correct": false },
+        { "id": "w10", "label": "Check integrations only during go-live weekend", "correct": false }
       ]
     }
   },
@@ -481,9 +523,9 @@
     "id": "prod-bottleneck",
     "roleId": "production",
     "type": "swipe",
-    "title": "Bottleneck tagging",
+    "title": "Bottleneck Tagging",
     "subtitle": "From the material flow, tag the step that hiccups/annoys daily.",
-    "points": 100,
+    "points": 40,
     "payload": {
       "prompt": "Smooth or Bottleneck?",
       "leftLabel": "Smooth",
@@ -501,9 +543,9 @@
     "id": "prod-downtime",
     "roleId": "production",
     "type": "sort",
-    "title": "Downtime check",
+    "title": "Downtime Check",
     "subtitle": "Which process tolerates standstill the least? Sort from Least Tolerant (Top) to Most Tolerant (Bottom).",
-    "points": 100,
+    "points": 40,
     "payload": {
       "prompt": "Sort from Least Tolerant to Standstill (Top) to Most (Bottom)",
       "items": [
@@ -511,55 +553,168 @@
         { "id": "p2", "label": "Packaging" },
         { "id": "p3", "label": "Quality Control" },
         { "id": "p4", "label": "Warehouse Picking" }
-      ]
+      ],
+      "correctOrder": ["p1", "p2", "p3", "p4"]
     }
   },
   {
     "id": "prod-realtime",
     "roleId": "production",
-    "type": "swipe",
-    "title": "Real-time potential",
-    "subtitle": "Where would you most urgently need live data?",
-    "points": 100,
+    "type": "chatbot",
+    "title": "Real-time Potential",
+    "subtitle": "Find hidden SAP migration risks before they become go-live problems.",
+    "points": 40,
     "payload": {
-      "prompt": "Need Live Data Here?",
-      "leftLabel": "Not Urgent",
-      "rightLabel": "Urgent",
-      "cards": [
-        { "id": "l1", "label": "Machine Status" },
-        { "id": "l2", "label": "Material Shortages" },
-        { "id": "l3", "label": "Shift Schedules" }
-      ]
+      "start": "node-start",
+      "nodes": {
+        "node-start": {
+          "bot": "Where do you most urgently need live data to improve production operations?",
+          "options": [
+            { "label": "Unplanned Downtime", "next": "node-downtime" },
+            { "label": "Quality Defects", "next": "node-quality" },
+            { "label": "Order Progress", "next": "node-order" },
+            { "label": "Material Availability", "next": "node-material" }
+          ]
+        },
+        "node-downtime": {
+          "bot": "How much unplanned downtime do you estimate per week?",
+          "options": [
+            { "label": "< 1 hour", "next": "node-impact-downtime" },
+            { "label": "1–3 hours", "next": "node-impact-downtime" },
+            { "label": "3–8 hours", "next": "node-impact-downtime" },
+            { "label": "> 8 hours", "next": "node-impact-downtime" },
+            { "label": "Unknown", "next": "node-impact-downtime" }
+          ]
+        },
+        "node-quality": {
+          "bot": "What is your approximate scrap/rework rate?",
+          "options": [
+            { "label": "< 1%", "next": "node-impact-quality" },
+            { "label": "1–3%", "next": "node-impact-quality" },
+            { "label": "3–7%", "next": "node-impact-quality" },
+            { "label": "> 7%", "next": "node-impact-quality" },
+            { "label": "Unknown", "next": "node-impact-quality" }
+          ]
+        },
+        "node-order": {
+          "bot": "How often is the production plan not aligned with actual shopfloor status?",
+          "options": [
+            { "label": "Daily", "next": "node-impact-order" },
+            { "label": "Several times per week", "next": "node-impact-order" },
+            { "label": "Weekly", "next": "node-impact-order" },
+            { "label": "Monthly", "next": "node-impact-order" },
+            { "label": "Rarely", "next": "node-impact-order" }
+          ]
+        },
+        "node-material": {
+          "bot": "How often do you experience material shortages that halt production?",
+          "options": [
+            { "label": "Daily", "next": "node-impact-material" },
+            { "label": "Several times per week", "next": "node-impact-material" },
+            { "label": "Weekly", "next": "node-impact-material" },
+            { "label": "Monthly", "next": "node-impact-material" },
+            { "label": "Rarely", "next": "node-impact-material" }
+          ]
+        },
+        "node-impact-downtime": {
+          "bot": "What is the main operational impact of this downtime?",
+          "options": [
+            { "label": "High waiting times and low OEE", "next": "node-end-downtime" },
+            { "label": "Schedule slip and overtime", "next": "node-end-downtime" }
+          ]
+        },
+        "node-impact-quality": {
+          "bot": "What is the main operational impact of quality defects?",
+          "options": [
+            { "label": "High material scrap cost", "next": "node-end-quality" },
+            { "label": "Extra rework cycles and capacity loss", "next": "node-end-quality" }
+          ]
+        },
+        "node-impact-order": {
+          "bot": "What is the main operational impact of misaligned plans?",
+          "options": [
+            { "label": "Lack of sequence control on the shopfloor", "next": "node-end-order" },
+            { "label": "Inaccurate customer delivery dates", "next": "node-end-order" }
+          ]
+        },
+        "node-impact-material": {
+          "bot": "What is the main operational impact of material shortages?",
+          "options": [
+            { "label": "Line stops and high setup costs", "next": "node-end-material" },
+            { "label": "Buffer stocks too high", "next": "node-end-material" }
+          ]
+        },
+        "node-end-downtime": {
+          "bot": "Real-time potential: Very high.\nMain value driver: live machine status monitoring.\nLikely SAP relevance: Production order confirmations, shopfloor integration, and real-time downtime tracking.",
+          "end": true
+        },
+        "node-end-quality": {
+          "bot": "Real-time potential: High.\nMain value driver: live quality checks and inspection lots.\nLikely SAP relevance: QM integration, in-process inspection, scrap postings, and rework order processing.",
+          "end": true
+        },
+        "node-end-order": {
+          "bot": "Real-time potential: Very high.\nMain value driver: live shopfloor status tracking.\nLikely SAP relevance: PP order confirmations, digital kanban, and production scheduling cockpit.",
+          "end": true
+        },
+        "node-end-material": {
+          "bot": "Real-time potential: Very high.\nMain value driver: live material availability.\nLikely SAP relevance: PP/MM integration, stock accuracy, goods movements, and real-time shopfloor feedback.",
+          "end": true
+        }
+      }
     }
   },
   {
-    "id": "prod-quiz",
+    "id": "prod-pp-risk-radar",
     "roleId": "production",
-    "type": "quiz",
-    "title": "Real-time value",
-    "subtitle": "What do real-time production data give me at my workstation?",
-    "points": 100,
+    "type": "match",
+    "title": "SAP PP Risk Radar",
+    "subtitle": "Identify which SAP production issues are critical during migration.",
+    "points": 40,
     "payload": {
-      "questions": [
-        {
-          "id": "q1",
-          "prompt": "If a machine goes down, what does real-time data let you do?",
-          "options": [
-            { "id": "a", "label": "Wait for the shift manager to notice", "correct": false },
-            { "id": "b", "label": "Instantly reroute work to another line", "correct": true }
-          ],
-          "explanation": "Live data means instant reaction, saving precious production time."
-        }
-      ]
+      "prompt": "Classify each scenario as Low, Medium, or High Risk:",
+      "randomLimit": 8,
+      "items": [
+        { "id": "s1", "label": "Production orders are visible, but layout looks different" },
+        { "id": "s2", "label": "Stock levels in SAP are inaccurate during go-live" },
+        { "id": "s3", "label": "MES interface to SAP is not fully tested" },
+        { "id": "s4", "label": "Goods movements are posted with delay" },
+        { "id": "s5", "label": "Users are unsure how to confirm production orders" },
+        { "id": "s6", "label": "BOM or routing data is outdated" },
+        { "id": "s7", "label": "Work center capacities are not maintained correctly" },
+        { "id": "s8", "label": "Quality inspection results do not flow back to SAP" },
+        { "id": "s9", "label": "Shopfloor dashboard refreshes slowly" },
+        { "id": "s10", "label": "Labels / packaging data missing after migration" },
+        { "id": "s11", "label": "Production order release works, but old screen looks different" },
+        { "id": "s12", "label": "Material staging process has no fallback" }
+      ],
+      "targets": [
+        { "id": "r1", "label": "Low Risk" },
+        { "id": "r2", "label": "Medium Risk" },
+        { "id": "r3", "label": "High Risk" }
+      ],
+      "correctMatches": {
+        "s1": "r1",
+        "s2": "r3",
+        "s3": "r3",
+        "s4": ["r2", "r3"],
+        "s5": "r2",
+        "s6": "r3",
+        "s7": ["r2", "r3"],
+        "s8": "r3",
+        "s9": "r2",
+        "s10": ["r2", "r3"],
+        "s11": "r1",
+        "s12": "r3"
+      }
     }
   },
   {
     "id": "prod-minigame",
     "roleId": "production",
     "type": "sort",
-    "title": "Build the process flow",
+    "title": "Build the Process Flow",
     "subtitle": "Drag & drop steps into the right order.",
-    "points": 150,
+    "points": 40,
     "payload": {
       "prompt": "Order the process flow (Start at Top, End at Bottom)",
       "items": [
@@ -568,25 +723,8 @@
         { "id": "s3", "label": "Final Assembly" },
         { "id": "s4", "label": "Quality Check" },
         { "id": "s5", "label": "Shipping" }
-      ]
-    }
-  },
-  {
-    "id": "prod-vote",
-    "roleId": "production",
-    "type": "swipe",
-    "title": "Voting",
-    "subtitle": "What would you improve about production if you could?",
-    "points": 100,
-    "payload": {
-      "prompt": "Would you improve this?",
-      "leftLabel": "No",
-      "rightLabel": "Yes",
-      "cards": [
-        { "id": "i1", "label": "Better communication between shifts." },
-        { "id": "i2", "label": "Less manual paperwork." },
-        { "id": "i3", "label": "Faster maintenance response." }
-      ]
+      ],
+      "correctOrder": ["s1", "s2", "s3", "s4", "s5"]
     }
   },
   {
