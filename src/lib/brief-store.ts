@@ -12,12 +12,13 @@ import { generateBriefDoc } from "./brief-ai";
 // per evidence-pack hash and survives restarts (the CEO opens it instantly).
 // ---------------------------------------------------------------------------
 
-export interface BriefResult {
-  source: "ai" | "baseline";
-  doc: BriefDoc;
-  company: EvidencePack["company"];
-  generatedAt: Date;
-}
+export type BriefState =
+  | { state: "ready"; source: "ai" | "baseline"; doc: BriefDoc; company: EvidencePack["company"]; generatedAt: Date }
+  | { state: "generating"; company: EvidencePack["company"] };
+
+// Re-kick a generation if a "generating" claim is older than this (e.g. the
+// process restarted mid-generation), so the client never polls forever.
+const STALE_GENERATING_MS = 3 * 60 * 1000;
 
 const DEFAULT_MODEL = process.env.BRIEF_MODEL || "claude-haiku-4-5";
 
@@ -56,37 +57,59 @@ async function persist(sessionId: string, inputHash: string, source: "ai" | "bas
 
 // On-demand path (the API route): serve the persisted brief if it matches the
 // current data, otherwise generate + persist now.
-export async function getBriefForSession(session: LoadedSession, content: Content): Promise<BriefResult> {
+// Background-safe generation: never throws (so a fire-and-forget call can't crash
+// the process), and always leaves the row in a terminal "ready" state so the
+// client's poll resolves.
+async function produceAndPersist(sessionId: string, pack: EvidencePack, hash: string): Promise<void> {
+  try {
+    const { source, doc, model } = await produceBrief(pack);
+    await persist(sessionId, hash, source, doc, model);
+  } catch (err) {
+    console.error(`[brief] generation failed for ${sessionId}: ${(err as Error).message}`);
+    try {
+      await persist(sessionId, hash, "baseline", buildDeterministicBriefDoc(pack), null);
+    } catch {
+      /* leave as generating; the staleness check will re-kick on a later open */
+    }
+  }
+}
+
+// On-demand entry point. Returns the ready brief if it exists for the current
+// data; otherwise kicks generation off in the BACKGROUND and returns "generating"
+// immediately, so the page never hangs on a ~40s request and the user only ever
+// sees the AI version (no deterministic baseline flash while it's still cooking).
+export async function loadOrStartBrief(session: LoadedSession, content: Content): Promise<BriefState> {
   const pack = buildEvidencePack(session, content);
   const hash = evidenceHash(pack);
 
   const existing = await prisma.generatedBrief.findUnique({ where: { sessionId: session.id } });
   if (existing && existing.inputHash === hash) {
-    // Already generated for this exact data — serve it, no API call.
     if (existing.status === "ready") {
       return {
+        state: "ready",
         source: existing.source === "ai" ? "ai" : "baseline",
         doc: existing.doc as BriefDoc,
         company: pack.company,
         generatedAt: existing.generatedAt,
       };
     }
-    // Another request (or the background worker) is already generating this exact
-    // brief — don't spend a second API call; serve the deterministic baseline now.
-    if (existing.status === "generating") {
-      return { source: "baseline", doc: buildDeterministicBriefDoc(pack), company: pack.company, generatedAt: new Date() };
+    // Already in flight (this request, a concurrent open, or the background worker)
+    // — don't start a second generation; tell the client to keep polling.
+    if (existing.status === "generating" && Date.now() - existing.updatedAt.getTime() < STALE_GENERATING_MS) {
+      return { state: "generating", company: pack.company };
     }
+    // stale claim → fall through and re-kick
   }
 
-  // Claim the slot so concurrent opens don't each call the model.
+  // Claim the slot, then generate in the background (the custom server stays alive
+  // after the response is sent, so the fire-and-forget promise runs to completion).
   await prisma.generatedBrief.upsert({
     where: { sessionId: session.id },
     create: { sessionId: session.id, inputHash: hash, status: "generating", source: "baseline", doc: {} as never },
-    update: { inputHash: hash, status: "generating" },
+    update: { inputHash: hash, status: "generating", source: "baseline" },
   });
-  const { source, doc, model } = await produceBrief(pack);
-  const saved = await persist(session.id, hash, source, doc, model);
-  return { source, doc, company: pack.company, generatedAt: saved.generatedAt };
+  void produceAndPersist(session.id, pack, hash);
+  return { state: "generating", company: pack.company };
 }
 
 // Background path (the socket hook): when everyone has finished, generate the

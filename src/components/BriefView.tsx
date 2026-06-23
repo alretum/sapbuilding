@@ -8,6 +8,7 @@ import type { BriefDoc } from "@/lib/brief-doc";
 import type { CompanyProfile } from "@/lib/profile";
 
 interface BriefResponse {
+  state: "ready";
   source: "ai" | "baseline";
   doc: BriefDoc;
   company: { name: string } & CompanyProfile;
@@ -27,22 +28,53 @@ export function BriefView({ code }: { code: string }) {
 
   useEffect(() => {
     let alive = true;
-    fetch(`/api/sessions/${code}/brief`)
-      .then(async (r) => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let attempts = 0;
+    // The brief generates in the background (~30–40s the first time). Poll until
+    // it's ready, keeping the "Assembling…" state — so the page never blocks and
+    // never flashes a non-AI version.
+    const poll = async () => {
+      try {
+        const r = await fetch(`/api/sessions/${code}/brief`, { cache: "no-store" });
         if (!r.ok) throw new Error("not found");
-        return (await r.json()) as BriefResponse;
-      })
-      .then((d) => alive && setData(d))
-      .catch((e) => alive && setError(String((e as Error).message || e)));
+        const j = await r.json();
+        if (!alive) return;
+        if (j.state === "ready") {
+          setData(j as BriefResponse);
+          return;
+        }
+        attempts += 1;
+        if (attempts > 80) {
+          setError("timeout");
+          return;
+        }
+        timer = setTimeout(poll, 2500);
+      } catch (e) {
+        if (alive) setError(String((e as Error).message || e));
+      }
+    };
+    poll();
     return () => {
       alive = false;
+      if (timer) clearTimeout(timer);
     };
   }, [code]);
 
   if (error)
     return (
       <Screen>
-        <p className="py-20 text-center text-ink/50">No challenge found for that code.</p>
+        <p className="py-20 text-center text-ink/50">
+          {error === "timeout" ? (
+            <>
+              The brief is taking longer than usual to assemble.{" "}
+              <a className="font-semibold text-brand underline" href={`/brief/${code}`}>
+                Keep waiting →
+              </a>
+            </>
+          ) : (
+            "No challenge found for that code."
+          )}
+        </p>
       </Screen>
     );
 

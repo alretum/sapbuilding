@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getContent } from "@/lib/content";
-import { getBriefForSession } from "@/lib/brief-store";
+import { loadOrStartBrief } from "@/lib/brief-store";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +17,16 @@ export async function GET(_req: Request, { params }: { params: Promise<{ code: s
   });
   if (!session) return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const { source, doc, company, generatedAt } = await getBriefForSession(session, getContent());
-  return NextResponse.json({ source, doc, company, sessionId: session.id, generatedAt });
+  const result = await loadOrStartBrief(session, getContent());
+  if (result.state === "generating") {
+    return NextResponse.json({ state: "generating", company: result.company, sessionId: session.id });
+  }
+  return NextResponse.json({
+    state: "ready",
+    source: result.source,
+    doc: result.doc,
+    company: result.company,
+    sessionId: session.id,
+    generatedAt: result.generatedAt,
+  });
 }
