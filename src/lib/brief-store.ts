@@ -61,15 +61,29 @@ export async function getBriefForSession(session: LoadedSession, content: Conten
   const hash = evidenceHash(pack);
 
   const existing = await prisma.generatedBrief.findUnique({ where: { sessionId: session.id } });
-  if (existing && existing.status === "ready" && existing.inputHash === hash) {
-    return {
-      source: existing.source === "ai" ? "ai" : "baseline",
-      doc: existing.doc as BriefDoc,
-      company: pack.company,
-      generatedAt: existing.generatedAt,
-    };
+  if (existing && existing.inputHash === hash) {
+    // Already generated for this exact data — serve it, no API call.
+    if (existing.status === "ready") {
+      return {
+        source: existing.source === "ai" ? "ai" : "baseline",
+        doc: existing.doc as BriefDoc,
+        company: pack.company,
+        generatedAt: existing.generatedAt,
+      };
+    }
+    // Another request (or the background worker) is already generating this exact
+    // brief — don't spend a second API call; serve the deterministic baseline now.
+    if (existing.status === "generating") {
+      return { source: "baseline", doc: buildDeterministicBriefDoc(pack), company: pack.company, generatedAt: new Date() };
+    }
   }
 
+  // Claim the slot so concurrent opens don't each call the model.
+  await prisma.generatedBrief.upsert({
+    where: { sessionId: session.id },
+    create: { sessionId: session.id, inputHash: hash, status: "generating", source: "baseline", doc: {} as never },
+    update: { inputHash: hash, status: "generating" },
+  });
   const { source, doc, model } = await produceBrief(pack);
   const saved = await persist(session.id, hash, source, doc, model);
   return { source, doc, company: pack.company, generatedAt: saved.generatedAt };
@@ -78,6 +92,11 @@ export async function getBriefForSession(session: LoadedSession, content: Conten
 // Background path (the socket hook): when everyone has finished, generate the
 // brief ahead of time. Returns { generated, code } when it produced a fresh one.
 export async function ensureBriefForCompletedSession(sessionId: string): Promise<{ generated: boolean; code: string } | null> {
+  // Speculative pre-generation is OFF by default — it would spend API calls on
+  // briefs nobody opens. Opt in with BRIEF_AUTOGEN=1 (own key / real pilot).
+  // When off, the brief is still generated on demand the first time it's opened.
+  if (process.env.BRIEF_AUTOGEN !== "1") return null;
+
   const session = await prisma.session.findUnique({
     where: { id: sessionId },
     include: { players: true, completions: true },
