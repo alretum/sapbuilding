@@ -182,27 +182,22 @@ function CreateForm({
             </a>
           </div>
 
-          {/* Simulated decision-maker invite (no real email is sent) */}
-          <div className="overflow-hidden rounded-2xl border border-black/10">
-            <div className="border-b border-black/5 bg-black/[0.03] px-4 py-2 text-xs text-ink/50">
-              📧 Preview — the email the decision-maker would receive
-            </div>
-            <div className="space-y-2 p-4 text-sm">
-              <p className="font-semibold">Your cloud-readiness starter is ready</p>
-              <p className="text-ink/65">
-                We&apos;ve put together a personalized read for your team — confirm a couple of details and see your
-                cloud path.
-              </p>
-              <a
-                href={`/welcome/${created.profileToken}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary inline-flex text-sm"
-              >
-                Confirm your company profile →
-              </a>
-              <p className="break-all pt-1 text-[11px] text-ink/40">Magic link: /welcome/{created.profileToken}</p>
-            </div>
+          {/* Decision-maker invite — opens the simulated email, which leads to /welcome */}
+          <div className="rounded-2xl border border-black/10 p-4 text-center">
+            <p className="text-sm font-semibold">Decision-maker invite</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-ink/55">
+              We&apos;ve pre-filled this company&apos;s profile. Open the email they&apos;d receive and click through to
+              their personalized cloud-path read.
+            </p>
+            <a
+              href={`/email/${created.profileToken}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-3 inline-flex text-sm"
+            >
+              📧 Open the decision-maker&apos;s email →
+            </a>
+            <p className="break-all pt-2 text-[11px] text-ink/40">Email link: /email/{created.profileToken}</p>
           </div>
         </div>
       )}
