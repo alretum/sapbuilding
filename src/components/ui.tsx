@@ -72,7 +72,7 @@ export function ProgressBar({ value, color, className }: { value: number; color:
   return (
     <div className={clsx("relative h-3 overflow-hidden rounded-full bg-ink/5", className)}>
       <motion.div
-        className="relative h-full rounded-full"
+        className="relative h-full overflow-hidden rounded-full"
         style={{ backgroundColor: color }}
         initial={{ width: 0 }}
         animate={{ width: `${Math.round(value * 100)}%` }}
