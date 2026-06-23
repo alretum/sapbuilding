@@ -176,9 +176,12 @@ export function buildDeterministicBriefDoc(pack: EvidencePack): BriefDoc {
   if (unknowns.length === 0)
     unknowns.push("Like many long-running ECC estates, some specifics — older custom code, undocumented interfaces — still need confirming before a firm plan.");
 
-  const byDepartment = pack.departments
-    .filter((d) => d.signals.length > 0)
-    .map((d) => ({ department: d.name, points: d.signals.slice(0, 5).map(signalLine) }));
+  // Include every involved department — even ones nobody joined — so missing
+  // teams render as an empty card rather than silently dropping out.
+  const byDepartment = pack.departments.map((d) => ({
+    department: d.name,
+    points: d.signals.slice(0, 5).map(signalLine),
+  }));
 
   const alignment: string[] = [];
   for (const d of pack.departments) {

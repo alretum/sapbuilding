@@ -44,8 +44,18 @@ function buildUserPrompt(pack: EvidencePack): string {
     "```",
     `The recommended path is already decided by a transparent rules engine: ${pack.recommendation.path} (${pack.recommendation.pathLabel}); confident=${pack.recommendation.confident}. Use exactly this path in section 7 and make the reasoning visible from the rationale ("you said X, Y, Z → therefore this").`,
     `When you route to SAP's real tools, refer to SAP's official Readiness Check (${SAP_READINESS_CHECK}) and ROI calculator (${SAP_ROI_CALCULATOR}).`,
+    `In ourPeopleSaid.byDepartment, include an entry for EVERY involved department using its exact "name" from the pack (${pack.departments.map((d) => d.name).join(", ")}); for a department with no participants, leave its points array empty.`,
     "Now call emit_brief with all 8 sections, obeying every rule.",
   ].join("\n");
+}
+
+// Guarantee every involved department appears (in canonical order), even ones
+// nobody joined — match the model's entries case-insensitively, fill the rest empty.
+function withAllDepartments(doc: BriefDoc, pack: EvidencePack): BriefDoc {
+  const norm = (s: string) => s.trim().toLowerCase();
+  const byName = new Map(doc.ourPeopleSaid.byDepartment.map((d) => [norm(d.department), d.points]));
+  const byDepartment = pack.departments.map((d) => ({ department: d.name, points: byName.get(norm(d.name)) ?? [] }));
+  return { ...doc, ourPeopleSaid: { ...doc.ourPeopleSaid, byDepartment } };
 }
 
 function forcePath(doc: BriefDoc, pack: EvidencePack): BriefDoc {
@@ -126,7 +136,7 @@ export async function generateBriefDoc(pack: EvidencePack): Promise<BriefDoc> {
       violations = parsed.error.issues.slice(0, 8).map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`);
       continue;
     }
-    const doc = forcePath(parsed.data, pack);
+    const doc = withAllDepartments(forcePath(parsed.data, pack), pack);
     violations = lint(doc, pack);
     if (violations.length === 0) return doc;
   }

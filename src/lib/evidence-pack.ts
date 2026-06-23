@@ -186,9 +186,14 @@ export function buildEvidencePack(session: LoadedSession, content: Content): Evi
   };
 
   const knowledgeGaps: string[] = [];
-  const departments: DeptEvidence[] = snap.departments.map((d) => {
+  // Roster = the full current department lineup (content roles), not the session's
+  // involvedRoles — so the brief always shows every department (empty if a team
+  // didn't take part), and stays correct even if a session was set up under an
+  // older role taxonomy.
+  const departments: DeptEvidence[] = content.roles.map((role) => {
+    const snapDept = snap.departments.find((d) => d.roleId === role.id);
     const byAction = new Map<string, ActionCompletion[]>();
-    for (const c of session.completions.filter((c) => c.roleId === d.roleId)) {
+    for (const c of session.completions.filter((c) => c.roleId === role.id)) {
       const arr = byAction.get(c.actionId) ?? [];
       arr.push(c);
       byAction.set(c.actionId, arr);
@@ -197,28 +202,29 @@ export function buildEvidencePack(session: LoadedSession, content: Content): Evi
     for (const [actionId, comps] of byAction) {
       const action = content.actions.find((a) => a.id === actionId);
       if (!action) continue;
-      const ev = decode(action, comps, d.name, knowledgeGaps);
+      const ev = decode(action, comps, role.name, knowledgeGaps);
       if (ev) signals.push(ev);
     }
     // Surface status signals first — they describe where the company actually stands.
     signals.sort((a, b) => Number(Boolean(b.statusSignal)) - Number(Boolean(a.statusSignal)));
     return {
-      roleId: d.roleId,
-      name: d.name,
-      department: d.department,
-      color: d.color,
-      players: d.playerCount,
-      readiness: Math.round(d.readiness * 100),
-      participated: d.participated,
+      roleId: role.id,
+      name: role.name,
+      department: role.department,
+      color: role.color,
+      players: session.players.filter((p) => p.roleId === role.id).length,
+      readiness: snapDept ? Math.round(snapDept.readiness * 100) : 0,
+      participated: signals.length > 0,
       signals,
     };
   });
 
+  const validRole = (roleId: string) => content.roles.some((r) => r.id === roleId);
   const coverage: Coverage = {
-    involvedRoles: snap.departments.map((d) => d.name),
-    playedRoles: snap.departments.filter((d) => d.participated).map((d) => d.name),
-    missingRoles: snap.departments.filter((d) => !d.participated).map((d) => d.name),
-    participants: snap.leaderboard.length,
+    involvedRoles: departments.map((d) => d.name),
+    playedRoles: departments.filter((d) => d.participated).map((d) => d.name),
+    missingRoles: departments.filter((d) => !d.participated).map((d) => d.name),
+    participants: session.players.filter((p) => validRole(p.roleId)).length,
     overallCompletion: snap.companyReadiness / 100,
   };
 
@@ -234,9 +240,13 @@ export function buildEvidencePack(session: LoadedSession, content: Content): Evi
   };
 }
 
+// Bump when the brief's structure/logic changes so already-persisted briefs are
+// regenerated even though the underlying participant data is unchanged.
+const BRIEF_LOGIC_VERSION = 2;
+
 // Stable hash of the meaningful content (excludes the timestamp) — the cache key.
 export function evidenceHash(pack: EvidencePack): string {
-  const stable = { ...pack, generatedAt: undefined };
+  const stable = { v: BRIEF_LOGIC_VERSION, ...pack, generatedAt: undefined };
   return createHash("sha256").update(JSON.stringify(stable)).digest("hex").slice(0, 16);
 }
 
