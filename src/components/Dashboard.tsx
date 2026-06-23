@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { type SessionSnapshot } from "@/lib/snapshot-types";
+import { getSocket } from "@/lib/socketClient";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { LevelBadge } from "./LevelBadge";
 import { DeptAvatar, UserAvatar } from "./Avatar";
@@ -23,6 +25,20 @@ export function Dashboard({
   const ranked = [...snapshot.departments].sort((a, b) => b.readiness - a.readiness);
   const leaderId = ranked[0]?.participated ? ranked[0].roleId : undefined;
   const topPlayers = snapshot.leaderboard.slice(0, 10);
+
+  // Light up when the brief has been auto-generated in the background (everyone
+  // finished) so it can be opened instantly.
+  const [briefReady, setBriefReady] = useState(false);
+  useEffect(() => {
+    const socket = getSocket();
+    const onReady = (p: { code?: string }) => {
+      if (!p?.code || p.code === snapshot.code) setBriefReady(true);
+    };
+    socket.on("brief:ready", onReady);
+    return () => {
+      socket.off("brief:ready", onReady);
+    };
+  }, [snapshot.code]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -257,6 +273,15 @@ export function Dashboard({
           </div>
         )}
       </section>
+
+      {briefReady && (
+        <a
+          href={`/brief/${snapshot.code}`}
+          className="card border-brand/30 bg-brand/5 p-4 text-center font-display font-semibold text-brand lg:col-span-3"
+        >
+          📄 Your challenge brief is ready — open it →
+        </a>
+      )}
 
       <BookEvoKitCTA code={snapshot.code} />
     </div>

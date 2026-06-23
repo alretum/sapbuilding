@@ -104,10 +104,14 @@ export const sortPayloadSchema = z.object({
 
 export const inputPayloadSchema = z.object({
   prompt: z.string(),
-  inputType: z.enum(["number", "slider"]),
+  // "text" is an open-ended, no-right/wrong status prompt — the richest input
+  // for the brief's "what our own people said" synthesis (clustered by the LLM).
+  inputType: z.enum(["number", "slider", "text"]),
   min: z.number().optional(),
   max: z.number().optional(),
   unit: z.string().optional(),
+  placeholder: z.string().optional(),
+  maxLength: z.number().optional(),
 });
 
 export const dashboardBoosterPayloadSchema = z.object({

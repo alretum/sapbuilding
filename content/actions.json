@@ -840,5 +840,76 @@
         }
       ]
     }
+  },
+
+  {
+    "id": "captain-open-status",
+    "roleId": "captain",
+    "type": "input",
+    "title": "In Your Own Words",
+    "subtitle": "No right or wrong — your honest view.",
+    "points": 30,
+    "payload": {
+      "prompt": "In one sentence: what is the real reason a cloud move hasn't happened yet — or what is pushing it now?",
+      "inputType": "text",
+      "placeholder": "Your honest take… (no need to enter any personal data)",
+      "maxLength": 400
+    }
+  },
+  {
+    "id": "finance-open-status",
+    "roleId": "finance",
+    "type": "input",
+    "title": "In Your Own Words",
+    "subtitle": "No right or wrong — your honest view.",
+    "points": 30,
+    "payload": {
+      "prompt": "In one sentence: what is the most painful part of your month-end close or reporting today?",
+      "inputType": "text",
+      "placeholder": "Your honest take… (no need to enter any personal data)",
+      "maxLength": 400
+    }
+  },
+  {
+    "id": "it-open-status",
+    "roleId": "it",
+    "type": "input",
+    "title": "In Your Own Words",
+    "subtitle": "No right or wrong — your honest view.",
+    "points": 30,
+    "payload": {
+      "prompt": "In one sentence: which custom-code or integration headache do you most dread touching in a migration?",
+      "inputType": "text",
+      "placeholder": "Your honest take… (no need to enter any personal data)",
+      "maxLength": 400
+    }
+  },
+  {
+    "id": "production-open-status",
+    "roleId": "production",
+    "type": "input",
+    "title": "In Your Own Words",
+    "subtitle": "No right or wrong — your honest view.",
+    "points": 30,
+    "payload": {
+      "prompt": "In one sentence: where does the lack of live data hurt you most on the floor today?",
+      "inputType": "text",
+      "placeholder": "Your honest take… (no need to enter any personal data)",
+      "maxLength": 400
+    }
+  },
+  {
+    "id": "hr-open-status",
+    "roleId": "hr",
+    "type": "input",
+    "title": "In Your Own Words",
+    "subtitle": "No right or wrong — your honest view.",
+    "points": 30,
+    "payload": {
+      "prompt": "In one sentence: what is your biggest worry about how people will react to a system change?",
+      "inputType": "text",
+      "placeholder": "Your honest take… (no need to enter any personal data)",
+      "maxLength": 400
+    }
   }
 ]
