@@ -17,6 +17,7 @@ import type { CompanyProfile } from "./profile";
 
 export interface BriefDept {
   name: string;
+  avatar: string;
   color: string;
   players: number;
   readiness: number;
@@ -54,6 +55,7 @@ export function buildBrief(session: LoadedSession, content: Content): Brief {
       }
       return {
         name: d.name,
+        avatar: d.avatar,
         color: d.color,
         players: d.playerCount,
         readiness: Math.round(d.readiness * 100),
