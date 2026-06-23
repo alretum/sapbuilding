@@ -31,6 +31,12 @@ services:
       NODE_ENV: production
       PORT: 3000
       ADMIN_KEY: ${ADMIN_KEY:-}
+      # Challenge-brief AI synthesis (see .env.example). Without ANTHROPIC_API_KEY
+      # the brief falls back to the deterministic version, so these are optional.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      BRIEF_MODEL: ${BRIEF_MODEL:-claude-haiku-4-5}
+      BRIEF_AUTOGEN: ${BRIEF_AUTOGEN:-}
+      BRIEF_AI_DISABLED: ${BRIEF_AI_DISABLED:-}
     depends_on:
       db:
         condition: service_healthy
