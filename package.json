@@ -15,6 +15,7 @@
     "db:seed:map": "tsx prisma/seed-map.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@dicebear/collection": "^9.4.2",
     "@dicebear/core": "^9.4.2",
     "@fontsource-variable/fredoka": "^5.2.10",

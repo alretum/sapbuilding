@@ -2,6 +2,7 @@ import type { Server, Socket } from "socket.io";
 import { prisma } from "../lib/prisma";
 import { computeSessionSnapshot } from "../lib/scoring";
 import { getContent } from "../lib/content";
+import { ensureBriefForCompletedSession } from "../lib/brief-store";
 
 // Socket.IO event handlers. This is the realtime backbone:
 //   - clients subscribe to a session room and get the current snapshot
@@ -65,6 +66,14 @@ export function registerSocketHandlers(io: Server): void {
           io.to(room(sessionId)).emit("score:update", snapshot);
           io.to(COMPANIES_ROOM).emit("companies:dirty"); // a company's score moved
           ack?.({ ok: true, awarded, snapshot });
+
+          // Once everyone has finished, generate the brief in the background so the
+          // decision-maker can open it instantly. Fire-and-forget — never blocks play.
+          ensureBriefForCompletedSession(sessionId)
+            .then((res) => {
+              if (res?.generated) io.to(room(sessionId)).emit("brief:ready", { code: res.code });
+            })
+            .catch((e) => console.warn(`[brief] background generation failed: ${(e as Error).message}`));
         } catch (err) {
           ack?.({ ok: false, error: (err as Error).message });
         }
