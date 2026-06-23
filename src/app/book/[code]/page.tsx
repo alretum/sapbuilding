@@ -24,7 +24,7 @@ export default function BookPage() {
             they&apos;ll see:
           </p>
           <a href={`/brief/${code}`} className="btn-primary">
-            📄 Open your pre-filled expert brief →
+            📄 Open your pre-filled challenge brief →
           </a>
         </Card>
       </Screen>

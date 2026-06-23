@@ -14,7 +14,7 @@ export function BookEvoKitCTA({ code }: { code: string }) {
           📅 Book your EvoKit session →
         </a>
         <a href={`/brief/${code}`} className="btn-ghost">
-          📄 See the expert brief
+          📄 See the challenge brief
         </a>
       </div>
     </div>

@@ -37,7 +37,7 @@ export default async function BriefPage({ params }: { params: Promise<{ code: st
 
       {/* Header */}
       <div className="card p-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Cloud Readiness Challenge · Expert brief</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-ink/45">Challenge brief</p>
         <h1 className="mt-1 font-display text-3xl font-bold">{c.name}</h1>
         {profileChips.length > 0 && (
           <div className="mt-2 flex flex-wrap justify-center gap-1.5">

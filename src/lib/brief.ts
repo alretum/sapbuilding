@@ -11,9 +11,9 @@ import { buildSnapshot, type LoadedSession } from "./scoring";
 import { recommend, type Recommendation } from "./recommendation";
 import type { CompanyProfile } from "./profile";
 
-// The expert handoff brief: turns everything the game already captured into a
-// one-page summary an SAP expert can pick up from — so the session starts on
-// value, not orientation.
+// The challenge brief: turns everything the game already captured into a one-page
+// summary the company (and whoever they take it to) can pick up from — so any
+// follow-up starts on value, not orientation.
 
 export interface BriefDept {
   name: string;
