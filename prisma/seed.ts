@@ -42,7 +42,7 @@ async function main() {
 
   // 2. Pre-seed Players and starting completions
   // Target readiness:
-  // - Captain (Caption): ~55% of 255 pts = 140 pts
+  // - Captain: ~55% of 255 pts = 140 pts
   // - Finance (Finance-Pros): 38% of 280 pts = 106 pts
   // - IT (Tech Team): ~85% of 230 pts = 195 pts
   // - Production (Ops-heroes): ~70% of 230 pts = 161 pts
@@ -146,7 +146,7 @@ async function main() {
       summary: "Your own people surfaced the points below. This is Hartmann's voice, not a vendor's.",
       byDepartment: [
         {
-          department: "Caption",
+          department: "Captain",
           points: [
             "Prioritize the Risks: most said 'No tested rollback plan if go-live fails'",
             "Sets the Vision: clear commitment to standardizing core processes"

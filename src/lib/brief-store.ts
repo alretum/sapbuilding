@@ -76,7 +76,7 @@ const DEMO_BRIEF: BriefDoc = {
     summary: "Your own people surfaced the points below. This is Hartmann's voice, not a vendor's.",
     byDepartment: [
       {
-        department: "Caption",
+        department: "Captain",
         points: [
           "Prioritize the Risks: most said 'No tested rollback plan if go-live fails'",
           "Sets the Vision: clear commitment to standardizing core processes",

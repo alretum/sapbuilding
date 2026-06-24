@@ -22,7 +22,7 @@ const PATH_STYLE: Record<BriefDoc["path"]["recommended"], { color: string; emoji
 };
 
 const DEPT_STYLES: Record<string, { bg: string, border: string, shadow: string, emoji: string }> = {
-  "Caption": { bg: "bg-brand/10", border: "border-brand/30", shadow: "rgba(109,93,246,0.3)", emoji: "📝" },
+  "Captain": { bg: "bg-brand/10", border: "border-brand/30", shadow: "rgba(109,93,246,0.3)", emoji: "📝" },
   "Finance-Pros": { bg: "bg-blue-100", border: "border-blue-300", shadow: "rgba(59,130,246,0.3)", emoji: "💰" },
   "Tech Team": { bg: "bg-mint/10", border: "border-mint/30", shadow: "rgba(43,212,168,0.3)", emoji: "💻" },
   "Ops-heroes": { bg: "bg-sun/10", border: "border-sun/30", shadow: "rgba(255,178,62,0.3)", emoji: "⚙️" },
@@ -141,7 +141,7 @@ export function BriefView({ code }: { code: string }) {
           </div>
 
           <p className="text-xs text-ink/40 max-w-xs leading-normal">
-            Structuring input from Caption, Finance, Tech Team, Ops-heroes, and People-Chamions into a board-ready executive report.
+            Structuring input from Captain, Finance, Tech Team, Ops-heroes, and People-Chamions into a board-ready executive report.
           </p>
         </div>
       </Screen>
