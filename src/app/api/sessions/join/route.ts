@@ -30,6 +30,25 @@ export async function POST(req: Request) {
     data: { sessionId: session.id, name: name.trim(), roleId, avatar: JSON.stringify(defaultAvatar()) },
   });
 
+  // If this is Sabine Wagner (CFO finance role), pre-seed her completions automatically
+  if (name.includes("Sabine Wagner") && roleId === "finance") {
+    const completions = [
+      { actionId: "finance-myth-fact", score: 40 },
+      { actionId: "finance-report-rescue", score: 40 },
+      { actionId: "finance-open-status", score: 26 },
+    ];
+    await prisma.actionCompletion.createMany({
+      data: completions.map((c) => ({
+        sessionId: session.id,
+        playerId: player.id,
+        actionId: c.actionId,
+        roleId,
+        score: c.score,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
   return NextResponse.json({
     sessionId: session.id,
     code: session.code,
