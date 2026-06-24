@@ -281,7 +281,7 @@ function CreateForm({
                 }`}
               >
                 <span className="text-lg">{r.avatar}</span>
-                <span className="leading-tight">{r.name}</span>
+                <span className="leading-tight">{r.name} ({r.department})</span>
               </button>
             );
           })}
