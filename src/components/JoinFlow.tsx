@@ -64,35 +64,23 @@ export function JoinFlow({
 
       // If deep-linked via employee invite, auto-join as Sabine Wagner under the DEMO session
       if (initialCode) {
-        const sabine = (data.players as ExistingPlayer[]).find((p) => p.name.includes("Sabine Wagner"));
-        if (sabine) {
-          onJoined({
-            sessionId: data.sessionId,
-            code: data.code,
-            playerId: sabine.id,
-            roleId: sabine.roleId,
-            name: sabine.name,
-          });
-          return;
-        } else {
-          // Auto-create Sabine Wagner under the finance role in the DEMO session if not exists
-          const createRes = await fetch("/api/sessions/join", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code: "DEMO", name: "Dr. Sabine Wagner", roleId: "finance" }),
-          });
-          const createData = await createRes.json();
-          if (!createRes.ok) throw new Error(createData.error ?? "Could not auto-create player");
-          onJoined({
-            sessionId: createData.sessionId,
-            code: createData.code,
-            playerId: createData.playerId,
-            roleId: createData.roleId,
-            name: "Dr. Sabine Wagner",
-            avatar: createData.avatar,
-          });
-          return;
-        }
+        // Auto-create or reset Sabine Wagner under the finance role in the DEMO session
+        const createRes = await fetch("/api/sessions/join", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: "DEMO", name: "Dr. Sabine Wagner", roleId: "finance" }),
+        });
+        const createData = await createRes.json();
+        if (!createRes.ok) throw new Error(createData.error ?? "Could not auto-create player");
+        onJoined({
+          sessionId: createData.sessionId,
+          code: createData.code,
+          playerId: createData.playerId,
+          roleId: createData.roleId,
+          name: "Dr. Sabine Wagner",
+          avatar: createData.avatar,
+        });
+        return;
       }
 
       setStep("role");

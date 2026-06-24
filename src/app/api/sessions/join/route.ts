@@ -25,10 +25,33 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "session not found" }, { status: 404 });
   }
 
-  // Assign a random avatar by default — no onboarding step; editable later.
-  const player = await prisma.player.create({
-    data: { sessionId: session.id, name: name.trim(), roleId, avatar: JSON.stringify(defaultAvatar()) },
-  });
+  let player;
+  const isSabineDemo = code.toUpperCase() === "DEMO" && name.includes("Sabine Wagner") && roleId === "finance";
+
+  if (isSabineDemo) {
+    const existing = await prisma.player.findFirst({
+      where: {
+        sessionId: session.id,
+        name: { contains: "Sabine Wagner" },
+        roleId: "finance",
+      },
+    });
+
+    if (existing) {
+      player = existing;
+      // Delete existing completions to reset Sabine to starting state
+      await prisma.actionCompletion.deleteMany({
+        where: { playerId: player.id },
+      });
+    }
+  }
+
+  if (!player) {
+    // Assign a random avatar by default — no onboarding step; editable later.
+    player = await prisma.player.create({
+      data: { sessionId: session.id, name: name.trim(), roleId, avatar: JSON.stringify(defaultAvatar()) },
+    });
+  }
 
   // If this is Sabine Wagner (CFO finance role), pre-seed her completions automatically
   if (name.includes("Sabine Wagner") && roleId === "finance") {
