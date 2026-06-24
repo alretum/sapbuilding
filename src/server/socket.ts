@@ -22,7 +22,11 @@ export function registerSocketHandlers(io: Server): void {
       if (!sessionId) return;
       socket.join(room(sessionId));
       const snapshot = await computeSessionSnapshot(sessionId);
-      if (snapshot) socket.emit("score:update", snapshot);
+      if (snapshot) {
+        socket.emit("score:update", snapshot);
+      } else {
+        socket.emit("session:error", "Session not found");
+      }
     });
 
     // The national/company leaderboard subscribes here; it refetches whenever any

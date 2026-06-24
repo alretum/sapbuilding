@@ -10,7 +10,7 @@ export function Departments() {
       <Reveal>
         <SectionHeading
           eyebrow="Everyone plays a part"
-          title="Six departments, one shared score"
+          title="Five departments, one shared score"
           subtitle="Each team gets its own role, its own actions, and its own slice of readiness. You're only fully ready when everyone joins in."
         />
       </Reveal>

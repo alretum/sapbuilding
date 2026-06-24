@@ -21,9 +21,48 @@ const PATH_STYLE: Record<BriefDoc["path"]["recommended"], { color: string; emoji
   PREPARE: { color: "#ffb23e", emoji: "🧭" },
 };
 
+const DEPT_STYLES: Record<string, { bg: string, border: string, shadow: string, emoji: string }> = {
+  "Caption": { bg: "bg-brand/10", border: "border-brand/30", shadow: "rgba(109,93,246,0.3)", emoji: "📝" },
+  "Finance-Pros": { bg: "bg-blue-100", border: "border-blue-300", shadow: "rgba(59,130,246,0.3)", emoji: "💰" },
+  "Tech Team": { bg: "bg-mint/10", border: "border-mint/30", shadow: "rgba(43,212,168,0.3)", emoji: "💻" },
+  "Ops-heroes": { bg: "bg-sun/10", border: "border-sun/30", shadow: "rgba(255,178,62,0.3)", emoji: "⚙️" },
+  "People-Chamions": { bg: "bg-coral/10", border: "border-coral/30", shadow: "rgba(255,107,107,0.3)", emoji: "🤝" },
+  "People-Champions": { bg: "bg-coral/10", border: "border-coral/30", shadow: "rgba(255,107,107,0.3)", emoji: "🤝" }
+};
+
+function HighlightText({ text }: { text: string }) {
+  if (!text) return null;
+  const regex = /(\b\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?[MBK]?|€\d+(?:\.\d+)?[MBK]?|\bROI\b|\bSAP\b|\bERP\b|\b[A-Z]{2,}\b|\b\d+\b)/g;
+  const parts = text.split(regex);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (regex.test(part)) {
+          return (
+            <strong key={i} className="font-extrabold text-brand bg-brand/10 px-1.5 py-0.5 rounded-md inline-block shadow-sm">
+              {part}
+            </strong>
+          );
+        }
+        return part;
+      })}
+    </>
+  );
+}
+
 export function BriefView({ code }: { code: string }) {
   const [data, setData] = useState<BriefResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [progress, setProgress] = useState(0);
+  const [simulatedComplete, setSimulatedComplete] = useState(false);
+
+  const steps = [
+    { threshold: 30, message: "🔍 Analyzing department flags..." },
+    { threshold: 60, message: "🧠 Synthesizing what your teams flagged..." },
+    { threshold: 90, message: "⚡ Creating AI-powered debrief..." },
+    { threshold: 100, message: "📋 Formatting board-ready brief..." },
+  ];
 
   useEffect(() => {
     let alive = true;
@@ -39,6 +78,24 @@ export function BriefView({ code }: { code: string }) {
     };
   }, [code]);
 
+  useEffect(() => {
+    let current = 0;
+    const duration = 2000; // 2 seconds
+    const intervalTime = 50; // smooth 20fps update
+    const step = 100 / (duration / intervalTime);
+
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= 100) {
+        current = 100;
+        clearInterval(interval);
+        setSimulatedComplete(true);
+      }
+      setProgress(Math.round(current));
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, []);
+
   if (error)
     return (
       <Screen>
@@ -46,17 +103,46 @@ export function BriefView({ code }: { code: string }) {
       </Screen>
     );
 
-  if (!data)
+  const currentStep = steps.find(s => progress <= s.threshold) || steps[steps.length - 1];
+
+  if (!data || !simulatedComplete)
     return (
-      <Screen className="max-w-2xl">
-        <div className="card flex flex-col items-center gap-3 py-20 text-center">
-          <span className="flex gap-1" aria-hidden>
-            <Dot delay="0ms" />
-            <Dot delay="150ms" />
-            <Dot delay="300ms" />
-          </span>
-          <p className="font-display font-semibold">Assembling your brief…</p>
-          <p className="max-w-sm text-sm text-ink/50">Synthesising what your teams flagged into a board-ready read.</p>
+      <Screen className="max-w-md mx-auto">
+        <div className="card flex flex-col items-center gap-6 p-8 py-12 text-center shadow-pop border border-brand/10">
+          <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-brand/5 border border-brand/10">
+            <div className="absolute inset-0 rounded-full bg-brand/10 animate-ping opacity-25" />
+            <div className="absolute inset-2 rounded-full bg-brand/5 animate-pulse" />
+            <span className="text-5xl select-none animate-bounce" style={{ animationDuration: "1.8s" }}>
+              🧑‍💻
+            </span>
+            <span className="absolute -top-1 -right-1 text-2xl animate-pulse">
+              🤔
+            </span>
+          </div>
+
+          <div className="w-full space-y-2">
+            <p className="font-display font-bold text-lg text-ink">Assembling Hartmann Brief</p>
+            <p className="text-sm text-brand font-semibold min-h-[1.5rem] transition-all duration-300">
+              {currentStep.message}
+            </p>
+          </div>
+
+          <div className="w-full space-y-1.5">
+            <div className="flex justify-between text-xs font-bold text-ink/40 px-0.5">
+              <span>PROGRESS</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="w-full h-3 bg-black/5 rounded-full overflow-hidden p-[2px] border border-black/5">
+              <div
+                className="h-full bg-gradient-to-r from-brand to-mint rounded-full transition-all duration-150 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          <p className="text-xs text-ink/40 max-w-xs leading-normal">
+            Structuring input from Caption, Finance, Tech Team, Ops-heroes, and People-Chamions into a board-ready executive report.
+          </p>
         </div>
       </Screen>
     );
@@ -145,8 +231,8 @@ export function BriefView({ code }: { code: string }) {
         </aside>
 
         {/* Main content — the reasoning */}
-        <div className="space-y-6 lg:col-span-8 xl:col-span-9">
-          <Panel title="Where you stand today" summary={doc.standToday.summary}>
+        <div className="space-y-8 lg:col-span-8 xl:col-span-9">
+          <Panel title="📍 Where you stand today" summary={doc.standToday.summary} theme="info">
             <div className="mt-2 grid gap-4 md:grid-cols-2">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wide text-ink/40">The facts</p>
@@ -160,24 +246,28 @@ export function BriefView({ code }: { code: string }) {
           </Panel>
 
           {/* The differentiator: the company's own voice */}
-          <section className="space-y-3">
-            <h2 className="px-1 font-display text-sm font-bold uppercase tracking-wide text-ink/45">
-              What our own people said
+          <section className="space-y-4">
+            <h2 className="px-1 font-display text-base font-extrabold uppercase tracking-wide text-ink/70">
+              🗣️ What our own people said
             </h2>
-            <p className="px-1 text-sm text-ink/60">{doc.ourPeopleSaid.summary}</p>
+            <p className="px-1 text-base font-medium text-ink/80">{doc.ourPeopleSaid.summary}</p>
             {doc.ourPeopleSaid.byDepartment.length === 0 ? (
               <p className="px-1 text-sm text-ink/40">No input captured yet.</p>
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {doc.ourPeopleSaid.byDepartment.map((d) => {
                   const empty = d.points.length === 0;
+                  const style = DEPT_STYLES[d.department] || { bg: "bg-white", border: "border-ink/20", shadow: "rgba(22,26,62,0.1)", emoji: "🏢" };
                   return (
                     <div
                       key={d.department}
-                      className={`card p-4 ${empty ? "border-dashed border-ink/15 bg-ink/[0.015]" : "border-brand/15"}`}
-                      style={empty ? undefined : { boxShadow: "inset 0 0 0 2px rgba(43,212,168,0.16)" }}
+                      className={`card p-5 border-2 ${empty ? "border-dashed border-ink/20 bg-ink/5" : `${style.bg} ${style.border}`}`}
+                      style={empty ? undefined : { boxShadow: `0 4px 12px ${style.shadow}, inset 0 0 0 2px ${style.shadow}` }}
                     >
-                      <p className={`font-display font-semibold ${empty ? "text-ink/45" : ""}`}>{d.department}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">{style.emoji}</span>
+                        <p className={`font-display text-lg font-extrabold ${empty ? "text-ink/50" : "text-ink"}`}>{d.department}</p>
+                      </div>
                       {empty ? (
                         <p className="mt-1 text-sm text-ink/40">No input yet — this team hasn&apos;t taken part.</p>
                       ) : (
@@ -198,10 +288,10 @@ export function BriefView({ code }: { code: string }) {
 
           {/* The two honest cases, side by side */}
           <div className="grid items-start gap-6 lg:grid-cols-2">
-            <Panel title="The honest case: what it's worth" summary={doc.worth.summary}>
+            <Panel title="💎 The honest case: what it's worth" summary={doc.worth.summary} theme="success">
               <Bullets items={doc.worth.valueDrivers} />
-              <p className="mt-3 rounded-xl bg-ink/5 px-3 py-2 text-sm text-ink/70">{doc.worth.peerOutcome}</p>
-              <p className="mt-3 text-sm text-ink/70">{doc.worth.roiPointer}</p>
+              <p className="mt-3 rounded-xl bg-white/60 px-3 py-2 text-sm text-ink/80 font-medium shadow-sm"><HighlightText text={doc.worth.peerOutcome} /></p>
+              <p className="mt-3 text-sm text-ink/70"><HighlightText text={doc.worth.roiPointer} /></p>
               <a
                 href={SAP_ROI_CALCULATOR}
                 target="_blank"
@@ -212,22 +302,22 @@ export function BriefView({ code }: { code: string }) {
               </a>
             </Panel>
 
-            <Panel title="The honest case: cost, effort & what's hard" summary={doc.costAndHard.summary} accent>
+            <Panel title="⚖️ The honest case: cost, effort & what's hard" summary={doc.costAndHard.summary} theme="warning">
               <Bullets items={doc.costAndHard.items} marker="–" />
             </Panel>
           </div>
 
           {/* De-risking + timing, side by side */}
           <div className="grid items-start gap-6 lg:grid-cols-2">
-            <Panel title="De-risking: the disaster scenario, handled" summary={doc.derisking.summary}>
-              <p className="mt-1 rounded-xl bg-ink/5 px-3 py-2 text-sm text-ink/75">{doc.derisking.scenario}</p>
+            <Panel title="🛡️ De-risking: the disaster scenario, handled" summary={doc.derisking.summary} theme="purple">
+              <p className="mt-1 rounded-xl bg-white/60 px-3 py-2 text-sm text-ink/80 font-medium shadow-sm"><HighlightText text={doc.derisking.scenario} /></p>
               <div className="mt-3">
                 <p className="text-xs font-bold uppercase tracking-wide text-ink/40">How it&apos;s managed</p>
                 <Bullets items={doc.derisking.mitigations} marker="✓" />
               </div>
             </Panel>
 
-            <Panel title="Why now" summary={doc.whyNow.summary}>
+            <Panel title="⏳ Why now" summary={doc.whyNow.summary} theme="info">
               <Bullets items={doc.whyNow.points} />
             </Panel>
           </div>
@@ -247,22 +337,38 @@ export function BriefView({ code }: { code: string }) {
   );
 }
 
+type PanelTheme = "default" | "warning" | "success" | "info" | "purple";
+
 function Panel({
   title,
   summary,
-  accent,
+  theme = "default",
   children,
 }: {
   title: string;
   summary?: string;
-  accent?: boolean;
+  theme?: PanelTheme;
   children: React.ReactNode;
 }) {
+  const themeStyles = {
+    default: "border-ink/10 bg-white",
+    warning: "border-sun/40 bg-sun/10",
+    success: "border-mint/40 bg-mint/10",
+    info: "border-blue-500/30 bg-blue-50/70",
+    purple: "border-brand/30 bg-brand/10",
+  };
+
+  const accentShadow = theme === "warning" 
+    ? { boxShadow: "0 6px 16px rgba(255,122,69,0.1), inset 0 0 0 2px rgba(255,122,69,0.3)" } 
+    : theme === "success" 
+    ? { boxShadow: "0 6px 16px rgba(43,212,168,0.1), inset 0 0 0 2px rgba(43,212,168,0.3)" }
+    : undefined;
+
   return (
-    <section className="space-y-2">
-      <h2 className="px-1 font-display text-sm font-bold uppercase tracking-wide text-ink/45">{title}</h2>
-      <div className="card p-5" style={accent ? { boxShadow: "inset 0 0 0 2px rgba(255,122,69,0.22)" } : undefined}>
-        {summary && <p className="text-sm text-ink/70">{summary}</p>}
+    <section className="space-y-3">
+      <h2 className="px-1 font-display text-base font-extrabold uppercase tracking-wide text-ink/70">{title}</h2>
+      <div className={`card p-6 border-2 ${themeStyles[theme]}`} style={accentShadow}>
+        {summary && <p className="text-base font-semibold text-ink/90 mb-4"><HighlightText text={summary} /></p>}
         {children}
       </div>
     </section>
@@ -286,7 +392,7 @@ function Bullets({ items, marker = "•" }: { items: string[]; marker?: string }
       {items.map((t, i) => (
         <li key={i} className="flex gap-2">
           <span className="select-none text-ink/30">{marker}</span>
-          <span>{t}</span>
+          <span><HighlightText text={t} /></span>
         </li>
       ))}
     </ul>

@@ -1,8 +1,8 @@
 [
   {
     "id": "captain",
-    "name": "Captain",
-    "department": "CEO / Management",
+    "name": "Caption",
+    "department": "Caption",
     "character": "Sets the vision & commitment — and sees everyone else.",
     "color": "#6d5df6",
     "avatar": "🧭",
@@ -11,7 +11,7 @@
   {
     "id": "finance",
     "name": "Finance-Pros",
-    "department": "Finance",
+    "department": "Finance-Pros",
     "character": "Reporting & numbers.",
     "color": "#00b5ad",
     "avatar": "📊",
@@ -19,8 +19,8 @@
   },
   {
     "id": "it",
-    "name": "Code-Crew & Data-Guardians",
-    "department": "IT",
+    "name": "Tech Team",
+    "department": "Tech Team",
     "character": "Custom developments & clean core.",
     "color": "#ff7a45",
     "avatar": "💻",
@@ -28,8 +28,8 @@
   },
   {
     "id": "production",
-    "name": "Ops-Heroes",
-    "department": "Production",
+    "name": "Ops-heroes",
+    "department": "Ops-heroes",
     "character": "Processes & workflows.",
     "color": "#27ae60",
     "avatar": "⚙️",
@@ -37,8 +37,8 @@
   },
   {
     "id": "hr",
-    "name": "People-Champions",
-    "department": "HR",
+    "name": "People-Chamions",
+    "department": "People-Chamions",
     "character": "Prepare the People",
     "color": "#e84393",
     "avatar": "🤝",

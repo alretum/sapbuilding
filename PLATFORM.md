@@ -43,7 +43,7 @@ Each department is a **role** with its own identity, colour, avatar and set of a
 |---|---|---|
 | **Captain** | CEO / Management | Sets vision & commitment; sees everyone; can "boost" a lagging department |
 | **Finance-Pros** | Finance | Reporting, real-time numbers, the ROI/business case |
-| **Code-Crew & Data-Guardians** | IT | Custom code, clean core, data quality |
+| **Tech Team** | IT | Custom code, clean core, data quality |
 | **Ops-Heroes** | Production / Supply Chain | Processes & workflows |
 
 The **Captain is a playing role**, not just a spectator. The set of roles is configurable per challenge.

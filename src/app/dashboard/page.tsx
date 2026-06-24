@@ -33,8 +33,8 @@ export default function DashboardPage() {
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:py-10 space-y-5">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-xl font-bold">{snapshot?.name ?? "Live Dashboard"}</h1>
-          {snapshot && <p className="text-xs text-ink/50">Session {snapshot.code}</p>}
+          <h1 className="font-display text-xl font-bold">{snapshot && typeof snapshot === "object" ? snapshot.name : "Live Dashboard"}</h1>
+          {snapshot && typeof snapshot === "object" && <p className="text-xs text-ink/50">Session {snapshot.code}</p>}
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <a href="/play" title="Play Tasks" className="flex items-center justify-center h-9 w-9 rounded-xl bg-ink/[0.05] hover:bg-ink/[0.1] text-lg transition">🎮</a>
@@ -48,6 +48,10 @@ export default function DashboardPage() {
       {!sessionId ? (
         <Card className="text-center text-sm text-ink/60 max-w-md mx-auto">
           No session selected. Join a challenge first, or open a host dashboard link.
+        </Card>
+      ) : typeof snapshot === "boolean" ? (
+        <Card className="text-center text-sm text-ink/60 max-w-md mx-auto">
+          Challenge session not found. It may have been deleted or the link is expired.
         </Card>
       ) : !snapshot ? (
         <Card className="text-center text-sm text-ink/50 max-w-md mx-auto">Connecting to the live scores…</Card>

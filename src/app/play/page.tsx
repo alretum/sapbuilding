@@ -71,9 +71,10 @@ export default function PlayPage() {
 
   const role = content.roles.find((r) => r.id === player.roleId);
   const actions = content.actions.filter((a) => a.roleId === player.roleId);
-  const myDept = snapshot?.departments.find((d) => d.roleId === player.roleId);
-  const myEntry = snapshot?.leaderboard.find((p) => p.playerId === player.playerId);
-  const myRank = snapshot ? snapshot.leaderboard.findIndex((p) => p.playerId === player.playerId) + 1 : 0;
+  const hasSnapshot = snapshot && typeof snapshot === "object";
+  const myDept = hasSnapshot ? snapshot.departments.find((d) => d.roleId === player.roleId) : undefined;
+  const myEntry = hasSnapshot ? snapshot.leaderboard.find((p) => p.playerId === player.playerId) : undefined;
+  const myRank = hasSnapshot ? snapshot.leaderboard.findIndex((p) => p.playerId === player.playerId) + 1 : 0;
   const doneCount = actions.filter((a) => completed.includes(a.id)).length;
   const progress = actions.length > 0 ? doneCount / actions.length : 0;
 
